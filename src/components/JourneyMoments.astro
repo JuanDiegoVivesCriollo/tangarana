@@ -1,0 +1,37 @@
+---
+import { Picture } from "astro:assets";
+import SectionHeading from "./SectionHeading.astro";
+import { journeyMoments } from "../data/images";
+
+interface Props {
+  id: string;
+  variant?: "mosaic" | "ribbon";
+}
+
+const { id, variant = "mosaic" } = Astro.props;
+---
+
+<section class:list={["section", "section--soft", "journey-moments", `journey-moments--${variant}`]} aria-labelledby={id}>
+  <div class="container">
+    <SectionHeading eyebrow="Bitácora Tangarana" title="La ruta también se cuenta con personas." id={id}>
+      <p>Encuentros, naturaleza y momentos compartidos por viajeros que ya recorrieron estos paisajes.</p>
+    </SectionHeading>
+
+    <div class="journey-moments__grid">
+      {journeyMoments.map((moment, index) => (
+        <figure>
+          <Picture
+            src={moment.image.src}
+            formats={["avif"]}
+            fallbackFormat="webp"
+            widths={[360, 560, 760, 960]}
+            sizes={variant === "ribbon" ? "(min-width: 768px) 25vw, 72vw" : index === 0 ? "(min-width: 768px) 52vw, 88vw" : "(min-width: 768px) 24vw, 72vw"}
+            alt={moment.image.alt}
+            loading="lazy"
+          />
+          <figcaption>{moment.label}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>

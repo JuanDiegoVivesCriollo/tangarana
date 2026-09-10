@@ -7,7 +7,7 @@ export type Destination = {
   intro: string;
   perspective: string;
   layout: "panorama" | "editorial" | "earth" | "river";
-  image: "hero" | "trail" | "river";
+  image: "oxapampaGroup" | "pozuzoGate" | "lagoonSwing" | "yaneshaExperience";
   marker: string;
 };
 
@@ -21,7 +21,7 @@ export const destinations: Destination[] = [
     intro: "Oxapampa abre la ruta de Tangarana por la Selva Central: un punto de encuentro entre paisaje, cultura y una forma más pausada de viajar.",
     perspective: "Desde aquí puedes consultar el paquete principal y coordinar directamente por WhatsApp los detalles de tu viaje.",
     layout: "panorama",
-    image: "hero",
+    image: "oxapampaGroup",
     marker: "01",
   },
   {
@@ -30,10 +30,10 @@ export const destinations: Destination[] = [
     eyebrow: "Segunda parada",
     seoTitle: "Turismo en Pozuzo | Tangarana Travel Tours",
     seoDescription: "Conoce Pozuzo dentro de la ruta de 4 días por la Selva Central organizada por Tangarana Travel Tours.",
-    intro: "Pozuzo ocupa la segunda estación del recorrido. La página está preparada para sumar información confirmada, fotografías reales y detalles coordinados del itinerario.",
+    intro: "Pozuzo ocupa la segunda estación del recorrido, con una identidad reconocible desde su pórtico de bienvenida y su paisaje rodeado de vegetación.",
     perspective: "Tangarana integra este destino en su ruta de cuatro días sin esconder la información esencial: duración, inclusiones, precio y contacto.",
     layout: "editorial",
-    image: "trail",
+    image: "pozuzoGate",
     marker: "02",
   },
   {
@@ -42,10 +42,10 @@ export const destinations: Destination[] = [
     eyebrow: "Tercera parada",
     seoTitle: "Tours en Villa Rica | Tangarana Travel Tours",
     seoDescription: "Incluye Villa Rica en tu viaje por la Selva Central con el tour de 4 días de Tangarana Travel Tours.",
-    intro: "Villa Rica marca la tercera jornada de la ruta. Su espacio visual adopta tonos de tierra y bosque, con contenido prudente hasta confirmar el itinerario completo.",
+    intro: "Villa Rica marca la tercera jornada de la ruta, con paisaje verde y espacios donde el viaje puede bajar el ritmo frente al agua.",
     perspective: "Consulta con el equipo qué experiencias se coordinarán para la fecha de tu viaje antes de reservar.",
     layout: "earth",
-    image: "trail",
+    image: "lagoonSwing",
     marker: "03",
   },
   {
@@ -54,10 +54,10 @@ export const destinations: Destination[] = [
     eyebrow: "Cierre de ruta",
     seoTitle: "Valle del Perené: turismo | Tangarana Travel Tours",
     seoDescription: "Descubre el Valle del Perené como cuarta parada del tour de 4 días por la Selva Central de Tangarana Travel Tours.",
-    intro: "El Valle del Perené cierra el recorrido de cuatro días. Una composición inspirada en el movimiento del río guía esta última etapa.",
+    intro: "El Valle del Perené cierra el recorrido de cuatro días con una mirada al paisaje, la comunidad y la memoria cultural de la zona.",
     perspective: "Los lugares, horarios y actividades concretas se confirman directamente con Tangarana Travel Tours.",
     layout: "river",
-    image: "river",
+    image: "yaneshaExperience",
     marker: "04",
   },
 ];

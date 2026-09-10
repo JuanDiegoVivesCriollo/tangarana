@@ -1,0 +1,42 @@
+---
+import { Picture } from "astro:assets";
+import SectionHeading from "./SectionHeading.astro";
+import { activityMoments } from "../data/images";
+
+interface Props {
+  id: string;
+  tone?: "plain" | "soft";
+}
+
+const { id, tone = "plain" } = Astro.props;
+---
+
+<section class:list={["section", "experience-fieldnotes", tone === "soft" && "section--soft"]} aria-labelledby={id}>
+  <div class="container">
+    <SectionHeading eyebrow="Actividades en ruta" title="Experiencias que cambian el ritmo." id={id}>
+      <p>Hay días para mirar el paisaje y otros para entrar en él. Estas fotografías muestran algunas experiencias compartidas por Tangarana.</p>
+    </SectionHeading>
+
+    <div class="experience-fieldnotes__grid">
+      {activityMoments.map((moment, index) => (
+        <figure class:list={["experience-card", index === 0 && "experience-card--wide", index === 1 && "experience-card--tall"]}>
+          <Picture
+            src={moment.image.src}
+            formats={["avif"]}
+            fallbackFormat="webp"
+            widths={index === 0 ? [520, 820, 1120] : [360, 560, 760]}
+            sizes={index === 0 ? "(min-width: 768px) 58vw, 92vw" : "(min-width: 768px) 29vw, 78vw"}
+            alt={moment.image.alt}
+            loading="lazy"
+          />
+          <figcaption>
+            <span>{moment.marker}</span>
+            <div><strong>{moment.title}</strong><p>{moment.description}</p></div>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <p class="experience-fieldnotes__note">Las actividades, accesos y condiciones se confirman al coordinar el itinerario de cada salida.</p>
+  </div>
+</section>

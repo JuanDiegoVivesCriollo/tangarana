@@ -80,18 +80,20 @@ Los tours se leen desde una Astro Content Collection; no es necesario modificar 
 
 ## Cambiar las imágenes
 
-Las imágenes provisionales están en `src/assets/images/` y se importan desde `src/data/images.ts`. Para reemplazarlas:
+Las fotografías reales entregadas por Tangarana están optimizadas en `src/assets/images/tangarana/`; el hero editorial aprobado permanece en `src/assets/images/`. Todas se importan desde `src/data/images.ts`. Para reemplazarlas:
 
 1. Añade la fotografía real con un nombre descriptivo.
 2. Actualiza solo el import correspondiente en `src/data/images.ts`.
 3. Conserva el texto alternativo preciso.
 4. No hace falta exportar manualmente AVIF/WebP: el componente `Picture` de Astro genera los formatos y tamaños responsivos al construir el sitio.
 
-Los archivos de `public/og/` son las vistas previas para redes sociales. Deben actualizarse cuando exista el logo oficial y un banco de fotografías real.
+Los archivos de `public/og/` son las vistas previas para redes sociales. Deben actualizarse cuando exista el logo oficial.
+
+Las fotografías originales de WhatsApp no se copian al proyecto. Se trabajó con 12 selecciones convertidas a WebP, con nombres descriptivos; Astro produce además variantes AVIF y tamaños responsivos para móvil y escritorio durante la compilación.
 
 ## Imágenes provisionales generadas
 
-Se usó el generador integrado de imágenes para producir recursos editoriales sin texto ni marcas de agua:
+Se usó el generador integrado de imágenes para producir los recursos editoriales iniciales sin texto ni marcas de agua. El hero generado se conserva por decisión del cliente; las demás fotografías visibles principales ya son reales:
 
 - `selva-central-montanas-hero.webp`: montaña y bosque nublado al amanecer para el hero.
 - `sendero-selva-central.webp`: sendero húmedo de expedición para secciones editoriales.

@@ -9,6 +9,7 @@ import IncludesBand from "../../components/IncludesBand.astro";
 import ExpeditionTimeline from "../../components/ExpeditionTimeline.astro";
 import FAQAccordion from "../../components/FAQAccordion.astro";
 import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
+import JourneyMoments from "../../components/JourneyMoments.astro";
 import { siteImages } from "../../data/images";
 import { SITE_URL, siteConfig, tourWhatsAppMessage } from "../../data/site";
 
@@ -77,6 +78,8 @@ const schema = [
       <ExpeditionTimeline stops={tour.itinerary} />
     </div>
   </section>
+
+  <JourneyMoments id="tour-moments-title" variant="ribbon" />
 
   <section class="section section--soft" aria-labelledby="stay-title">
     <div class="container content-grid">

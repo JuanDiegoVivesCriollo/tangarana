@@ -4,6 +4,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageIntro from "../../components/PageIntro.astro";
 import TourFeature from "../../components/TourFeature.astro";
 import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
+import ExperienceFieldnotes from "../../components/ExperienceFieldnotes.astro";
 const tours = await getCollection("tours", ({ data }) => data.status === "published");
 ---
 
@@ -22,6 +23,7 @@ const tours = await getCollection("tours", ({ data }) => data.status === "publis
       {tours.map((entry) => <TourFeature tour={entry.data} />)}
     </div>
   </section>
+  <ExperienceFieldnotes id="tours-experiences-title" tone="soft" />
   <section class="cta-route" aria-labelledby="tour-help-title">
     <div class="container cta-route__inner">
       <div><span class="eyebrow">¿Tienes una fecha en mente?</span><h2 id="tour-help-title">Conversemos sobre tu ruta.</h2></div>
