@@ -1,7 +1,11 @@
 export const faqItems = [
   {
     question: "¿Qué destinos visita Tangarana Travel Tours?",
-    answer: "La ruta disponible conecta Oxapampa, Pozuzo, Villa Rica y el Valle del Perené durante cuatro días.",
+    answer: "La expedición principal conecta Oxapampa, Pozuzo, Villa Rica y el Valle del Perené. También hay excursiones a Chontabamba y Catarata Río Tigre.",
+  },
+  {
+    question: "¿Hay tours de un solo día?",
+    answer: "Sí. Hay excursiones publicadas a Perené, Villa Rica, Pozuzo, Chontabamba y Catarata Río Tigre, con horarios y precios desde S/30 por persona.",
   },
   {
     question: "¿Cómo puedo consultar disponibilidad?",
@@ -17,7 +21,11 @@ export const faqItems = [
   },
   {
     question: "¿El desayuno está incluido?",
-    answer: "Sí. Los desayunos están incluidos dentro del paquete publicado.",
+    answer: "Los desayunos están incluidos en el paquete de 4 días y 3 noches. Para las excursiones de un día, consulta por WhatsApp si la alimentación está incluida.",
+  },
+  {
+    question: "¿Qué debo confirmar en las excursiones de un día?",
+    answer: "Antes de reservar, confirma disponibilidad, punto de salida, transporte, entradas, alimentación, orden de las paradas y condiciones de las actividades opcionales.",
   },
   {
     question: "¿Cómo puedo comunicarme con Tangarana Travel Tours?",

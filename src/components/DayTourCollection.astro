@@ -1,0 +1,15 @@
+---
+import type { CollectionEntry } from "astro:content";
+import DayTourPoster from "./DayTourPoster.astro";
+
+interface Props {
+  tours: CollectionEntry<"tours">["data"][];
+  compact?: boolean;
+}
+
+const { tours, compact = false } = Astro.props;
+---
+
+<div class:list={["day-tour-collection", compact && "day-tour-collection--compact"]}>
+  {tours.map((tour, index) => <DayTourPoster tour={tour} index={index} compact={compact} />)}
+</div>

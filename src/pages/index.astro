@@ -10,12 +10,16 @@ import FAQAccordion from "../components/FAQAccordion.astro";
 import WhatsAppCTA from "../components/WhatsAppCTA.astro";
 import ExperienceFieldnotes from "../components/ExperienceFieldnotes.astro";
 import JourneyMoments from "../components/JourneyMoments.astro";
+import DayTourCollection from "../components/DayTourCollection.astro";
 import { destinations } from "../data/destinations";
 import { faqItems } from "../data/faq";
 import { SITE_URL, siteConfig } from "../data/site";
 
-const [tourEntry] = await getCollection("tours", ({ data }) => data.status === "published" && data.featured);
+const publishedTours = await getCollection("tours", ({ data }) => data.status === "published");
+const tourEntry = publishedTours.find(({ data }) => data.featured)!;
 const tour = tourEntry.data;
+const dayTourOrder = ["perene-dia-completo", "villa-rica-dia-completo", "chontabamba-medio-dia"];
+const dayTours = dayTourOrder.map((slug) => publishedTours.find(({ data }) => data.slug === slug)!.data);
 const homeFaq = faqItems.slice(0, 4);
 const schema = [
   {
@@ -82,6 +86,16 @@ const schema = [
   </section>
 
   <ExperienceFieldnotes id="home-experiences-title" tone="soft" />
+
+  <section class="section home-day-tours" aria-labelledby="home-day-tours-title">
+    <div class="container">
+      <SectionHeading eyebrow="Rutas de un día" title="También puedes empezar con una escapada." id="home-day-tours-title">
+        <p>Excursiones con horario y precio visibles para descubrir Perené, Villa Rica o Chontabamba sin recorrer el programa completo.</p>
+      </SectionHeading>
+      <DayTourCollection tours={dayTours} compact />
+      <a class="text-link home-day-tours__link" href="/tours/">Ver las cinco excursiones</a>
+    </div>
+  </section>
 
   <section class="section section--forest" aria-labelledby="included-title">
     <div class="container route-values">

@@ -65,7 +65,8 @@ Si se elige otro dominio, actualiza `SITE_URL` en `src/data/site.ts`, las URLs d
 - Destinos y textos introductorios: `src/data/destinations.ts`.
 - Preguntas frecuentes: `src/data/faq.ts`.
 - Imágenes centralizadas: `src/data/images.ts`.
-- Tour actual: `src/content/tours/selva-central-4-dias.md`.
+- Paquetes publicados: `src/content/tours/` (expedición de 4 días y cinco excursiones).
+- Logo oficial optimizado: `src/assets/brand/tangarana-logo.webp`.
 - Estilos y tokens de marca: `src/styles/global.css`.
 
 ## Agregar un nuevo tour
@@ -76,7 +77,7 @@ Si se elige otro dominio, actualiza `SITE_URL` en `src/data/site.ts`, las URLs d
 4. Coloca `status: "published"` cuando esté listo.
 5. Ejecuta `npm run build` y revisa la nueva URL.
 
-Los tours se leen desde una Astro Content Collection; no es necesario modificar la cuadrícula de `/tours/`.
+Los tours se leen desde una Astro Content Collection. Si se incorpora otra excursión, añádela también al orden editorial definido en `src/pages/tours/index.astro`.
 
 ## Cambiar las imágenes
 
@@ -87,9 +88,11 @@ Las fotografías reales entregadas por Tangarana están optimizadas en `src/asse
 3. Conserva el texto alternativo preciso.
 4. No hace falta exportar manualmente AVIF/WebP: el componente `Picture` de Astro genera los formatos y tamaños responsivos al construir el sitio.
 
-Los archivos de `public/og/` son las vistas previas para redes sociales. Deben actualizarse cuando exista el logo oficial.
+Los archivos de `public/og/` son las vistas previas para redes sociales y se conservan como recursos independientes del logotipo de navegación.
 
 Las fotografías originales de WhatsApp no se copian al proyecto. Se trabajó con 12 selecciones convertidas a WebP, con nombres descriptivos; Astro produce además variantes AVIF y tamaños responsivos para móvil y escritorio durante la compilación.
+
+Los cinco afiches recibidos se usaron únicamente como fuente de horarios, precios e itinerarios. No se publican como imágenes: cada paquete está reconstruido con componentes web responsivos.
 
 ## Imágenes provisionales generadas
 
@@ -129,15 +132,16 @@ Prompts finales: fotografía editorial natural de bosque nublado, sendero y río
 - [ ] RUC si se desea publicar.
 - [ ] Historia de la empresa.
 - [ ] Misión y visión.
-- [ ] Fotos reales.
-- [ ] Más paquetes.
+- [x] Fotos reales iniciales.
+- [x] Cinco excursiones adicionales.
 - [ ] Política de cancelación.
 - [ ] Métodos de pago.
 - [ ] Horarios de atención.
 - [ ] Puntos de salida.
 - [ ] Condiciones de niños / adultos.
 - [ ] Testimonios verificables.
-- [ ] Logo oficial en PNG/WebP y, de preferencia, SVG.
+- [x] Logo oficial en PNG/WebP.
+- [ ] Logo oficial en SVG, si se entrega una versión vectorial.
 - [ ] Isotipo independiente de la hormiga si existe.
 - [ ] Texto legal revisado para privacidad y términos.
 

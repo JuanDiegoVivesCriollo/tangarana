@@ -33,7 +33,14 @@ const tone = destination.layout === "earth" ? "earth" : destination.layout === "
   <section class:list={["section", tone === "earth" && "section--soft"]} aria-labelledby="destination-story-title">
     <div class="container destination-story">
       <p class="destination-story__lede" id="destination-story-title">{destination.intro}</p>
-      <div class="destination-story__copy"><p>{destination.perspective}</p><p style="margin-top: 1rem;">Forma parte del tour Selva Central de 4 días junto con las otras estaciones del recorrido.</p><a class="text-link" href="/tours/selva-central-4-dias/">Ver el tour asociado <ArrowUpRight size={19} aria-hidden="true" /></a></div>
+      <div class="destination-story__copy">
+        <p>{destination.perspective}</p>
+        <ul class="destination-highlights">{destination.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+        <div class="destination-story__links">
+          <a class="text-link" href={`/tours/${destination.tourSlug}/`}>Ver excursión de un día <ArrowUpRight size={19} aria-hidden="true" /></a>
+          <a class="text-link" href="/tours/selva-central-4-dias/">Ver expedición de 4 días <ArrowUpRight size={19} aria-hidden="true" /></a>
+        </div>
+      </div>
     </div>
   </section>
 

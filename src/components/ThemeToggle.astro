@@ -1,9 +1,10 @@
 ---
-import { MoonStar } from "@lucide/astro";
+import { MoonStar, Sun } from "@lucide/astro";
 ---
 
 <button class="theme-toggle" type="button" data-theme-toggle aria-label="Cambiar tema de color" title="Cambiar tema">
-  <MoonStar size={20} stroke-width={1.8} aria-hidden="true" />
+  <MoonStar class="theme-toggle__moon" size={20} stroke-width={1.8} aria-hidden="true" />
+  <Sun class="theme-toggle__sun" size={20} stroke-width={1.8} aria-hidden="true" />
   <span class="theme-toggle__label">Tema</span>
 </button>
 
@@ -12,7 +13,9 @@ import { MoonStar } from "@lucide/astro";
     const isDark = document.documentElement.dataset.theme === "dark";
     document.querySelectorAll<HTMLElement>("[data-theme-toggle]").forEach((button) => {
       button.setAttribute("aria-pressed", String(isDark));
-      button.setAttribute("title", isDark ? "Usar tema claro" : "Usar tema oscuro");
+      const label = isDark ? "Usar tema claro" : "Usar tema oscuro";
+      button.setAttribute("title", label);
+      button.setAttribute("aria-label", label);
     });
   };
 

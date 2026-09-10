@@ -1,0 +1,44 @@
+---
+import { Picture } from "astro:assets";
+import { ArrowUpRight, Clock3, MapPin } from "@lucide/astro";
+import type { CollectionEntry } from "astro:content";
+import { siteImages, type SiteImageKey } from "../data/images";
+
+interface Props {
+  tour: CollectionEntry<"tours">["data"];
+  index: number;
+  compact?: boolean;
+}
+
+const { tour, index, compact = false } = Astro.props;
+const image = siteImages[tour.imageKey as SiteImageKey];
+const activities = compact ? tour.activities.slice(0, 3) : tour.activities.slice(0, 5);
+const price = new Intl.NumberFormat("es-PE", { maximumFractionDigits: 0 }).format(tour.price);
+---
+
+<article class:list={["day-tour-poster", `day-tour-poster--${tour.posterTone}`, compact && "day-tour-poster--compact"]}>
+  <a class="day-tour-poster__media" href={`/tours/${tour.slug}/`} aria-label={`Ver detalles del tour ${tour.commercialName}`}>
+    <Picture
+      src={image.src}
+      formats={["avif"]}
+      fallbackFormat="webp"
+      widths={[420, 640, 860]}
+      sizes={compact ? "(min-width: 768px) 31vw, 82vw" : "(min-width: 768px) 44vw, 100vw"}
+      alt={image.alt}
+      loading="lazy"
+    />
+    <span class="day-tour-poster__number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+    <span class="day-tour-poster__price"><small>por persona</small><strong>S/{price}</strong></span>
+  </a>
+  <div class="day-tour-poster__body">
+    <div class="day-tour-poster__meta">
+      <span><Clock3 size={17} aria-hidden="true" /> {tour.scheduleStart} — {tour.scheduleEnd}</span>
+      <span><MapPin size={17} aria-hidden="true" /> {tour.durationLabel}</span>
+    </div>
+    <h3>{tour.commercialName}</h3>
+    <ol class="day-tour-poster__activities">
+      {activities.map((activity, activityIndex) => <li><span>{String(activityIndex + 1).padStart(2, "0")}</span>{activity}</li>)}
+    </ol>
+    <a class="day-tour-poster__link" href={`/tours/${tour.slug}/`}>Ver ruta completa <ArrowUpRight size={19} aria-hidden="true" /></a>
+  </div>
+</article>

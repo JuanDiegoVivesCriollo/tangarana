@@ -30,6 +30,10 @@ export const defaultWhatsAppMessage =
 export const tourWhatsAppMessage =
   "Hola, vi en la web el tour de 4 días por Oxapampa, Pozuzo, Villa Rica y Valle del Perené. Quisiera consultar disponibilidad y detalles.";
 
+export function tourInquiryMessage(tourName: string) {
+  return `Hola, vi en la web el tour ${tourName}. Quisiera consultar disponibilidad, punto de salida y qué incluye el precio.`;
+}
+
 export function whatsappUrl(message = defaultWhatsAppMessage) {
   return `https://wa.me/${siteConfig.primaryWhatsApp.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`;
 }

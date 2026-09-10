@@ -1,4 +1,5 @@
 ---
+kind: "multi-day"
 title: "Tour Selva Central 4 días: Oxapampa, Pozuzo, Villa Rica y Valle del Perené"
 slug: "selva-central-4-dias"
 commercialName: "Oxapampa — Naturaleza, Cultura y Aventura"
@@ -8,6 +9,7 @@ price: 370
 currency: "PEN"
 durationDays: 4
 durationNights: 3
+durationLabel: "4 días / 3 noches"
 destinations:
   - "Oxapampa"
   - "Pozuzo"
@@ -30,6 +32,9 @@ itinerary:
     destination: "Villa Rica"
   - day: 4
     destination: "Valle del Perené"
+activities: []
+imageKey: "hero"
+posterTone: "canopy"
 cover: "selva-central-montanas-hero"
 status: "published"
 ---

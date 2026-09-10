@@ -1,4 +1,7 @@
 ---
+import { Image } from "astro:assets";
+import logo from "../assets/brand/tangarana-logo.webp";
+
 interface Props {
   compact?: boolean;
 }
@@ -7,11 +10,12 @@ const { compact = false } = Astro.props;
 ---
 
 <a class="brand-mark" href="/" title="Volver al inicio">
-  <span class="brand-mark__seal" aria-hidden="true">T</span>
-  {!compact && (
-    <span class="brand-mark__copy">
-      <span class="brand-mark__name">Tangarana</span>
-      <span class="brand-mark__tour">Travel Tours</span>
-    </span>
-  )}
+  <Image
+    class:list={["brand-mark__logo", compact && "brand-mark__logo--compact"]}
+    src={logo}
+    alt="Tangarana Travel Tours"
+    width={compact ? 78 : 154}
+    height={compact ? 52 : 103}
+    loading="eager"
+  />
 </a>

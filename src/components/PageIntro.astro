@@ -1,6 +1,8 @@
 ---
+import { Picture } from "astro:assets";
 import BrandMark from "./BrandMark.astro";
 import Breadcrumbs from "./Breadcrumbs.astro";
+import { siteImages, type SiteImageKey } from "../data/images";
 
 interface Crumb { label: string; href?: string }
 interface Props {
@@ -9,21 +11,55 @@ interface Props {
   description: string;
   crumbs?: Crumb[];
   tone?: "forest" | "earth" | "river" | "mist";
+  variant?: "tours" | "destinations" | "about" | "contact" | "faq" | "legal";
+  image?: SiteImageKey;
+  secondaryImage?: SiteImageKey;
+  marker?: string;
+  note?: string;
 }
 
-const { eyebrow, title, description, crumbs = [], tone = "forest" } = Astro.props;
+const {
+  eyebrow,
+  title,
+  description,
+  crumbs = [],
+  tone = "forest",
+  variant = "legal",
+  image,
+  secondaryImage,
+  marker,
+  note,
+} = Astro.props;
+const primary = image ? siteImages[image] : undefined;
+const secondary = secondaryImage ? siteImages[secondaryImage] : undefined;
 ---
 
-<header class:list={["page-intro", `page-intro--${tone}`]}>
+<header class:list={["page-intro", `page-intro--${tone}`, `page-intro--${variant}`]}>
+  {primary && (
+    <div class="page-intro__media page-intro__media--primary">
+      <Picture src={primary.src} formats={["avif"]} fallbackFormat="webp" widths={[520, 760, 1080, 1440]} sizes="(min-width: 768px) 58vw, 100vw" alt={primary.alt} loading="eager" fetchpriority="high" />
+    </div>
+  )}
+  {secondary && (
+    <div class="page-intro__media page-intro__media--secondary">
+      <Picture src={secondary.src} formats={["avif"]} fallbackFormat="webp" widths={[320, 480, 680]} sizes="(min-width: 768px) 26vw, 45vw" alt={secondary.alt} loading="eager" />
+    </div>
+  )}
   <div class="page-intro__top container"><BrandMark /></div>
   <div class="page-intro__body container">
-    {crumbs.length > 0 && <Breadcrumbs items={crumbs} />}
-    <span class="eyebrow">{eyebrow}</span>
-    <h1>{title}</h1>
-    <p>{description}</p>
+    <div class="page-intro__copy">
+      {crumbs.length > 0 && <Breadcrumbs items={crumbs} />}
+      <span class="eyebrow">{eyebrow}</span>
+      <h1>{title}</h1>
+      <p>{description}</p>
+      {note && <span class="page-intro__note">{note}</span>}
+    </div>
   </div>
-  <svg class="page-intro__route" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M-40 230C160 40 300 320 485 130S790 20 1040 165" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="8 10" />
-    <circle cx="486" cy="130" r="7" fill="currentColor" />
-  </svg>
+  {marker && <span class="page-intro__marker" aria-hidden="true">{marker}</span>}
+  {variant === "destinations" && (
+    <svg class="page-intro__route" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M-40 230C160 40 300 320 485 130S790 20 1040 165" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="8 10" />
+      <circle cx="486" cy="130" r="7" fill="currentColor" />
+    </svg>
+  )}
 </header>

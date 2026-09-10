@@ -212,47 +212,18 @@ picture {
 .brand-mark {
   display: inline-flex;
   align-items: center;
-  gap: 0.72rem;
   color: inherit;
   text-decoration: none;
 }
 
-.brand-mark__seal {
-  display: grid;
-  width: 2.8rem;
-  height: 2.8rem;
-  place-items: center;
-  border: 1px solid currentColor;
-  border-radius: 50%;
-  font-family: "Manrope Variable", sans-serif;
-  font-size: 1.15rem;
-  font-weight: 850;
-  transform: rotate(-7deg);
+.brand-mark__logo {
+  width: clamp(7.5rem, 12vw, 9.65rem);
+  height: auto;
+  filter: drop-shadow(0 0.55rem 1.1rem rgba(0, 0, 0, 0.2));
 }
 
-.brand-mark__copy {
-  display: grid;
-  line-height: 1;
-}
-
-.brand-mark__name {
-  font-family: "Manrope Variable", sans-serif;
-  font-size: 1rem;
-  font-weight: 840;
-  letter-spacing: -0.03em;
-}
-
-.brand-mark__tour {
-  width: max-content;
-  margin-top: 0.28rem;
-  border-radius: 999px;
-  background: var(--accent-pink);
-  color: #fff;
-  padding: 0.16rem 0.48rem;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.brand-mark__logo--compact {
+  width: 4.9rem;
 }
 
 .expedition-nav {
@@ -677,6 +648,10 @@ picture {
 }
 
 @media (min-width: 64rem) {
+  .container {
+    width: min(calc(100% - 13rem), var(--content-max));
+  }
+
   .expedition-nav {
     display: block;
   }
@@ -849,6 +824,18 @@ picture {
 
 .theme-toggle__label {
   font-size: 0.68rem;
+}
+
+.theme-toggle__sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle__moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle__sun {
+  display: block;
 }
 
 .expedition-timeline {
@@ -1155,7 +1142,7 @@ picture {
 
 .page-intro {
   position: relative;
-  min-height: 34rem;
+  min-height: 41rem;
   overflow: hidden;
   background: var(--forest-950);
   color: #fff;
@@ -1174,45 +1161,423 @@ picture {
   color: var(--forest-950);
 }
 
-.page-intro__top {
+.page-intro__top,
+.page-intro__body {
   position: relative;
-  z-index: 2;
-  padding-top: 1.4rem;
+  z-index: 4;
+}
+
+.page-intro__top {
+  padding-top: 1.1rem;
 }
 
 .page-intro__body {
-  position: relative;
-  z-index: 2;
   display: grid;
+  min-height: 32rem;
   align-content: end;
-  min-height: 28rem;
   padding-block: 5rem;
 }
 
-.page-intro__body h1 {
-  max-width: 15ch;
-  margin-top: 1rem;
-  font-size: clamp(3rem, 8vw, 7.4rem);
+.page-intro__copy {
+  max-width: 47rem;
 }
 
-.page-intro__body > p {
-  max-width: 45rem;
-  margin-top: 1.5rem;
-  color: color-mix(in srgb, currentColor 72%, transparent);
+.page-intro__copy h1 {
+  max-width: 13ch;
+  margin-top: 0.9rem;
+  font-size: clamp(3rem, 8vw, 7.25rem);
+}
+
+.page-intro__copy > p {
+  max-width: 43rem;
+  margin-top: 1.35rem;
+  color: color-mix(in srgb, currentColor 75%, transparent);
   font-size: clamp(1.08rem, 1rem + 0.35vw, 1.35rem);
+}
+
+.page-intro__note {
+  display: inline-flex;
+  margin-top: 1.35rem;
+  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-radius: 999px;
+  padding: 0.48rem 0.85rem;
+  font-size: 0.88rem;
+  font-weight: 720;
+}
+
+.page-intro__media,
+.page-intro__media picture,
+.page-intro__media img {
+  position: absolute;
+}
+
+.page-intro__media picture,
+.page-intro__media img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.page-intro__media img {
+  object-fit: cover;
+}
+
+.page-intro__marker {
+  position: absolute;
+  z-index: 2;
+  right: -0.03em;
+  bottom: -0.27em;
+  color: rgba(255, 255, 255, 0.09);
+  font-family: "Manrope Variable", sans-serif;
+  font-size: clamp(15rem, 36vw, 36rem);
+  font-weight: 900;
+  letter-spacing: -0.12em;
+  line-height: 1;
+  pointer-events: none;
 }
 
 .page-intro__route {
   position: absolute;
+  z-index: 3;
   right: -5%;
   bottom: 0;
   width: 75%;
-  color: rgba(243, 201, 95, 0.35);
+  color: rgba(243, 201, 95, 0.48);
   pointer-events: none;
+}
+
+.page-intro--tours .page-intro__media--primary {
+  inset: 0 0 0 43%;
+}
+
+.page-intro--tours::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: linear-gradient(90deg, #071c17 0%, rgba(7, 28, 23, 0.97) 37%, rgba(7, 28, 23, 0.14) 82%), linear-gradient(0deg, rgba(7, 28, 23, 0.7), transparent 45%);
+}
+
+.page-intro--tours .page-intro__copy {
+  max-width: 39rem;
+}
+
+.page-intro--tours .page-intro__copy h1 {
+  font-size: clamp(3.5rem, 8vw, 7.5rem);
+}
+
+.page-intro--destinations {
+  background: #0a3133;
+}
+
+.page-intro--destinations .page-intro__media--primary {
+  inset: 0 0 0 35%;
+  clip-path: polygon(14% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.page-intro--destinations .page-intro__media--primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(10, 49, 51, 0.96), rgba(10, 49, 51, 0.03) 68%), linear-gradient(0deg, rgba(10, 49, 51, 0.62), transparent 55%);
+}
+
+.page-intro--destinations .page-intro__media--secondary {
+  z-index: 3;
+  right: clamp(2rem, 7vw, 7rem);
+  bottom: 2rem;
+  width: clamp(12rem, 24vw, 23rem);
+  height: clamp(10rem, 22vw, 17rem);
+  overflow: hidden;
+  border: 0.45rem solid #f8f7f0;
+  border-radius: 45% 0 45% 0;
+  box-shadow: var(--shadow-soft);
+}
+
+.page-intro--destinations .page-intro__copy {
+  max-width: 38rem;
+}
+
+.page-intro--about .page-intro__media--primary {
+  inset: 0;
+}
+
+.page-intro--about::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(38, 19, 12, 0.9), rgba(38, 19, 12, 0.24) 76%), linear-gradient(0deg, rgba(38, 19, 12, 0.78), transparent 65%);
+}
+
+.page-intro--about .page-intro__copy {
+  max-width: 44rem;
+  border-left: 0.22rem solid var(--sun-400);
+  padding-left: clamp(1.2rem, 3vw, 2.3rem);
+}
+
+.page-intro--contact {
+  background: var(--cream-100);
+  color: var(--forest-950);
+}
+
+.page-intro--contact .page-intro__media--primary {
+  inset: 1.5rem 2rem 1.5rem 53%;
+  overflow: hidden;
+  border-radius: 12rem 1rem 1rem 12rem;
+}
+
+.page-intro--contact .page-intro__media--primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(239, 237, 223, 0.82), transparent 45%);
+}
+
+.page-intro--contact .page-intro__copy {
+  max-width: 40rem;
+}
+
+.page-intro--contact .page-intro__marker,
+.page-intro--faq .page-intro__marker {
+  color: rgba(7, 28, 23, 0.08);
+}
+
+.page-intro--faq {
+  min-height: 37rem;
+  background: var(--cream-100);
+  color: var(--forest-950);
+}
+
+.page-intro--faq .page-intro__media--primary {
+  top: 2rem;
+  right: 3rem;
+  bottom: 2rem;
+  width: min(33vw, 29rem);
+  overflow: hidden;
+  border-radius: 50% 50% 0 0;
+}
+
+.page-intro--faq .page-intro__media--primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(7, 28, 23, 0.38), transparent 50%);
+}
+
+.page-intro--faq .page-intro__copy {
+  max-width: 42rem;
+}
+
+.page-intro--legal {
+  min-height: 32rem;
+}
+
+.page-intro--legal .page-intro__body {
+  min-height: 24rem;
 }
 
 .home-featured {
   padding-block: 0 var(--space-section);
+}
+
+.home-day-tours {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+}
+
+.home-day-tours__link {
+  margin-top: 2rem;
+}
+
+.day-tour-collection {
+  display: grid;
+  gap: 1.15rem;
+  margin-top: 3rem;
+}
+
+.day-tour-poster {
+  --poster-accent: var(--sun-400);
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem 3.2rem 0.8rem 0.8rem;
+  background: var(--surface-raised);
+  box-shadow: 0 1.1rem 3.5rem rgba(7, 28, 23, 0.09);
+}
+
+.day-tour-poster--river {
+  --poster-accent: #56b8bd;
+}
+
+.day-tour-poster--coffee {
+  --poster-accent: #bd7b4b;
+}
+
+.day-tour-poster--sun {
+  --poster-accent: #f3c95f;
+}
+
+.day-tour-poster--earth {
+  --poster-accent: #c48b69;
+}
+
+.day-tour-poster--canopy {
+  --poster-accent: #79a86b;
+}
+
+.day-tour-poster__media {
+  position: relative;
+  display: block;
+  min-height: 21rem;
+  overflow: hidden;
+  background: var(--forest-900);
+  color: #fff;
+  text-decoration: none;
+}
+
+.day-tour-poster__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(4, 20, 16, 0.75), transparent 58%);
+}
+
+.day-tour-poster__media picture,
+.day-tour-poster__media img {
+  width: 100%;
+  height: 100%;
+}
+
+.day-tour-poster__media picture {
+  position: absolute;
+  inset: 0;
+}
+
+.day-tour-poster__media img {
+  object-fit: cover;
+  transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.day-tour-poster:hover .day-tour-poster__media img {
+  transform: scale(1.035);
+}
+
+.day-tour-poster__number {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  left: 1rem;
+  display: grid;
+  width: 3.1rem;
+  height: 3.1rem;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  font-family: "Manrope Variable", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  backdrop-filter: blur(0.6rem);
+}
+
+.day-tour-poster__price {
+  position: absolute;
+  z-index: 2;
+  right: 1rem;
+  bottom: 1rem;
+  display: grid;
+  border-radius: 1.25rem 0.2rem 1.25rem 0.2rem;
+  background: var(--poster-accent);
+  color: var(--forest-950);
+  padding: 0.75rem 1rem;
+  line-height: 1;
+  text-align: right;
+}
+
+.day-tour-poster__price small {
+  font-size: 0.7rem;
+  font-weight: 720;
+  text-transform: uppercase;
+}
+
+.day-tour-poster__price strong {
+  margin-top: 0.25rem;
+  font-family: "Manrope Variable", sans-serif;
+  font-size: 1.65rem;
+}
+
+.day-tour-poster__body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  border-top: 0.35rem solid var(--poster-accent);
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.day-tour-poster__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.day-tour-poster__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+}
+
+.day-tour-poster h3 {
+  max-width: 17ch;
+  margin-top: 0.85rem;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+.day-tour-poster__activities {
+  display: grid;
+  gap: 0;
+  margin: 1.25rem 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.day-tour-poster__activities li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0.65rem;
+  border-top: 1px solid var(--line);
+  padding-block: 0.55rem;
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
+.day-tour-poster__activities li > span {
+  color: color-mix(in srgb, var(--poster-accent) 80%, var(--ink));
+  font-family: "Manrope Variable", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.day-tour-poster__link {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.4rem;
+  margin-top: auto;
+  font-family: "Manrope Variable", sans-serif;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.day-tour-poster__link:hover {
+  color: color-mix(in srgb, var(--poster-accent) 72%, var(--ink));
+}
+
+.display-section-title {
+  margin-top: 1rem;
+  font-size: clamp(2.4rem, 5vw, 4.8rem);
 }
 
 .home-destinations {
@@ -1467,15 +1832,15 @@ picture {
   color: #fff;
 }
 
-.tour-hero picture,
-.tour-hero img {
+.tour-hero > picture,
+.tour-hero > picture > img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
-.tour-hero img {
+.tour-hero > picture > img {
   object-fit: cover;
 }
 
@@ -1525,6 +1890,9 @@ picture {
 }
 
 .tour-hero__meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 999px;
   padding: 0.55rem 0.85rem;
@@ -1537,6 +1905,181 @@ picture {
   z-index: 3;
   right: max(1rem, calc((100% - var(--content-max)) / 2));
   bottom: 4rem;
+}
+
+.tour-hero--day {
+  min-height: max(42rem, 92svh);
+}
+
+.tour-hero--day > picture,
+.tour-hero--day > picture > img {
+  inset: 0 0 0 34%;
+  width: 66%;
+}
+
+.tour-hero--day::after {
+  background: linear-gradient(90deg, rgba(4, 19, 15, 0.99) 0%, rgba(4, 19, 15, 0.96) 34%, rgba(4, 19, 15, 0.24) 79%), linear-gradient(0deg, rgba(4, 19, 15, 0.86), transparent 58%);
+}
+
+.tour-hero--river::before,
+.tour-hero--coffee::before,
+.tour-hero--sun::before,
+.tour-hero--earth::before,
+.tour-hero--canopy::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  width: 34%;
+  height: 0.42rem;
+  background: var(--sun-400);
+}
+
+.tour-hero--river::before {
+  background: #56b8bd;
+}
+
+.tour-hero--coffee::before,
+.tour-hero--earth::before {
+  background: #bd7b4b;
+}
+
+.tour-hero--canopy::before {
+  background: #79a86b;
+}
+
+.tour-hero--day .tour-hero__inner {
+  max-width: var(--content-max);
+}
+
+.tour-hero--day h1 {
+  max-width: 10ch;
+  font-size: clamp(3.2rem, 7.7vw, 7.2rem);
+}
+
+.day-tour-route__layout {
+  display: grid;
+  gap: 3rem;
+}
+
+.day-tour-route__intro h2 {
+  max-width: 12ch;
+  margin-top: 1rem;
+  font-size: clamp(2.7rem, 6vw, 5.7rem);
+}
+
+.day-tour-route__intro > p {
+  max-width: 38rem;
+  margin-top: 1.25rem;
+  color: var(--muted);
+}
+
+.day-tour-route__schedule {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.6rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--surface-2);
+  padding: 0.8rem 1rem;
+}
+
+.day-tour-route__schedule > span {
+  display: grid;
+  line-height: 1.2;
+}
+
+.day-tour-route__schedule small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.day-tour-route__schedule strong {
+  font-family: "Manrope Variable", sans-serif;
+}
+
+.day-tour-route__stops {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.day-tour-route__stops li {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  gap: 0.8rem;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-block: 1rem;
+}
+
+.day-tour-route__stops li > span {
+  color: var(--amber-500);
+  font-family: "Manrope Variable", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.day-tour-route__stops strong {
+  font-family: "Manrope Variable", sans-serif;
+  font-size: clamp(1.02rem, 2vw, 1.2rem);
+}
+
+.day-tour-route__stops svg {
+  color: var(--leaf-500);
+}
+
+.day-tour-gallery {
+  display: grid;
+  background: var(--forest-950);
+}
+
+.day-tour-gallery figure {
+  position: relative;
+  min-height: 28rem;
+  margin: 0;
+  overflow: hidden;
+  color: #fff;
+}
+
+.day-tour-gallery picture,
+.day-tour-gallery img {
+  width: 100%;
+  height: 100%;
+}
+
+.day-tour-gallery picture {
+  position: absolute;
+  inset: 0;
+}
+
+.day-tour-gallery img {
+  object-fit: cover;
+}
+
+.day-tour-gallery figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(4, 19, 15, 0.78), transparent 55%);
+}
+
+.day-tour-gallery figcaption {
+  position: absolute;
+  z-index: 2;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  font-family: "Manrope Variable", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .tour-details-grid {
@@ -1590,15 +2133,15 @@ picture {
   color: #fff;
 }
 
-.destination-hero picture,
-.destination-hero img {
+.destination-hero > picture,
+.destination-hero > picture > img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
-.destination-hero img {
+.destination-hero > picture > img {
   object-fit: cover;
 }
 
@@ -1617,7 +2160,7 @@ picture {
   border-bottom-left-radius: 28% 12%;
 }
 
-.destination-page--editorial .destination-hero picture {
+.destination-page--editorial .destination-hero > picture {
   inset: 0 0 0 38%;
   width: 62%;
 }
@@ -1677,6 +2220,31 @@ picture {
 .destination-story__copy {
   max-width: 40rem;
   color: var(--muted);
+}
+
+.destination-highlights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.destination-highlights li {
+  border-top: 1px solid var(--line);
+  padding: 0.7rem 0.8rem 0.7rem 0;
+  color: var(--ink);
+  font-family: "Manrope Variable", sans-serif;
+  font-size: 0.92rem;
+  font-weight: 720;
+}
+
+.destination-story__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.4rem;
+  margin-top: 1rem;
 }
 
 .related-destinations {
@@ -1967,8 +2535,9 @@ picture {
 
 @media (max-width: 47.99rem) {
   .tour-hero .price-seal {
+    top: 1rem;
     right: 1rem;
-    bottom: 1.2rem;
+    bottom: auto;
     width: 7.6rem;
     height: 7.6rem;
   }
@@ -2047,12 +2616,168 @@ picture {
     box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.28);
   }
 
-  .destination-page--editorial .destination-hero picture {
+  .destination-page--editorial .destination-hero > picture {
     inset: 0;
     width: 100%;
   }
 
   .destination-page--editorial .destination-hero::after {
     background: linear-gradient(0deg, rgba(7, 28, 23, 0.95), rgba(7, 28, 23, 0.08) 80%);
+  }
+}
+
+@media (min-width: 48rem) {
+  .day-tour-collection {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .day-tour-collection:not(.day-tour-collection--compact) .day-tour-poster:first-child {
+    grid-template-columns: minmax(0, 1.16fr) minmax(18rem, 0.84fr);
+    grid-column: 1 / -1;
+  }
+
+  .day-tour-collection:not(.day-tour-collection--compact) .day-tour-poster:first-child .day-tour-poster__media {
+    min-height: 34rem;
+  }
+
+  .day-tour-collection--compact {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .day-tour-collection--compact .day-tour-poster__media {
+    min-height: 17rem;
+  }
+
+  .day-tour-collection--compact .day-tour-poster h3 {
+    font-size: clamp(1.55rem, 2.5vw, 2.2rem);
+  }
+
+  .day-tour-route__layout {
+    grid-template-columns: minmax(0, 0.88fr) minmax(24rem, 1.12fr);
+    align-items: start;
+  }
+
+  .day-tour-route__intro {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .day-tour-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .day-tour-gallery figure:first-child {
+    border-radius: 0 5rem 0 0;
+  }
+
+  .day-tour-gallery figure:last-child {
+    margin-top: 5rem;
+    border-radius: 5rem 0 0 0;
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .page-intro {
+    min-height: 43rem;
+  }
+
+  .page-intro__body {
+    min-height: 34rem;
+    padding-block: 4rem 5.5rem;
+  }
+
+  .page-intro__copy h1 {
+    font-size: clamp(2.8rem, 14vw, 4.4rem);
+  }
+
+  .page-intro--tours .page-intro__media--primary,
+  .page-intro--destinations .page-intro__media--primary,
+  .page-intro--about .page-intro__media--primary {
+    inset: 0;
+    width: 100%;
+    clip-path: none;
+  }
+
+  .page-intro--tours::after {
+    background: linear-gradient(0deg, rgba(7, 28, 23, 0.98) 0%, rgba(7, 28, 23, 0.75) 55%, rgba(7, 28, 23, 0.14) 100%);
+  }
+
+  .page-intro--destinations .page-intro__media--primary::after {
+    background: linear-gradient(0deg, rgba(10, 49, 51, 0.98), rgba(10, 49, 51, 0.12) 88%);
+  }
+
+  .page-intro--destinations .page-intro__media--secondary {
+    display: none;
+  }
+
+  .page-intro--about::after {
+    background: linear-gradient(0deg, rgba(38, 19, 12, 0.96), rgba(38, 19, 12, 0.12) 90%);
+  }
+
+  .page-intro--contact,
+  .page-intro--faq {
+    min-height: 47rem;
+  }
+
+  .page-intro--contact .page-intro__media--primary,
+  .page-intro--faq .page-intro__media--primary {
+    inset: 0 0 auto 0;
+    width: 100%;
+    height: 20rem;
+    border-radius: 0 0 5rem 0;
+  }
+
+  .page-intro--contact .page-intro__media--primary::after,
+  .page-intro--faq .page-intro__media--primary::after {
+    background: linear-gradient(0deg, var(--cream-100), transparent 48%);
+  }
+
+  .page-intro--contact .page-intro__body,
+  .page-intro--faq .page-intro__body {
+    min-height: 40rem;
+    padding-top: 19rem;
+    padding-bottom: 4rem;
+  }
+
+  .page-intro__marker {
+    font-size: 17rem;
+  }
+
+  .day-tour-collection--compact {
+    width: calc(100% + 1rem);
+    grid-auto-columns: minmax(84vw, 1fr);
+    grid-auto-flow: column;
+    margin-right: 0;
+    padding-right: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+  }
+
+  .day-tour-collection--compact .day-tour-poster {
+    scroll-snap-align: start;
+  }
+
+  .tour-hero--day > picture,
+  .tour-hero--day > picture > img {
+    inset: 0;
+    width: 100%;
+  }
+
+  .tour-hero--day::after {
+    background: linear-gradient(0deg, rgba(4, 19, 15, 0.98) 0%, rgba(4, 19, 15, 0.78) 58%, rgba(4, 19, 15, 0.08) 100%);
+  }
+
+  .tour-hero--day .tour-hero__inner {
+    min-height: 40rem;
+    padding-bottom: 9rem;
+  }
+
+  .tour-hero--day h1 {
+    font-size: clamp(3rem, 14vw, 4.6rem);
+  }
+
+  .day-tour-gallery figure {
+    min-height: 24rem;
   }
 }
