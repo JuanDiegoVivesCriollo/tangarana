@@ -1,0 +1,29 @@
+---
+import { MessageCircle } from "@lucide/astro";
+import { whatsappUrl, defaultWhatsAppMessage } from "../data/site";
+
+interface Props {
+  label?: string;
+  message?: string;
+  variant?: "inline" | "floating" | "sticky-mobile";
+  class?: string;
+}
+
+const {
+  label = "Hablar por WhatsApp",
+  message = defaultWhatsAppMessage,
+  variant = "inline",
+  class: className = "",
+} = Astro.props;
+---
+
+<a
+  class:list={["whatsapp-cta", `whatsapp-cta--${variant}`, className]}
+  href={whatsappUrl(message)}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={`${label} (se abre en una nueva pestaña)`}
+>
+  <MessageCircle size={20} stroke-width={1.8} aria-hidden="true" />
+  <span>{label}</span>
+</a>

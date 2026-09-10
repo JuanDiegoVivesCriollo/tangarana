@@ -1,0 +1,34 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageIntro from "../components/PageIntro.astro";
+import FAQAccordion from "../components/FAQAccordion.astro";
+import WhatsAppCTA from "../components/WhatsAppCTA.astro";
+import { faqItems } from "../data/faq";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: { "@type": "Answer", text: item.answer },
+  })),
+};
+---
+
+<BaseLayout title="Preguntas frecuentes sobre los tours" description="Respuestas sobre destinos, inclusiones, alojamiento, desayunos y contacto con Tangarana Travel Tours." schema={schema}>
+  <PageIntro
+    eyebrow="Antes de partir"
+    title="Preguntas frecuentes"
+    description="Aquí reunimos lo que ya puede responderse con certeza. Para disponibilidad y detalles de cada fecha, conversa directamente con el equipo."
+    crumbs={[{ label: "Inicio", href: "/" }, { label: "Preguntas frecuentes" }]}
+    tone="mist"
+  />
+  <section class="section">
+    <div class="container content-grid">
+      <div><span class="eyebrow">Información disponible</span><h2 style="font-size: clamp(2.4rem, 5vw, 4.8rem); margin-top: 1rem;">Respuestas claras para avanzar.</h2></div>
+      <FAQAccordion items={faqItems} headingLevel="h2" />
+    </div>
+  </section>
+  <section class="cta-route" aria-labelledby="faq-cta-title"><div class="container cta-route__inner"><div><span class="eyebrow">¿Quedó algo pendiente?</span><h2 id="faq-cta-title">Pregúntanos directamente.</h2></div><div class="cta-route__actions"><WhatsAppCTA /></div></div></section>
+</BaseLayout>

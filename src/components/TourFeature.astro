@@ -1,0 +1,46 @@
+---
+import { Picture } from "astro:assets";
+import { ArrowUpRight, BedDouble, CalendarDays } from "@lucide/astro";
+import PriceBadge from "./PriceBadge.astro";
+import ExpeditionTimeline from "./ExpeditionTimeline.astro";
+import { siteImages } from "../data/images";
+
+interface Props {
+  tour: {
+    slug: string;
+    commercialName: string;
+    price: number;
+    currency: string;
+    durationDays: number;
+    durationNights: number;
+    itinerary: { day: number; destination: string }[];
+  };
+}
+
+const { tour } = Astro.props;
+---
+
+<article class="tour-feature">
+  <div class="tour-feature__photo">
+    <Picture
+      src={siteImages.trail.src}
+      formats={["avif"]}
+      fallbackFormat="webp"
+      widths={[480, 720, 960]}
+      sizes="(min-width: 768px) 44vw, 100vw"
+      alt={siteImages.trail.alt}
+      loading="lazy"
+    />
+    <PriceBadge price={tour.price} currency={tour.currency} />
+  </div>
+  <div class="tour-feature__content">
+    <span class="eyebrow">Ruta 01 · Selva Central</span>
+    <h2>{tour.commercialName}</h2>
+    <div class="tour-feature__facts">
+      <span><CalendarDays size={19} aria-hidden="true" /> {tour.durationDays} días de ruta</span>
+      <span><BedDouble size={19} aria-hidden="true" /> {tour.durationNights} noches</span>
+    </div>
+    <ExpeditionTimeline stops={tour.itinerary} compact />
+    <a class="text-link" href={`/tours/${tour.slug}/`}>Ver itinerario completo <ArrowUpRight size={19} aria-hidden="true" /></a>
+  </div>
+</article>

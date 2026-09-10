@@ -1,0 +1,13 @@
+{
+  "name": "Tangarana Travel Tours",
+  "short_name": "Tangarana",
+  "description": "Tours por la Selva Central del Perú.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f7f0",
+  "theme_color": "#071c17",
+  "lang": "es-PE",
+  "icons": [
+    { "src": "/icons/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

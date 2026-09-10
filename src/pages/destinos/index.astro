@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageIntro from "../../components/PageIntro.astro";
+import DestinationEditorial from "../../components/DestinationEditorial.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
+import { destinations } from "../../data/destinations";
+---
+
+<BaseLayout
+  title="Destinos de la Selva Central"
+  description="Explora Oxapampa, Pozuzo, Villa Rica y el Valle del Perené dentro de la ruta de Tangarana Travel Tours."
+>
+  <PageIntro
+    eyebrow="Atlas Tangarana"
+    title="Destinos de la Selva Central"
+    description="Cuatro paradas conectadas por una misma ruta. Entra a cada destino para conocer su lugar dentro del recorrido."
+    crumbs={[{ label: "Inicio", href: "/" }, { label: "Destinos" }]}
+    tone="river"
+  />
+  <section class="section" aria-labelledby="destinations-map-title">
+    <div class="container">
+      <SectionHeading eyebrow="Elige una estación" title="No hay una sola forma de entrar a la selva." id="destinations-map-title">
+        <p>Las páginas están preparadas para crecer cuando Tangarana entregue nuevos datos e imágenes verificadas.</p>
+      </SectionHeading>
+      <DestinationEditorial destinations={destinations} />
+    </div>
+  </section>
+  <section class="cta-route" aria-labelledby="destinations-cta-title">
+    <div class="container cta-route__inner">
+      <div><span class="eyebrow">Arma tu recorrido</span><h2 id="destinations-cta-title">Empieza por una conversación.</h2></div>
+      <div class="cta-route__actions"><a class="button button-dark" href="/tours/">Ver el tour</a><WhatsAppCTA /></div>
+    </div>
+  </section>
+</BaseLayout>

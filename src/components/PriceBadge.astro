@@ -1,0 +1,13 @@
+---
+interface Props {
+  price: number;
+  currency?: string;
+}
+const { price, currency = "PEN" } = Astro.props;
+const symbol = currency === "PEN" ? "S/" : currency;
+---
+
+<div class="price-seal" aria-label={`${symbol} ${price} por persona`}>
+  <strong>{symbol} {price}</strong>
+  <span>por persona</span>
+</div>

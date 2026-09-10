@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.netlify/
+.DS_Store
+*.log
+src/assets/images/selva-central-montanas-hero.png
+src/assets/images/sendero-selva-central.png
+src/assets/images/rio-bosque-selva-central.png

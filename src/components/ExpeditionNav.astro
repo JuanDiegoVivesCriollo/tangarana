@@ -1,0 +1,33 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+import { mainNavigation } from "../data/navigation";
+
+const pathname = Astro.url.pathname;
+const current = (href: string) => href === "/" ? pathname === href : pathname.startsWith(href);
+---
+
+<nav class="expedition-nav" aria-label="Navegación principal">
+  <ul>
+    {mainNavigation.map((item) => (
+      <li>
+        <a href={item.href} aria-current={current(item.href) ? "page" : undefined}>{item.label}</a>
+      </li>
+    ))}
+    <li><ThemeToggle /></li>
+  </ul>
+</nav>
+
+<nav class="mobile-nav" aria-label="Navegación móvil">
+  {mainNavigation.slice(0, 3).map((item) => (
+    <a href={item.href} aria-current={current(item.href) ? "page" : undefined}>{item.label}</a>
+  ))}
+  <details>
+    <summary>Menú</summary>
+    <div class="mobile-menu">
+      <a href="/nosotros/">Nosotros</a>
+      <a href="/preguntas-frecuentes/">Preguntas frecuentes</a>
+      <a href="/contacto/">Contacto</a>
+      <ThemeToggle />
+    </div>
+  </details>
+</nav>

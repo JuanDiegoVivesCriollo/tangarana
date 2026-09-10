@@ -1,0 +1,44 @@
+---
+import BrandMark from "./BrandMark.astro";
+import { destinationNavigation, mainNavigation } from "../data/navigation";
+import { phoneHref, siteConfig, whatsappUrl } from "../data/site";
+---
+
+<footer class="footer-camp">
+  <div class="container">
+    <div class="footer-camp__top">
+      <div>
+        <BrandMark />
+        <p class="footer-camp__motto">El campamento final de una ruta que recién empieza.</p>
+      </div>
+      <div class="footer-camp__links">
+        <div>
+          <h2>Rutas</h2>
+          <ul>
+            {mainNavigation.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+            <li><a href="/preguntas-frecuentes/">Preguntas frecuentes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Destinos</h2>
+          <ul>{destinationNavigation.map((item) => <li><a href={item.href}>{item.label}</a></li>)}</ul>
+        </div>
+        <div>
+          <h2>Contacto</h2>
+          <ul>
+            <li><a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">WhatsApp {siteConfig.primaryWhatsAppDisplay}</a></li>
+            {siteConfig.phones.slice(1).map((phone) => <li><a href={phoneHref(phone)}>{phone.replace("+51", "+51 ")}</a></li>)}
+            <li><a href={siteConfig.socials.instagram} target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li><a href={siteConfig.socials.facebook} target="_blank" rel="noopener noreferrer">Facebook</a></li>
+            <li><a href={siteConfig.socials.tiktok} target="_blank" rel="noopener noreferrer">TikTok</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-camp__base">
+      <span>{siteConfig.location.display}</span>
+      <span>© {new Date().getFullYear()} Tangarana Travel Tours</span>
+      <span><a href="/politica-de-privacidad/">Privacidad</a> · <a href="/terminos-y-condiciones/">Términos</a></span>
+    </div>
+  </div>
+</footer>

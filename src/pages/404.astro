@@ -1,0 +1,9 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Ruta no encontrada" description="La página que buscas no forma parte de esta ruta." noindex>
+  <section class="error-route">
+    <div class="error-route__inner"><span class="error-route__code" aria-hidden="true">404</span><span class="eyebrow">Ruta interrumpida</span><h1>Te saliste de la ruta</h1><p>Parece que este sendero no lleva a ningún destino.</p><div class="error-route__actions"><a class="button button-primary" href="/">Volver al inicio</a><a class="button button-secondary" href="/tours/">Ver tours</a></div></div>
+  </section>
+</BaseLayout>

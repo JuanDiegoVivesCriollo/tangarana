@@ -1,0 +1,26 @@
+---
+interface Stop {
+  day: number;
+  destination: string;
+}
+
+interface Props {
+  stops: Stop[];
+  compact?: boolean;
+}
+
+const { stops, compact = false } = Astro.props;
+---
+
+<ol class:list={["expedition-timeline", compact && "expedition-timeline--compact"]}>
+  {stops.map((stop, index) => (
+    <li style={`--stop-index: ${index}`}>
+      <span class="expedition-timeline__marker" aria-hidden="true">{String(stop.day).padStart(2, "0")}</span>
+      <div>
+        <small>Día {stop.day}</small>
+        <h3>{stop.destination}</h3>
+        {!compact && <p>Jornada dedicada a conocer el destino y sus principales experiencias según el itinerario coordinado por Tangarana Travel Tours.</p>}
+      </div>
+    </li>
+  ))}
+</ol>

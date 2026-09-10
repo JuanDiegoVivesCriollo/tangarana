@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageIntro from "../components/PageIntro.astro";
+import WhatsAppCTA from "../components/WhatsAppCTA.astro";
+import { SITE_URL, phoneHref, siteConfig } from "../data/site";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "TravelAgency",
+  name: siteConfig.name,
+  url: SITE_URL,
+  telephone: siteConfig.primaryWhatsApp,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: siteConfig.location.street,
+    addressLocality: siteConfig.location.city,
+    addressRegion: siteConfig.location.region,
+    addressCountry: siteConfig.location.country,
+  },
+  sameAs: Object.values(siteConfig.socials),
+};
+---
+
+<BaseLayout title="Contacto" description="Contacta a Tangarana Travel Tours por WhatsApp, teléfono o redes sociales en Oxapampa, Pasco." schema={schema}>
+  <PageIntro
+    eyebrow="Contacto directo"
+    title="Tu ruta comienza aquí"
+    description="Consulta disponibilidad y detalles del tour por WhatsApp. Te atenderá directamente el equipo de Tangarana Travel Tours."
+    crumbs={[{ label: "Inicio", href: "/" }, { label: "Contacto" }]}
+  />
+  <section class="section" aria-labelledby="contact-title">
+    <div class="container contact-board">
+      <div class="contact-board__primary"><span class="eyebrow">Canal principal</span><h2 id="contact-title">Escríbenos por WhatsApp.</h2><p>Cuéntanos qué fecha tienes en mente y qué información necesitas confirmar antes de viajar.</p><WhatsAppCTA label={`WhatsApp ${siteConfig.primaryWhatsAppDisplay}`} /></div>
+      <dl class="contact-board__details">
+        <div><dt>Dirección</dt><dd>{siteConfig.location.display}</dd></div>
+        {siteConfig.phones.map((phone, index) => <div><dt>{index === 0 ? "WhatsApp principal" : `Teléfono ${index + 1}`}</dt><dd><a href={phoneHref(phone)}>{phone.replace("+51", "+51 ")}</a></dd></div>)}
+        <div><dt>Instagram</dt><dd><a href={siteConfig.socials.instagram} target="_blank" rel="noopener noreferrer">@tangaranatraveltours_2026</a></dd></div>
+        <div><dt>Facebook</dt><dd><a href={siteConfig.socials.facebook} target="_blank" rel="noopener noreferrer">Tangarana Travel Tours</a></dd></div>
+        <div><dt>TikTok</dt><dd><a href={siteConfig.socials.tiktok} target="_blank" rel="noopener noreferrer">@tangarana_travel_tours</a></dd></div>
+      </dl>
+    </div>
+  </section>
+</BaseLayout>

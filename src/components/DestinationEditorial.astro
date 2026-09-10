@@ -1,0 +1,37 @@
+---
+import { Picture } from "astro:assets";
+import { ArrowUpRight } from "@lucide/astro";
+import type { Destination } from "../data/destinations";
+import { siteImages } from "../data/images";
+
+interface Props {
+  destinations: Destination[];
+}
+
+const { destinations } = Astro.props;
+---
+
+<div class="destination-editorial">
+  {destinations.map((destination) => {
+    const image = siteImages[destination.image];
+    return (
+      <article class:list={["destination-tile", `destination-tile--${destination.layout}`]}>
+        <Picture
+          src={image.src}
+          formats={["avif"]}
+          fallbackFormat="webp"
+          widths={[420, 640, 860]}
+          sizes="(min-width: 900px) 42vw, 100vw"
+          alt={image.alt}
+          loading="lazy"
+        />
+        <div class="destination-tile__veil"></div>
+        <div class="destination-tile__copy">
+          <span>{destination.marker} · {destination.eyebrow}</span>
+          <h3>{destination.name}</h3>
+          <a href={`/destinos/${destination.slug}/`} aria-label={`Explorar ${destination.name}`}>Explorar <ArrowUpRight size={20} aria-hidden="true" /></a>
+        </div>
+      </article>
+    );
+  })}
+</div>

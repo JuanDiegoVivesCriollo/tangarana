@@ -1,0 +1,43 @@
+---
+import { Picture } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageIntro from "../components/PageIntro.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import WhatsAppCTA from "../components/WhatsAppCTA.astro";
+import { siteImages } from "../data/images";
+---
+
+<BaseLayout
+  title="Sobre Tangarana Travel Tours"
+  description="Conoce el propósito de Tangarana Travel Tours y su forma de acompañar rutas por la Selva Central del Perú."
+>
+  <PageIntro
+    eyebrow="Quiénes somos"
+    title="Cercanía para recorrer la Selva Central"
+    description="Tangarana Travel Tours conecta a viajeros con una ruta por Oxapampa, Pozuzo, Villa Rica y el Valle del Perené."
+    crumbs={[{ label: "Inicio", href: "/" }, { label: "Nosotros" }]}
+    tone="earth"
+  />
+  <section class="section" aria-labelledby="purpose-title">
+    <div class="container route-values">
+      <div>
+        <SectionHeading eyebrow="Nuestro propósito" title="Acompañar el viaje desde la primera consulta." id="purpose-title">
+          <p>La propuesta de Tangarana parte de información clara, contacto directo y una ruta que se entiende antes de comenzar.</p>
+        </SectionHeading>
+        <div class="info-note">La historia de la empresa, el equipo, la misión y la visión se incorporarán cuando sean confirmados por Tangarana Travel Tours.</div>
+      </div>
+      <div class="editorial-gallery">
+        <Picture src={siteImages.trail.src} formats={["avif"]} fallbackFormat="webp" widths={[420, 680, 900]} sizes="(min-width: 768px) 30vw, 58vw" alt={siteImages.trail.alt} loading="lazy" />
+        <Picture src={siteImages.hero.src} formats={["avif"]} fallbackFormat="webp" widths={[320, 520, 700]} sizes="(min-width: 768px) 22vw, 38vw" alt={siteImages.hero.alt} loading="lazy" />
+        <Picture src={siteImages.river.src} formats={["avif"]} fallbackFormat="webp" widths={[320, 520, 700]} sizes="(min-width: 768px) 22vw, 38vw" alt={siteImages.river.alt} loading="lazy" />
+      </div>
+    </div>
+  </section>
+  <section class="section section--forest" aria-labelledby="way-title">
+    <div class="container content-grid">
+      <div><span class="eyebrow">Forma de acompañar</span><h2 id="way-title" style="font-size: clamp(2.4rem, 5vw, 4.8rem); margin-top: 1rem;">Una ruta explicada sin rodeos.</h2></div>
+      <div class="content-copy" style="color: rgba(255,255,255,.72);"><p>La web muestra el precio, la duración, los destinos y las inclusiones disponibles. Todo lo que aún necesite confirmación se conversa directamente con el equipo.</p><p>Así puedes decidir con mejor contexto y mantener un canal humano abierto antes de viajar.</p></div>
+    </div>
+  </section>
+  <section class="cta-route" aria-labelledby="about-cta-title"><div class="container cta-route__inner"><div><span class="eyebrow">Hablemos</span><h2 id="about-cta-title">Tu consulta abre la ruta.</h2></div><div class="cta-route__actions"><WhatsAppCTA /></div></div></section>
+</BaseLayout>

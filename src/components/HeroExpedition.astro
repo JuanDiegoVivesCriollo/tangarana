@@ -1,0 +1,44 @@
+---
+import { Picture } from "astro:assets";
+import { ArrowDown, ArrowRight } from "@lucide/astro";
+import BrandMark from "./BrandMark.astro";
+import WhatsAppCTA from "./WhatsAppCTA.astro";
+import { siteImages } from "../data/images";
+---
+
+<header class="hero">
+  <Picture
+    src={siteImages.hero.src}
+    formats={["avif"]}
+    fallbackFormat="webp"
+    widths={[640, 960, 1280, 1600, 1920]}
+    sizes="100vw"
+    alt={siteImages.hero.alt}
+    loading="eager"
+    fetchpriority="high"
+    class="hero-media"
+  />
+  <svg class="topography" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
+    <g fill="none" stroke="currentColor" stroke-width="1">
+      <path d="M-90 170C120 30 205 300 422 150S775 30 960 170s265 12 350-55" />
+      <path d="M-100 220C110 80 225 350 445 200S785 80 975 225s265 10 345-60" />
+      <path d="M-100 270C100 130 245 400 470 250S800 130 990 280s260 8 340-55" />
+      <path d="M-120 525C80 370 205 650 400 505s360-135 540 20 280 35 370-50" />
+      <path d="M-130 575C70 420 225 700 425 555s350-125 530 25 285 30 380-55" />
+    </g>
+  </svg>
+  <div class="hero__brand"><BrandMark /></div>
+  <div class="hero__inner container">
+    <div class="hero__content">
+      <span class="eyebrow">Tours por la Selva Central del Perú</span>
+      <h1>Abre el mapa. Empieza la ruta.</h1>
+      <p class="hero__lead">Explora Oxapampa, Pozuzo, Villa Rica y el Valle del Perené con Tangarana Travel Tours.</p>
+      <div class="hero__actions">
+        <a class="button button-primary" href="/tours/">Ver tours <ArrowRight size={20} aria-hidden="true" /></a>
+        <WhatsAppCTA label="Consultar por WhatsApp" class="button button-secondary" />
+      </div>
+      <span class="route-stamp">Ruta 01 · Selva Central · 4 días</span>
+    </div>
+  </div>
+  <a class="scroll-cue" href="#ruta">Comienza la ruta <ArrowDown size={18} aria-hidden="true" /></a>
+</header>

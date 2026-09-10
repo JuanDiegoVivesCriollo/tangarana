@@ -1,0 +1,107 @@
+---
+import { getCollection } from "astro:content";
+import { Picture } from "astro:assets";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BrandMark from "../../components/BrandMark.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import PriceBadge from "../../components/PriceBadge.astro";
+import IncludesBand from "../../components/IncludesBand.astro";
+import ExpeditionTimeline from "../../components/ExpeditionTimeline.astro";
+import FAQAccordion from "../../components/FAQAccordion.astro";
+import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
+import { siteImages } from "../../data/images";
+import { SITE_URL, siteConfig, tourWhatsAppMessage } from "../../data/site";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("tours", ({ data }) => data.status === "published");
+  return entries.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const tour = entry.data;
+const canonicalPath = `/tours/${tour.slug}/`;
+const tourFaq = [
+  { question: "¿Cómo confirmo disponibilidad?", answer: "La disponibilidad se confirma directamente por WhatsApp con el equipo de Tangarana Travel Tours." },
+  { question: "¿Qué alojamiento incluye?", answer: "El paquete incluye alojamiento durante 4 días y 3 noches. El detalle se confirma al coordinar el viaje." },
+  { question: "¿Qué actividades se realizan cada día?", answer: "Las experiencias concretas de cada jornada se informan en el itinerario coordinado con Tangarana Travel Tours." },
+];
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristTrip",
+    name: tour.title,
+    description: tour.seoDescription,
+    itinerary: tour.destinations.map((name) => ({ "@type": "Place", name })),
+    provider: { "@type": "TravelAgency", name: siteConfig.name, url: SITE_URL },
+    offers: { "@type": "Offer", price: tour.price, priceCurrency: tour.currency, url: new URL(canonicalPath, SITE_URL).toString() },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: tourFaq.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })),
+  },
+];
+---
+
+<BaseLayout title={tour.seoTitle} description={tour.seoDescription} canonicalPath={canonicalPath} schema={schema} socialImage="/og/tour-selva-central-4-dias.png">
+  <header class="tour-hero">
+    <Picture src={siteImages.hero.src} formats={["avif"]} fallbackFormat="webp" widths={[640, 960, 1280, 1600, 1920]} sizes="100vw" alt={siteImages.hero.alt} loading="eager" fetchpriority="high" />
+    <div class="tour-hero__top container"><BrandMark /></div>
+    <div class="tour-hero__inner container">
+      <Breadcrumbs items={[{ label: "Inicio", href: "/" }, { label: "Tours", href: "/tours/" }, { label: tour.commercialName }]} />
+      <span class="eyebrow">Ruta 01 · Selva Central</span>
+      <h1>{tour.commercialName}</h1>
+      <p class="tour-hero__lead">{tour.seoDescription}</p>
+      <div class="tour-hero__meta"><span>{tour.durationDays} días</span><span>{tour.durationNights} noches</span><span>{tour.destinations.length} destinos</span></div>
+    </div>
+    <PriceBadge price={tour.price} currency={tour.currency} />
+  </header>
+
+  <section class="section" aria-labelledby="includes-title">
+    <div class="container tour-details-grid">
+      <div class="tour-details-grid__intro">
+        <span class="eyebrow">Todo a la vista</span>
+        <h2 id="includes-title">Qué incluye el paquete.</h2>
+        <p>El precio publicado corresponde a la información disponible del paquete. Fechas, disponibilidad y detalles adicionales se confirman directamente antes del viaje.</p>
+      </div>
+      <IncludesBand labels={tour.includes} />
+    </div>
+  </section>
+
+  <section class="section section--forest" aria-labelledby="itinerary-title">
+    <div class="container tour-route-panel">
+      <div class="tour-route-panel__head">
+        <div><span class="eyebrow">Itinerario</span><h2 id="itinerary-title">Cuatro días sobre el mapa.</h2></div>
+        <PriceBadge price={tour.price} currency={tour.currency} />
+      </div>
+      <ExpeditionTimeline stops={tour.itinerary} />
+    </div>
+  </section>
+
+  <section class="section section--soft" aria-labelledby="stay-title">
+    <div class="container content-grid">
+      <div class="content-copy">
+        <span class="eyebrow">Estancia y desayuno</span>
+        <h2 id="stay-title">Descanso contemplado en la ruta.</h2>
+        <p>El paquete incluye alojamiento por 4 días y 3 noches, además de desayunos. El hospedaje específico y cualquier condición adicional deben confirmarse por WhatsApp.</p>
+      </div>
+      <div class="info-note"><strong>Información transparente.</strong> No se muestran horarios, puntos de salida, actividades ni políticas que todavía no han sido confirmados por la empresa.</div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="tour-faq-title">
+    <div class="container content-grid">
+      <div><span class="eyebrow">Antes de consultar</span><h2 id="tour-faq-title" style="font-size: clamp(2.4rem, 5vw, 4.8rem); margin-top: 1rem;">Preguntas sobre este tour.</h2></div>
+      <FAQAccordion items={tourFaq} />
+    </div>
+  </section>
+
+  <section class="cta-route" aria-labelledby="book-title">
+    <div class="container cta-route__inner">
+      <div><span class="eyebrow">Tu siguiente paso</span><h2 id="book-title">Consulta la disponibilidad.</h2></div>
+      <div class="cta-route__actions"><WhatsAppCTA label="Escribir por WhatsApp" message={tourWhatsAppMessage} /></div>
+    </div>
+  </section>
+  <WhatsAppCTA label="Consultar disponibilidad por WhatsApp" message={tourWhatsAppMessage} variant="sticky-mobile" />
+  <div class="sticky-tour-cta"><WhatsAppCTA label="Consultar disponibilidad" message={tourWhatsAppMessage} /></div>
+</BaseLayout>

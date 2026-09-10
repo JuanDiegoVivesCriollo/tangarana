@@ -1,0 +1,31 @@
+---
+import { BusFront, BedDouble, Coffee, Map, UserRoundCheck, LifeBuoy } from "@lucide/astro";
+
+const items = [
+  BusFront,
+  BedDouble,
+  Coffee,
+  Map,
+  UserRoundCheck,
+  LifeBuoy,
+];
+
+interface Props {
+  labels?: string[];
+}
+
+const { labels = ["Transporte turístico", "Alojamiento", "Desayunos", "4 días de tours", "Guía profesional", "Asistencia permanente"] } = Astro.props;
+---
+
+<ul class="includes-band">
+  {labels.map((label, index) => {
+    const Icon = items[index] ?? Map;
+    return (
+    <li>
+      <span class="includes-band__index">{String(index + 1).padStart(2, "0")}</span>
+      <Icon size={25} stroke-width={1.5} aria-hidden="true" />
+      <span>{label}</span>
+    </li>
+    );
+  })}
+</ul>

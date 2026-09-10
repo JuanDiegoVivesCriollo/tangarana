@@ -1,0 +1,30 @@
+---
+import { MoonStar } from "@lucide/astro";
+---
+
+<button class="theme-toggle" type="button" data-theme-toggle aria-label="Cambiar tema de color" title="Cambiar tema">
+  <MoonStar size={20} stroke-width={1.8} aria-hidden="true" />
+  <span class="theme-toggle__label">Tema</span>
+</button>
+
+<script>
+  const syncThemeButtons = () => {
+    const isDark = document.documentElement.dataset.theme === "dark";
+    document.querySelectorAll<HTMLElement>("[data-theme-toggle]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(isDark));
+      button.setAttribute("title", isDark ? "Usar tema claro" : "Usar tema oscuro");
+    });
+  };
+
+  document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]").forEach((button) => {
+    if (button.dataset.ready === "true") return;
+    button.dataset.ready = "true";
+    button.addEventListener("click", () => {
+      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem("tangarana-theme", next);
+      syncThemeButtons();
+    });
+  });
+  syncThemeButtons();
+</script>

@@ -1,0 +1,29 @@
+---
+import BrandMark from "./BrandMark.astro";
+import Breadcrumbs from "./Breadcrumbs.astro";
+
+interface Crumb { label: string; href?: string }
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  crumbs?: Crumb[];
+  tone?: "forest" | "earth" | "river" | "mist";
+}
+
+const { eyebrow, title, description, crumbs = [], tone = "forest" } = Astro.props;
+---
+
+<header class:list={["page-intro", `page-intro--${tone}`]}>
+  <div class="page-intro__top container"><BrandMark /></div>
+  <div class="page-intro__body container">
+    {crumbs.length > 0 && <Breadcrumbs items={crumbs} />}
+    <span class="eyebrow">{eyebrow}</span>
+    <h1>{title}</h1>
+    <p>{description}</p>
+  </div>
+  <svg class="page-intro__route" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M-40 230C160 40 300 320 485 130S790 20 1040 165" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="8 10" />
+    <circle cx="486" cy="130" r="7" fill="currentColor" />
+  </svg>
+</header>

@@ -1,0 +1,31 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageIntro from "../../components/PageIntro.astro";
+import TourFeature from "../../components/TourFeature.astro";
+import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
+const tours = await getCollection("tours", ({ data }) => data.status === "published");
+---
+
+<BaseLayout
+  title="Tours por la Selva Central del Perú"
+  description="Explora tours por Oxapampa, Pozuzo, Villa Rica y el Valle del Perené con información clara de duración, precio e inclusiones."
+>
+  <PageIntro
+    eyebrow="Rutas Tangarana"
+    title="Tours por la Selva Central del Perú"
+    description="Viajes de varios días para recorrer Oxapampa, Pozuzo, Villa Rica y el Valle del Perené con acompañamiento durante la ruta."
+    crumbs={[{ label: "Inicio", href: "/" }, { label: "Tours" }]}
+  />
+  <section class="section" aria-label="Tours disponibles">
+    <div class="container tour-list-single">
+      {tours.map((entry) => <TourFeature tour={entry.data} />)}
+    </div>
+  </section>
+  <section class="cta-route" aria-labelledby="tour-help-title">
+    <div class="container cta-route__inner">
+      <div><span class="eyebrow">¿Tienes una fecha en mente?</span><h2 id="tour-help-title">Conversemos sobre tu ruta.</h2></div>
+      <div class="cta-route__actions"><WhatsAppCTA label="Consultar disponibilidad" /></div>
+    </div>
+  </section>
+</BaseLayout>

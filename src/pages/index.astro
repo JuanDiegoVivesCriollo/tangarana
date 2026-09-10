@@ -1,0 +1,143 @@
+---
+import { getCollection } from "astro:content";
+import { Picture } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeroExpedition from "../components/HeroExpedition.astro";
+import TourFeature from "../components/TourFeature.astro";
+import DestinationEditorial from "../components/DestinationEditorial.astro";
+import IncludesBand from "../components/IncludesBand.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import FAQAccordion from "../components/FAQAccordion.astro";
+import WhatsAppCTA from "../components/WhatsAppCTA.astro";
+import { destinations } from "../data/destinations";
+import { faqItems } from "../data/faq";
+import { siteImages } from "../data/images";
+import { SITE_URL, siteConfig } from "../data/site";
+
+const [tourEntry] = await getCollection("tours", ({ data }) => data.status === "published" && data.featured);
+const tour = tourEntry.data;
+const homeFaq = faqItems.slice(0, 4);
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: SITE_URL,
+    inLanguage: "es-PE",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": ["TravelAgency", "Organization"],
+    name: siteConfig.name,
+    url: SITE_URL,
+    telephone: siteConfig.primaryWhatsApp,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: siteConfig.location.street,
+      addressLocality: siteConfig.location.city,
+      addressRegion: siteConfig.location.region,
+      addressCountry: siteConfig.location.country,
+    },
+    sameAs: Object.values(siteConfig.socials),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: homeFaq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  },
+];
+---
+
+<BaseLayout
+  title="Tangarana Travel Tours | Tours en Oxapampa y Selva Central"
+  description="Tours por Oxapampa, Pozuzo, Villa Rica y el Valle del Perené. Recorre la Selva Central del Perú con Tangarana Travel Tours."
+  schema={schema}
+>
+  <HeroExpedition />
+
+  <section class="intro-route" id="ruta" aria-labelledby="route-title">
+    <div class="container">
+      <div class="intro-route__grid">
+        <div>
+          <span class="eyebrow">Cuatro estaciones</span>
+          <h2 id="route-title">Una ruta, cuatro formas de mirar la selva.</h2>
+        </div>
+        <div class="intro-route__copy">
+          <p>Descubre la Selva Central a tu ritmo. El recorrido conecta cuatro destinos en una experiencia de 4 días y 3 noches.</p>
+          <p>Los detalles de cada jornada se coordinan directamente con el equipo, con precio e inclusiones visibles desde el inicio.</p>
+        </div>
+      </div>
+      <ol class="route-preview">
+        {tour.itinerary.map((stop) => <li><small>Día {String(stop.day).padStart(2, "0")}</small><strong>{stop.destination}</strong></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="home-featured" aria-label="Tour destacado">
+    <div class="container"><TourFeature tour={tour} /></div>
+  </section>
+
+  <section class="section section--forest" aria-labelledby="included-title">
+    <div class="container route-values">
+      <div class="route-values__copy">
+        <span class="eyebrow">Viaja con claridad</span>
+        <h2 id="included-title">Lo esencial, incluido en la ruta.</h2>
+        <p>Una experiencia de varios días con acompañamiento, movilidad y estancia indicados de forma directa. Los detalles adicionales se confirman antes del viaje.</p>
+      </div>
+      <IncludesBand labels={tour.includes} />
+    </div>
+  </section>
+
+  <section class="home-destinations" aria-labelledby="destinations-title">
+    <div class="container">
+      <SectionHeading eyebrow="Elige tu próxima parada" title="La Selva Central no se recorre en línea recta." id="destinations-title">
+        <p>Cada estación cambia el ritmo visual de la ruta. Abre un destino y continúa explorando.</p>
+      </SectionHeading>
+      <DestinationEditorial destinations={destinations} />
+    </div>
+  </section>
+
+  <section class="section section--soft" aria-labelledby="gallery-title">
+    <div class="container route-values">
+      <div>
+        <SectionHeading eyebrow="Cuaderno de campo" title="Paisajes para imaginar el recorrido." id="gallery-title">
+          <p>Estas imágenes son referenciales durante el desarrollo. La estructura está lista para incorporar el archivo fotográfico real de Tangarana.</p>
+        </SectionHeading>
+      </div>
+      <div class="editorial-gallery" aria-label="Galería de paisajes referenciales de la Selva Central">
+        <Picture src={siteImages.trail.src} formats={["avif"]} fallbackFormat="webp" widths={[360, 600, 780]} sizes="(min-width: 768px) 28vw, 58vw" alt={siteImages.trail.alt} loading="lazy" />
+        <Picture src={siteImages.hero.src} formats={["avif"]} fallbackFormat="webp" widths={[320, 520, 700]} sizes="(min-width: 768px) 23vw, 38vw" alt={siteImages.hero.alt} loading="lazy" />
+        <Picture src={siteImages.river.src} formats={["avif"]} fallbackFormat="webp" widths={[320, 520, 700]} sizes="(min-width: 768px) 23vw, 38vw" alt={siteImages.river.alt} loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-title">
+    <div class="container content-grid">
+      <SectionHeading eyebrow="Antes de partir" title="Preguntas para preparar tu ruta." id="faq-title">
+        <p>Respuestas claras con los datos disponibles. Si necesitas confirmar fechas o condiciones, escríbenos por WhatsApp.</p>
+      </SectionHeading>
+      <div>
+        <FAQAccordion items={homeFaq} />
+        <a class="text-link" href="/preguntas-frecuentes/">Ver todas las preguntas</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-route" aria-labelledby="cta-title">
+    <div class="container cta-route__inner">
+      <div>
+        <span class="eyebrow">Siguiente estación</span>
+        <h2 id="cta-title">La Selva Central te espera.</h2>
+      </div>
+      <div class="cta-route__actions">
+        <a class="button button-dark" href="/tours/">Ver tours</a>
+        <WhatsAppCTA label="Hablar por WhatsApp" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
