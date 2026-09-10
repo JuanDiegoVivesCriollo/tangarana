@@ -113,8 +113,23 @@ Prompts finales: fotografía editorial natural de bosque nublado, sendero y río
 - `robots.txt`, `llms.txt` y `llms-full.txt` incluidos.
 - JSON-LD para sitio, agencia, tour, breadcrumbs y preguntas frecuentes.
 - Metadatos Open Graph y Twitter con imágenes específicas.
+- H1, titles y metadescripciones únicos según la intención de búsqueda de cada URL.
+- Landings comerciales independientes en `/tours/pozuzo/`, `/tours/villa-rica/`, `/tours/perene/`, `/tours/chontabamba/`, `/tours/catarata-rio-tigre/` y `/tours/selva-central-4-dias/`.
+- Páginas informativas independientes en `/destinos/` para evitar duplicar la intención comercial de los tours.
+- Redirecciones de compatibilidad desde las cuatro URLs largas utilizadas antes de la refactorización.
 - Páginas legales marcadas como borrador y `noindex` hasta revisión.
 - La arquitectura de blog está preparada en `src/content/blog/`; no hay artículos ficticios publicados.
+
+## Pasos después del deploy
+
+1. Añadir el dominio final a Google Search Console.
+2. Verificar la propiedad del dominio.
+3. Enviar `https://DOMINIO-FINAL/sitemap-index.xml`.
+4. Inspeccionar la home y `/tours/`.
+5. Inspeccionar cada landing comercial de tour.
+6. Solicitar indexación cuando el dominio definitivo esté publicado.
+7. Revisar cobertura e indexación después de la publicación.
+8. Conectar Google Business Profile cuando la empresa lo tenga configurado y verificado.
 
 ## Tema y accesibilidad
 
@@ -124,25 +139,28 @@ Prompts finales: fotografía editorial natural de bosque nublado, sendero y río
 - Tipografía mínima de 16 px para el contenido principal.
 - `prefers-reduced-motion` desactiva el scroll suave y reduce animaciones.
 
-## DATOS PENDIENTES DEL CLIENTE
+## Datos SEO pendientes del cliente
 
-- [ ] Comprar y confirmar el dominio oficial.
-- [x] Dirección física: Av. San Martín 0001, frente al hospedaje Tunki Lodge.
-- [ ] Correo oficial.
-- [ ] RUC si se desea publicar.
-- [ ] Historia de la empresa.
-- [ ] Misión y visión.
-- [x] Fotos reales iniciales.
-- [x] Cinco excursiones adicionales.
-- [ ] Política de cancelación.
-- [ ] Métodos de pago.
+- [ ] Dominio final comprado y confirmado.
+- [x] Dirección física: Av. San Martín 0001, frente al hospedaje Tunki Lodge, Oxapampa, Pasco.
 - [ ] Horarios de atención.
-- [ ] Puntos de salida.
-- [ ] Condiciones de niños / adultos.
+- [ ] Punto de salida de cada tour.
+- [ ] Qué incluye cada tour individual.
+- [ ] Qué no incluye cada tour individual.
+- [ ] Política de reservas.
+- [ ] Política de cancelación y reprogramación.
+- [ ] Métodos de pago.
+- [ ] Correo comercial.
+- [x] Fotos oficiales iniciales.
+- [ ] Fotos oficiales adicionales por destino y tour.
+- [ ] RUC, si se desea publicar.
+- [ ] Descripción e historia oficial de la empresa.
+- [ ] Misión y visión.
+- [ ] Condiciones para niños y adultos.
 - [ ] Testimonios verificables.
 - [x] Logo oficial en PNG/WebP.
 - [ ] Logo oficial en SVG, si se entrega una versión vectorial.
-- [ ] Isotipo independiente de la hormiga si existe.
+- [ ] Isotipo independiente de la hormiga, si existe.
 - [ ] Texto legal revisado para privacidad y términos.
 
 El frontend no inventa estos datos ni muestra disponibilidad falsa. La futura capa de reservas puede reemplazar los CTA de WhatsApp sin rehacer la estructura de contenido.

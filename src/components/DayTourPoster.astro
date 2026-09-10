@@ -36,9 +36,10 @@ const price = new Intl.NumberFormat("es-PE", { maximumFractionDigits: 0 }).forma
       <span><MapPin size={17} aria-hidden="true" /> {tour.durationLabel}</span>
     </div>
     <h3>{tour.commercialName}</h3>
+    <p class="day-tour-poster__tagline">{tour.tagline}</p>
     <ol class="day-tour-poster__activities">
       {activities.map((activity, activityIndex) => <li><span>{String(activityIndex + 1).padStart(2, "0")}</span>{activity}</li>)}
     </ol>
-    <a class="day-tour-poster__link" href={`/tours/${tour.slug}/`}>Ver ruta completa <ArrowUpRight size={19} aria-hidden="true" /></a>
+    <a class="day-tour-poster__link" href={`/tours/${tour.slug}/`}>{tour.linkLabel} <ArrowUpRight size={19} aria-hidden="true" /></a>
   </div>
 </article>

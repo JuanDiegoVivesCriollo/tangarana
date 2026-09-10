@@ -12,7 +12,7 @@ import FAQAccordion from "../../components/FAQAccordion.astro";
 import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
 import JourneyMoments from "../../components/JourneyMoments.astro";
 import { siteImages, type SiteImageKey } from "../../data/images";
-import { SITE_URL, siteConfig, tourInquiryMessage } from "../../data/site";
+import { SITE_URL, siteConfig } from "../../data/site";
 
 export async function getStaticPaths() {
   const entries = await getCollection("tours", ({ data }) => data.status === "published");
@@ -24,23 +24,33 @@ const tour = entry.data;
 const isDayTour = tour.kind === "day-tour";
 const canonicalPath = `/tours/${tour.slug}/`;
 const heroImage = siteImages[tour.imageKey as SiteImageKey];
-const message = tourInquiryMessage(tour.commercialName);
+const message = tour.whatsappMessage;
+const faqTourName = tour.commercialName.replace(/^Tour/, "el tour");
+const faqTourNameWithDe = faqTourName.replace(/^el /, "del ");
+const allTours = await getCollection("tours", ({ data }) => data.status === "published" && data.indexable);
+const relatedTours = allTours
+  .filter(({ data }) => data.slug !== tour.slug)
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured))
+  .slice(0, 3)
+  .map(({ data }) => data);
 const dayTourFaq = [
+  { question: `¿Cuánto cuesta ${faqTourName}?`, answer: `El precio publicado es S/${tour.price} por persona.` },
+  { question: `¿Cuál es el horario ${faqTourNameWithDe}?`, answer: `El horario publicado es de ${tour.scheduleStart} a ${tour.scheduleEnd}.` },
+  { question: "¿Qué incluye exactamente el precio?", answer: "La página muestra las paradas anunciadas. Confirma por WhatsApp el transporte, las entradas, la alimentación y cualquier condición adicional antes de reservar." },
   { question: "¿Cómo confirmo disponibilidad?", answer: "La disponibilidad se confirma directamente por WhatsApp con el equipo de Tangarana Travel Tours." },
-  { question: "¿El precio es por persona?", answer: `Sí. El precio publicado es S/${tour.price} por persona, según la información proporcionada por Tangarana Travel Tours.` },
-  { question: "¿Qué incluye exactamente el precio?", answer: "La ficha muestra las paradas anunciadas para la ruta. Confirma por WhatsApp el transporte, entradas, alimentación y cualquier condición adicional antes de reservar." },
 ];
 const expeditionFaq = [
+  { question: "¿Cuánto cuesta el tour de 4 días?", answer: `El precio publicado es S/${tour.price} por persona.` },
   { question: "¿Cómo confirmo disponibilidad?", answer: "La disponibilidad se confirma directamente por WhatsApp con el equipo de Tangarana Travel Tours." },
   { question: "¿Qué alojamiento incluye?", answer: "El paquete incluye alojamiento durante 4 días y 3 noches. El detalle se confirma al coordinar el viaje." },
   { question: "¿Qué actividades se realizan cada día?", answer: "Las experiencias concretas de cada jornada se informan en el itinerario coordinado con Tangarana Travel Tours." },
 ];
 const tourFaq = isDayTour ? dayTourFaq : expeditionFaq;
 const galleryByTour: Record<string, SiteImageKey[]> = {
-  "perene-dia-completo": ["butterfly", "yaneshaExperience"],
-  "villa-rica-dia-completo": ["lagoonGroup", "lagoonSwing"],
-  "pozuzo-dia-completo": ["pozuzoGate", "waterPause"],
-  "chontabamba-medio-dia": ["highBridge", "yaneshaCulture"],
+  "perene": ["butterfly", "yaneshaExperience"],
+  "villa-rica": ["lagoonGroup", "lagoonSwing"],
+  "pozuzo": ["pozuzoGate", "waterPause"],
+  "chontabamba": ["highBridge", "yaneshaCulture"],
   "catarata-rio-tigre": ["hiking", "waterfallGroup"],
 };
 const gallery = (galleryByTour[tour.slug] ?? ["trail", "river"]).map((key) => siteImages[key]);
@@ -50,6 +60,8 @@ const schema = [
     "@type": "TouristTrip",
     name: tour.title,
     description: tour.seoDescription,
+    url: new URL(canonicalPath, SITE_URL).toString(),
+    image: new URL(heroImage.src.src, SITE_URL).toString(),
     itinerary: tour.destinations.map((name) => ({ "@type": "Place", name })),
     provider: { "@type": "TravelAgency", name: siteConfig.name, url: SITE_URL },
     offers: { "@type": "Offer", price: tour.price, priceCurrency: tour.currency, url: new URL(canonicalPath, SITE_URL).toString() },
@@ -62,7 +74,7 @@ const schema = [
 ];
 ---
 
-<BaseLayout title={tour.seoTitle} description={tour.seoDescription} canonicalPath={canonicalPath} schema={schema}>
+<BaseLayout title={tour.seoTitle} description={tour.seoDescription} canonicalPath={canonicalPath} schema={schema} noindex={!tour.indexable} socialImage={heroImage.src.src} socialImageAlt={heroImage.alt}>
   <header class:list={["tour-hero", isDayTour && "tour-hero--day", isDayTour && `tour-hero--${tour.posterTone}`]}>
     <Picture src={heroImage.src} formats={["avif"]} fallbackFormat="webp" widths={[640, 960, 1280, 1600, 1920]} sizes="100vw" alt={heroImage.alt} loading="eager" fetchpriority="high" />
     <div class="tour-hero__top container"><BrandMark /></div>
@@ -70,7 +82,7 @@ const schema = [
       <Breadcrumbs items={[{ label: "Inicio", href: "/" }, { label: "Tours", href: "/tours/" }, { label: tour.commercialName }]} />
       <span class="eyebrow">{isDayTour ? `${tour.durationLabel} · ${tour.scheduleStart}` : "Expedición · Selva Central"}</span>
       <h1>{tour.commercialName}</h1>
-      <p class="tour-hero__lead">{tour.seoDescription}</p>
+      <p class="tour-hero__lead">{tour.shortDescription}</p>
       <div class="tour-hero__meta">
         {isDayTour ? (
           <><span><Clock3 size={17} aria-hidden="true" /> {tour.scheduleStart} — {tour.scheduleEnd}</span><span><MapPin size={17} aria-hidden="true" /> {tour.destinations[0]}</span><span>{tour.activities.length} paradas</span></>
@@ -87,9 +99,9 @@ const schema = [
       <section class="section day-tour-route" aria-labelledby="day-route-title">
         <div class="container day-tour-route__layout">
           <div class="day-tour-route__intro">
-            <span class="eyebrow">Itinerario anunciado</span>
-            <h2 id="day-route-title">{tour.activities.length} momentos en una sola salida.</h2>
-            <p>Una guía clara de las paradas previstas. El orden puede ajustarse según la fecha, el clima y la operación local.</p>
+            <span class="eyebrow">Paradas anunciadas</span>
+            <h2 id="day-route-title">Itinerario del tour</h2>
+            <p>Estas son las {tour.activities.length} actividades publicadas para la excursión. Consulta el orden final por WhatsApp.</p>
             <div class="day-tour-route__schedule"><Clock3 size={24} aria-hidden="true" /><span><small>Horario</small><strong>{tour.scheduleStart} — {tour.scheduleEnd}</strong></span></div>
           </div>
           <ol class="day-tour-route__stops">
@@ -98,18 +110,18 @@ const schema = [
         </div>
       </section>
 
-      <section class="day-tour-gallery" aria-label={`Momentos relacionados con ${tour.destinations[0]}`}>
+      <section class="day-tour-gallery" aria-label={`Fotografías relacionadas con ${tour.destinations[0]}`}>
         {gallery.map((image, index) => (
           <figure>
             <Picture src={image.src} formats={["avif"]} fallbackFormat="webp" widths={[520, 760, 1080]} sizes="(min-width: 768px) 50vw, 100vw" alt={image.alt} loading="lazy" />
-            <figcaption>{index === 0 ? tour.destinations[0] : "La experiencia Tangarana"}</figcaption>
+            <figcaption>{index === 0 ? `Foto de ${tour.destinations[0]}` : "Viajeros con Tangarana Travel Tours"}</figcaption>
           </figure>
         ))}
       </section>
 
       <section class="section section--soft" aria-labelledby="confirm-title">
         <div class="container content-grid">
-          <div class="content-copy"><span class="eyebrow">Antes de reservar</span><h2 id="confirm-title">Lo que conviene confirmar.</h2><p>El precio, el horario y las paradas corresponden a la información publicada por la empresa. Consulta disponibilidad y confirma transporte, entradas, alimentación y condiciones de las actividades opcionales.</p></div>
+          <div class="content-copy"><span class="eyebrow">Antes de reservar</span><h2 id="confirm-title">Qué debes confirmar</h2><p>Consulta la disponibilidad, el punto de salida, el transporte, las entradas, la alimentación y las condiciones de las actividades opcionales.</p></div>
           <div class="info-note"><strong>Precio publicado: S/{tour.price} por persona.</strong> La disponibilidad y el orden final del recorrido se confirman directamente con Tangarana Travel Tours.</div>
         </div>
       </section>
@@ -118,14 +130,14 @@ const schema = [
     <>
       <section class="section" aria-labelledby="includes-title">
         <div class="container tour-details-grid">
-          <div class="tour-details-grid__intro"><span class="eyebrow">Todo a la vista</span><h2 id="includes-title">Qué incluye el paquete.</h2><p>El precio publicado corresponde a la información disponible del paquete. Fechas, disponibilidad y detalles adicionales se confirman directamente antes del viaje.</p></div>
+          <div class="tour-details-grid__intro"><span class="eyebrow">Servicios incluidos</span><h2 id="includes-title">Qué incluye el tour de 4 días</h2><p>Estos son los servicios confirmados para el paquete. Las fechas y la disponibilidad se consultan directamente por WhatsApp.</p></div>
           <IncludesBand labels={tour.includes} />
         </div>
       </section>
 
       <section class="section section--forest" aria-labelledby="itinerary-title">
         <div class="container tour-route-panel">
-          <div class="tour-route-panel__head"><div><span class="eyebrow">Itinerario</span><h2 id="itinerary-title">Cuatro días sobre el mapa.</h2></div><PriceBadge price={tour.price} currency={tour.currency} /></div>
+          <div class="tour-route-panel__head"><div><span class="eyebrow">Cuatro destinos</span><h2 id="itinerary-title">Itinerario del tour de 4 días</h2></div><PriceBadge price={tour.price} currency={tour.currency} /></div>
           <ExpeditionTimeline stops={tour.itinerary} />
         </div>
       </section>
@@ -134,24 +146,33 @@ const schema = [
 
       <section class="section section--soft" aria-labelledby="stay-title">
         <div class="container content-grid">
-          <div class="content-copy"><span class="eyebrow">Estancia y desayuno</span><h2 id="stay-title">Descanso contemplado en la ruta.</h2><p>El paquete incluye alojamiento por 4 días y 3 noches, además de desayunos. El hospedaje específico y cualquier condición adicional deben confirmarse por WhatsApp.</p></div>
+          <div class="content-copy"><span class="eyebrow">Estancia y alimentación</span><h2 id="stay-title">Alojamiento y desayunos incluidos</h2><p>El paquete incluye alojamiento por 4 días y 3 noches, además de desayunos. El hospedaje específico y cualquier condición adicional deben confirmarse por WhatsApp.</p></div>
           <div class="info-note"><strong>Información transparente.</strong> No se muestran horarios, puntos de salida, actividades ni políticas que todavía no han sido confirmados por la empresa.</div>
         </div>
       </section>
     </>
   )}
 
+  <section class="section section--soft" aria-labelledby="related-tours-title">
+    <div class="container content-grid">
+      <div><span class="eyebrow">Otros tours</span><h2 id="related-tours-title" class="display-section-title">También puedes consultar</h2></div>
+      <ul class="related-destinations">
+        {relatedTours.map((relatedTour) => <li><a href={`/tours/${relatedTour.slug}/`}><span>{relatedTour.commercialName}</span><span aria-hidden="true">↗</span></a></li>)}
+      </ul>
+    </div>
+  </section>
+
   <section class="section" aria-labelledby="tour-faq-title">
     <div class="container content-grid">
-      <div><span class="eyebrow">Antes de consultar</span><h2 id="tour-faq-title" class="display-section-title">Preguntas sobre este tour.</h2></div>
+      <div><span class="eyebrow">Información confirmada</span><h2 id="tour-faq-title" class="display-section-title">Preguntas sobre este tour</h2></div>
       <FAQAccordion items={tourFaq} />
     </div>
   </section>
 
   <section class="cta-route" aria-labelledby="book-title">
     <div class="container cta-route__inner">
-      <div><span class="eyebrow">Tu siguiente paso</span><h2 id="book-title">Consulta la disponibilidad.</h2></div>
-      <div class="cta-route__actions"><WhatsAppCTA label="Escribir por WhatsApp" message={message} /></div>
+      <div><span class="eyebrow">Contacto directo</span><h2 id="book-title">Consulta disponibilidad por WhatsApp</h2></div>
+      <div class="cta-route__actions"><WhatsAppCTA label="Consultar disponibilidad por WhatsApp" message={message} /></div>
     </div>
   </section>
   <WhatsAppCTA label="Consultar disponibilidad por WhatsApp" message={message} variant="sticky-mobile" />

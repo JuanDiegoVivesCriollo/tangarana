@@ -1,3 +1,4 @@
+import brandLogoAsset from "../assets/brand/tangarana-logo.webp";
 import hero from "../assets/images/selva-central-montanas-hero.webp";
 import trail from "../assets/images/sendero-selva-central.webp";
 import river from "../assets/images/rio-bosque-selva-central.webp";
@@ -13,6 +14,8 @@ import lagoonGroup from "../assets/images/tangarana/grupo-laguna-bote.webp";
 import waterfallGroup from "../assets/images/tangarana/grupo-cascada.webp";
 import oxapampaGroup from "../assets/images/tangarana/oxapampa-mirador-grupo.webp";
 import waterPause from "../assets/images/tangarana/grupo-pies-agua.webp";
+
+export const brandLogo = brandLogoAsset;
 
 export const siteImages = {
   hero: {
@@ -83,33 +86,33 @@ export const activityMoments = [
   {
     marker: "01",
     image: siteImages.airBike,
-    title: "Altura y movimiento",
-    description: "Circuitos de aventura con el bosque y las montañas siempre a la vista.",
+    title: "Bicicleta aérea",
+    description: "Actividad de aventura en altura sobre un valle de la Selva Central.",
   },
   {
     marker: "02",
     image: siteImages.highBridge,
-    title: "Cruces que se recuerdan",
-    description: "Retos en altura para quienes disfrutan una ruta con más adrenalina.",
+    title: "Puente de aventura",
+    description: "Cruce con casco y arnés en un circuito de altura entre montañas.",
   },
   {
     marker: "03",
     image: siteImages.hiking,
-    title: "Senderos vivos",
-    description: "Caminatas entre vegetación, agua y el sonido cercano del bosque.",
+    title: "Caminatas en el bosque",
+    description: "Senderismo entre vegetación y quebradas de la Selva Central.",
   },
   {
     marker: "04",
     image: siteImages.butterfly,
-    title: "Naturaleza de cerca",
-    description: "Detalles que obligan a bajar el ritmo y mirar con más atención.",
+    title: "Observación de mariposas",
+    description: "Mariposas y vegetación observadas durante las actividades del tour.",
   },
 ] as const;
 
 export const journeyMoments = [
   {
     image: siteImages.waterfallGroup,
-    label: "Naturaleza compartida",
+    label: "Grupo frente a una cascada",
   },
   {
     image: siteImages.lagoonGroup,
@@ -121,6 +124,6 @@ export const journeyMoments = [
   },
   {
     image: siteImages.waterPause,
-    label: "Pausas en la ruta",
+    label: "Descanso junto al agua",
   },
 ] as const;

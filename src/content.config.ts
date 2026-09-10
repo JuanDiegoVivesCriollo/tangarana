@@ -9,6 +9,10 @@ const tours = defineCollection({
     title: z.string(),
     slug: z.string(),
     commercialName: z.string(),
+    tagline: z.string(),
+    shortDescription: z.string(),
+    linkLabel: z.string(),
+    whatsappMessage: z.string(),
     seoTitle: z.string(),
     seoDescription: z.string(),
     price: z.number(),
@@ -43,6 +47,7 @@ const tours = defineCollection({
     posterTone: z.enum(["canopy", "river", "coffee", "sun", "earth"]),
     cover: z.string(),
     status: z.enum(["published", "draft"]),
+    indexable: z.boolean().default(true),
   }),
 });
 

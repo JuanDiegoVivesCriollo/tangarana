@@ -14,11 +14,12 @@ import DayTourCollection from "../components/DayTourCollection.astro";
 import { destinations } from "../data/destinations";
 import { faqItems } from "../data/faq";
 import { SITE_URL, siteConfig } from "../data/site";
+import { brandLogo } from "../data/images";
 
 const publishedTours = await getCollection("tours", ({ data }) => data.status === "published");
 const tourEntry = publishedTours.find(({ data }) => data.featured)!;
 const tour = tourEntry.data;
-const dayTourOrder = ["perene-dia-completo", "villa-rica-dia-completo", "chontabamba-medio-dia"];
+const dayTourOrder = ["perene", "villa-rica", "chontabamba"];
 const dayTours = dayTourOrder.map((slug) => publishedTours.find(({ data }) => data.slug === slug)!.data);
 const homeFaq = faqItems.slice(0, 4);
 const schema = [
@@ -32,8 +33,10 @@ const schema = [
   {
     "@context": "https://schema.org",
     "@type": ["TravelAgency", "Organization"],
+    "@id": `${SITE_URL}/#organization`,
     name: siteConfig.name,
     url: SITE_URL,
+    logo: new URL(brandLogo.src, SITE_URL).toString(),
     telephone: siteConfig.primaryWhatsApp,
     address: {
       "@type": "PostalAddress",
@@ -57,8 +60,8 @@ const schema = [
 ---
 
 <BaseLayout
-  title="Tangarana Travel Tours | Tours en Oxapampa y Selva Central"
-  description="Tours por Oxapampa, Pozuzo, Villa Rica y el Valle del Perené. Recorre la Selva Central del Perú con Tangarana Travel Tours."
+  title="Tours en Oxapampa y Selva Central | Tangarana Travel Tours"
+  description="Descubre tours por Oxapampa, Pozuzo, Villa Rica, Valle del Perené, Chontabamba y Catarata Río Tigre. Consulta itinerarios, precios y disponibilidad con Tangarana Travel Tours."
   schema={schema}
 >
   <HeroExpedition />
@@ -67,12 +70,12 @@ const schema = [
     <div class="container">
       <div class="intro-route__grid">
         <div>
-          <span class="eyebrow">Cuatro estaciones</span>
-          <h2 id="route-title">Una ruta, cuatro formas de mirar la selva.</h2>
+          <span class="eyebrow">Paquete de 4 días</span>
+          <h2 id="route-title">Tour por Oxapampa, Pozuzo, Villa Rica y Perené</h2>
         </div>
         <div class="intro-route__copy">
-          <p>Descubre la Selva Central a tu ritmo. El recorrido conecta cuatro destinos en una experiencia de 4 días y 3 noches.</p>
-          <p>Los detalles de cada jornada se coordinan directamente con el equipo, con precio e inclusiones visibles desde el inicio.</p>
+          <p>El paquete recorre cuatro destinos durante 4 días y 3 noches.</p>
+          <p>Consulta el precio, las inclusiones y los destinos antes de comunicarte con el equipo.</p>
         </div>
       </div>
       <ol class="route-preview">
@@ -89,11 +92,11 @@ const schema = [
 
   <section class="section home-day-tours" aria-labelledby="home-day-tours-title">
     <div class="container">
-      <SectionHeading eyebrow="Rutas de un día" title="También puedes empezar con una escapada." id="home-day-tours-title">
-        <p>Excursiones con horario y precio visibles para descubrir Perené, Villa Rica o Chontabamba sin recorrer el programa completo.</p>
+      <SectionHeading eyebrow="Tours de un día" title="Excursiones con precio y horario publicados" id="home-day-tours-title">
+        <p>Compara tours al Valle del Perené, Villa Rica y Chontabamba. Cada página muestra el horario, el precio y las paradas anunciadas.</p>
       </SectionHeading>
       <DayTourCollection tours={dayTours} compact />
-      <a class="text-link home-day-tours__link" href="/tours/">Ver las cinco excursiones</a>
+      <a class="text-link home-day-tours__link" href="/tours/">Ver todos los tours de un día</a>
     </div>
   </section>
 
@@ -101,8 +104,8 @@ const schema = [
     <div class="container route-values">
       <div class="route-values__copy">
         <span class="eyebrow">Viaja con claridad</span>
-        <h2 id="included-title">Lo esencial, incluido en la ruta.</h2>
-        <p>Una experiencia de varios días con acompañamiento, movilidad y estancia indicados de forma directa. Los detalles adicionales se confirman antes del viaje.</p>
+        <h2 id="included-title">Qué incluye el tour de 4 días</h2>
+        <p>El paquete incluye transporte turístico, alojamiento, desayunos, guía profesional y asistencia permanente. Los detalles adicionales se confirman antes del viaje.</p>
       </div>
       <IncludesBand labels={tour.includes} />
     </div>
@@ -110,8 +113,8 @@ const schema = [
 
   <section class="home-destinations" aria-labelledby="destinations-title">
     <div class="container">
-      <SectionHeading eyebrow="Elige tu próxima parada" title="La Selva Central no se recorre en línea recta." id="destinations-title">
-        <p>Cada estación cambia el ritmo visual de la ruta. Abre un destino y continúa explorando.</p>
+      <SectionHeading eyebrow="Información de destinos" title="Conoce los destinos de la Selva Central" id="destinations-title">
+        <p>Consulta información sobre Oxapampa, Pozuzo, Villa Rica y el Valle del Perené, y encuentra el tour relacionado con cada destino.</p>
       </SectionHeading>
       <DestinationEditorial destinations={destinations} />
     </div>
@@ -121,7 +124,7 @@ const schema = [
 
   <section class="section" aria-labelledby="faq-title">
     <div class="container content-grid">
-      <SectionHeading eyebrow="Antes de partir" title="Preguntas para preparar tu ruta." id="faq-title">
+      <SectionHeading eyebrow="Antes de reservar" title="Información sobre precios, horarios e inclusiones" id="faq-title">
         <p>Respuestas claras con los datos disponibles. Si necesitas confirmar fechas o condiciones, escríbenos por WhatsApp.</p>
       </SectionHeading>
       <div>
@@ -134,12 +137,12 @@ const schema = [
   <section class="cta-route" aria-labelledby="cta-title">
     <div class="container cta-route__inner">
       <div>
-        <span class="eyebrow">Siguiente estación</span>
-        <h2 id="cta-title">La Selva Central te espera.</h2>
+        <span class="eyebrow">Contacto directo</span>
+        <h2 id="cta-title">Consulta fechas y disponibilidad</h2>
       </div>
       <div class="cta-route__actions">
-        <a class="button button-dark" href="/tours/">Ver tours</a>
-        <WhatsAppCTA label="Hablar por WhatsApp" />
+        <a class="button button-dark" href="/tours/">Ver todos los tours</a>
+        <WhatsAppCTA label="Consultar por WhatsApp" />
       </div>
     </div>
   </section>

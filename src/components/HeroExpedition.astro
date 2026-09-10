@@ -30,15 +30,23 @@ import { siteImages } from "../data/images";
   <div class="hero__brand"><BrandMark /></div>
   <div class="hero__inner container">
     <div class="hero__content">
-      <span class="eyebrow">Tours por la Selva Central del Perú</span>
-      <h1>Abre el mapa. Empieza la ruta.</h1>
-      <p class="hero__lead">Explora Oxapampa, Pozuzo, Villa Rica y el Valle del Perené con Tangarana Travel Tours.</p>
+      <span class="eyebrow">Agencia de tours en Oxapampa</span>
+      <h1>Tours en Oxapampa y la Selva Central</h1>
+      <p class="hero-display">Abre el mapa. Empieza la ruta.</p>
+      <p class="hero__lead">Descubre tours por Pozuzo, Villa Rica, el Valle del Perené, Chontabamba y Catarata Río Tigre con Tangarana Travel Tours.</p>
       <div class="hero__actions">
-        <a class="button button-primary" href="/tours/">Ver tours <ArrowRight size={20} aria-hidden="true" /></a>
+        <a class="button button-primary" href="/tours/">Ver todos los tours <ArrowRight size={20} aria-hidden="true" /></a>
         <WhatsAppCTA label="Consultar por WhatsApp" class="button button-secondary" />
       </div>
-      <span class="route-stamp">Ruta 01 · Selva Central · 4 días</span>
+      <nav class="hero__tour-links" aria-label="Tours principales">
+        <a href="/tours/pozuzo/">Pozuzo</a><span aria-hidden="true">·</span>
+        <a href="/tours/villa-rica/">Villa Rica</a><span aria-hidden="true">·</span>
+        <a href="/tours/perene/">Perené</a><span aria-hidden="true">·</span>
+        <a href="/tours/chontabamba/">Chontabamba</a><span aria-hidden="true">·</span>
+        <a href="/tours/catarata-rio-tigre/">Río Tigre</a>
+      </nav>
+      <span class="route-stamp">Tours de un día · Circuito de 4 días</span>
     </div>
   </div>
-  <a class="scroll-cue" href="#ruta">Comienza la ruta <ArrowDown size={18} aria-hidden="true" /></a>
+  <a class="scroll-cue" href="#ruta">Ver tours destacados <ArrowDown size={18} aria-hidden="true" /></a>
 </header>

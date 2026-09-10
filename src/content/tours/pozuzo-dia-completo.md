@@ -1,10 +1,14 @@
 ---
 kind: "day-tour"
-title: "Tour Pozuzo de día completo"
-slug: "pozuzo-dia-completo"
-commercialName: "Pozuzo · historia entre montañas"
-seoTitle: "Tour Pozuzo de día completo | Tangarana Travel Tours"
-seoDescription: "Tour a Pozuzo de 5:30 a. m. a 6:30 p. m. con cascadas, pozas, barrio Prusia y cervecería artesanal. Desde S/70 por persona."
+title: "Tour a Pozuzo"
+slug: "pozuzo"
+commercialName: "Tour a Pozuzo"
+tagline: "Historia y naturaleza entre montañas"
+shortDescription: "Excursión de día completo a Pozuzo con cascadas, pozas de agua y sal, parque, cervecería artesanal y barrio Prusia."
+linkLabel: "Ver tour a Pozuzo"
+whatsappMessage: "Hola, vi en la web el tour a Pozuzo de Tangarana Travel Tours. Quisiera consultar disponibilidad y detalles."
+seoTitle: "Tour a Pozuzo: itinerario y precio | Tangarana Travel Tours"
+seoDescription: "Conoce el tour a Pozuzo de Tangarana Travel Tours. Revisa horario, precio e itinerario con Catarata Rayatambo, Cascada Yulitunqui, Portal de Pozuzo, pozas de agua y sal y más."
 price: 70
 currency: "PEN"
 durationLabel: "Día completo"
@@ -28,6 +32,7 @@ imageKey: "pozuzoGate"
 posterTone: "earth"
 cover: "pozuzo-portico"
 status: "published"
+indexable: true
 ---
 
-Una salida de día completo para conocer los paisajes y la memoria cultural de Pozuzo, desde el portal hasta el barrio Prusia.
+Excursión de día completo a Pozuzo con ocho paradas anunciadas. Consulta por WhatsApp la disponibilidad y los detalles antes de reservar.

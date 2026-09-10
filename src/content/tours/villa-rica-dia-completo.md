@@ -1,10 +1,14 @@
 ---
 kind: "day-tour"
-title: "Tour Villa Rica de día completo"
-slug: "villa-rica-dia-completo"
-commercialName: "Villa Rica · laguna, café y paisaje"
-seoTitle: "Tour Villa Rica de día completo | Tangarana Travel Tours"
-seoDescription: "Tour a Villa Rica de 8:00 a. m. a 6:30 p. m. con Laguna El Oconal, mirador, cascada y degustaciones. Desde S/60 por persona."
+title: "Tour a Villa Rica"
+slug: "villa-rica"
+commercialName: "Tour a Villa Rica"
+tagline: "Laguna, café y paisaje"
+shortDescription: "Excursión de día completo a Villa Rica con Laguna El Oconal, mirador, cascada y degustaciones de café y chocolate."
+linkLabel: "Ver tour a Villa Rica"
+whatsappMessage: "Hola, vi en la web el tour a Villa Rica de Tangarana Travel Tours. Quisiera consultar disponibilidad y detalles."
+seoTitle: "Tour a Villa Rica: itinerario y precio | Tangarana Travel Tours"
+seoDescription: "Revisa el tour a Villa Rica de Tangarana Travel Tours: precio, horario e itinerario con Laguna El Oconal, mirador, plaza, cascada y experiencias de café y chocolate."
 price: 60
 currency: "PEN"
 durationLabel: "Día completo"
@@ -17,7 +21,8 @@ includes: []
 itinerary: []
 activities:
   - "Deportes extremos"
-  - "Portal de bienvenida y Laguna El Oconal"
+  - "Portal de bienvenida"
+  - "Laguna El Oconal"
   - "Ictioterapia"
   - "Mirador de Villa Rica"
   - "Plaza de Villa Rica"
@@ -28,6 +33,7 @@ imageKey: "lagoonSwing"
 posterTone: "coffee"
 cover: "laguna-columpio"
 status: "published"
+indexable: true
 ---
 
-Un día entre el paisaje lacustre, el café y los sabores de Villa Rica. La secuencia de experiencias puede ajustarse según las condiciones de la fecha.
+Excursión de día completo a Villa Rica con nueve actividades anunciadas. Consulta por WhatsApp la disponibilidad y los detalles antes de reservar.

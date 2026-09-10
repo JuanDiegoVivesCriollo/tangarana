@@ -19,8 +19,8 @@ export const siteConfig = {
   primaryWhatsAppDisplay: "+51 931 530 169",
   socials: {
     facebook: "https://www.facebook.com/share/18pYh7JSDx/",
-    instagram: "https://www.instagram.com/tangaranatraveltours_2026?utm_source=qr&igsi=MWdncmdydnhhZ2Z4NQ==",
-    tiktok: "https://www.tiktok.com/@tangarana_travel_tours?_r=1&_t=ZS-98aAXnO7Uwe",
+    instagram: "https://www.instagram.com/tangaranatraveltours_2026/",
+    tiktok: "https://www.tiktok.com/@tangarana_travel_tours",
   },
 } as const;
 
@@ -29,10 +29,6 @@ export const defaultWhatsAppMessage =
 
 export const tourWhatsAppMessage =
   "Hola, vi en la web el tour de 4 días por Oxapampa, Pozuzo, Villa Rica y Valle del Perené. Quisiera consultar disponibilidad y detalles.";
-
-export function tourInquiryMessage(tourName: string) {
-  return `Hola, vi en la web el tour ${tourName}. Quisiera consultar disponibilidad, punto de salida y qué incluye el precio.`;
-}
 
 export function whatsappUrl(message = defaultWhatsAppMessage) {
   return `https://wa.me/${siteConfig.primaryWhatsApp.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`;

@@ -2,9 +2,13 @@
 kind: "multi-day"
 title: "Tour Selva Central 4 días: Oxapampa, Pozuzo, Villa Rica y Valle del Perené"
 slug: "selva-central-4-dias"
-commercialName: "Oxapampa — Naturaleza, Cultura y Aventura"
-seoTitle: "Tour Selva Central 4 días | Oxapampa, Pozuzo y Villa Rica"
-seoDescription: "Recorre Oxapampa, Pozuzo, Villa Rica y el Valle del Perené en un tour de 4 días con transporte, alojamiento, desayunos, guía y asistencia."
+commercialName: "Tour Oxapampa, Pozuzo, Villa Rica y Perené — 4 días"
+tagline: "Naturaleza, cultura y aventura"
+shortDescription: "Tour de 4 días por Oxapampa, Pozuzo, Villa Rica y el Valle del Perené con alojamiento, desayunos, transporte turístico, guía y asistencia."
+linkLabel: "Ver tour de 4 días"
+whatsappMessage: "Hola, vi en la web el tour de 4 días por Oxapampa, Pozuzo, Villa Rica y Valle del Perené. Quisiera consultar disponibilidad y detalles."
+seoTitle: "Tour Oxapampa, Pozuzo, Villa Rica y Perené 4 días | Tangarana"
+seoDescription: "Tour de 4 días por Oxapampa, Pozuzo, Villa Rica y Valle del Perené. Incluye alojamiento, desayunos, transporte turístico, guía y asistencia. S/ 370 por persona."
 price: 370
 currency: "PEN"
 durationDays: 4
@@ -37,6 +41,7 @@ imageKey: "hero"
 posterTone: "canopy"
 cover: "selva-central-montanas-hero"
 status: "published"
+indexable: true
 ---
 
-Descubre la Selva Central a tu ritmo. Recorre cuatro destinos en una ruta pensada para conectar naturaleza, cultura y aventura con el acompañamiento de Tangarana Travel Tours.
+Tour de 4 días por Oxapampa, Pozuzo, Villa Rica y el Valle del Perené. El paquete incluye alojamiento, desayunos, transporte turístico, guía y asistencia permanente.
