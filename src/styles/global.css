@@ -1447,7 +1447,7 @@ picture {
 }
 
 .home-featured {
-  padding-block: 0 var(--space-section);
+  padding-block: clamp(3rem, 6vw, 5.5rem) var(--space-section);
 }
 
 .home-day-tours {
@@ -2855,6 +2855,14 @@ picture {
   background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.5), rgba(63, 132, 81, 0.035));
 }
 
+:root[data-theme="dark"] .section.section--soft,
+:root[data-theme="dark"] .section.home-day-tours {
+  background-color: #0b211b;
+  background-image:
+    radial-gradient(circle at 82% 16%, rgba(63, 132, 81, 0.13), transparent 28rem),
+    linear-gradient(145deg, rgba(13, 43, 34, 0.78), rgba(7, 23, 19, 0.96));
+}
+
 :where(.section:not(.section--forest), .intro-route, .home-destinations):nth-of-type(3n + 1)::before {
   content: "";
   position: absolute;
@@ -2864,7 +2872,7 @@ picture {
   width: clamp(8rem, 9vw, 10.5rem);
   aspect-ratio: 720 / 672;
   background: url("/decor/foliage-fern.webp") center / contain no-repeat;
-  opacity: 0.1;
+  opacity: 0.14;
   pointer-events: none;
 }
 
@@ -2877,7 +2885,7 @@ picture {
   width: clamp(4.75rem, 5.5vw, 6.5rem);
   aspect-ratio: 460 / 739;
   background: url("/decor/foliage-vine.webp") center / contain no-repeat;
-  opacity: 0.095;
+  opacity: 0.13;
   transform: translateY(-50%);
   pointer-events: none;
 }
@@ -2891,12 +2899,13 @@ picture {
   width: clamp(16rem, 22vw, 22rem);
   aspect-ratio: 920 / 609;
   background: url("/decor/foliage-heliconia.webp") center / contain no-repeat;
-  opacity: 0.085;
+  opacity: 0.14;
   pointer-events: none;
 }
 
 :root[data-theme="dark"] :where(.section:not(.section--forest), .intro-route, .home-destinations)::before {
-  opacity: 0.065;
+  opacity: 0.14;
+  filter: brightness(1.45) saturate(0.92);
 }
 
 .jungle-interlude {
@@ -2961,7 +2970,11 @@ picture {
 
 @media (max-width: 47.99rem) {
   :where(.section:not(.section--forest), .intro-route, .home-destinations)::before {
-    opacity: 0.055;
+    opacity: 0.09;
+  }
+
+  :root[data-theme="dark"] :where(.section:not(.section--forest), .intro-route, .home-destinations)::before {
+    opacity: 0.11;
   }
 
   .jungle-interlude {

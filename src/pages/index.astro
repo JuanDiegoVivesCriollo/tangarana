@@ -67,25 +67,7 @@ const schema = [
 >
   <HeroExpedition />
 
-  <section class="intro-route" id="ruta" aria-labelledby="route-title">
-    <div class="container">
-      <div class="intro-route__grid">
-        <div>
-          <span class="eyebrow">Paquete de 4 días</span>
-          <h2 id="route-title">Tour por Oxapampa, Pozuzo, Villa Rica y Perené</h2>
-        </div>
-        <div class="intro-route__copy">
-          <p>El paquete recorre cuatro destinos durante 4 días y 3 noches.</p>
-          <p>Consulta el precio, las inclusiones y los destinos antes de comunicarte con el equipo.</p>
-        </div>
-      </div>
-      <ol class="route-preview">
-        {tour.itinerary.map((stop) => <li><small>Día {String(stop.day).padStart(2, "0")}</small><strong>{stop.destination}</strong></li>)}
-      </ol>
-    </div>
-  </section>
-
-  <section class="home-featured" aria-label="Tour destacado">
+  <section class="home-featured" id="ruta" aria-label="Tour destacado">
     <div class="container"><TourFeature tour={tour} /></div>
   </section>
 
