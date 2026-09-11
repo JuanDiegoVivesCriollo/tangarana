@@ -2,8 +2,8 @@
 
 :root {
   color-scheme: light;
-  --page-max: 94rem;
-  --content-max: 74rem;
+  --page-max: 110rem;
+  --content-max: 104rem;
   --space-section: clamp(5rem, 9vw, 9rem);
   --radius-sm: 0.65rem;
   --radius-md: 1.15rem;
@@ -2819,34 +2819,68 @@ picture {
   }
 }
 
-/* Light-mode landscape system: crisp surfaces with quiet botanical edges. */
-.section:not(.section--forest),
-.intro-route,
-.home-destinations {
+/* Light-mode landscape system: quiet, varied foliage stays outside reading areas. */
+:where(.section:not(.section--forest), .intro-route, .home-destinations) {
+  position: relative;
+  overflow: clip;
+  isolation: isolate;
   background-color: var(--surface);
-  background-image:
-    url("/decor/botanical-edges.webp"),
-    radial-gradient(circle at 76% 18%, rgba(63, 132, 81, 0.07), transparent 26rem);
-  background-repeat: no-repeat;
-  background-position: center top, center;
-  background-size: min(96rem, 140vw) auto, cover;
+  background-image: radial-gradient(circle at 76% 18%, rgba(63, 132, 81, 0.065), transparent 26rem);
+}
+
+:where(.section:not(.section--forest), .intro-route, .home-destinations) > .container {
+  position: relative;
+  z-index: 1;
 }
 
 .section.section--soft,
 .section.home-day-tours {
   background-color: var(--surface-2);
-  background-image:
-    url("/decor/botanical-edges.webp"),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.5), rgba(63, 132, 81, 0.035));
-  background-position: center bottom, center;
+  background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.5), rgba(63, 132, 81, 0.035));
 }
 
-:root[data-theme="dark"] .section:not(.section--forest),
-:root[data-theme="dark"] .intro-route,
-:root[data-theme="dark"] .home-destinations {
-  background-image:
-    url("/decor/botanical-edges.webp"),
-    radial-gradient(circle at 76% 18%, rgba(95, 143, 83, 0.08), transparent 26rem);
+:where(.section:not(.section--forest), .intro-route, .home-destinations):nth-of-type(3n + 1)::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: clamp(1.5rem, 4vw, 4rem);
+  left: -7rem;
+  width: clamp(8rem, 9vw, 10.5rem);
+  aspect-ratio: 720 / 672;
+  background: url("/decor/foliage-fern.webp") center / contain no-repeat;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+:where(.section:not(.section--forest), .intro-route, .home-destinations):nth-of-type(3n + 2)::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  right: -3.5rem;
+  width: clamp(4.75rem, 5.5vw, 6.5rem);
+  aspect-ratio: 460 / 739;
+  background: url("/decor/foliage-vine.webp") center / contain no-repeat;
+  opacity: 0.095;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+:where(.section:not(.section--forest), .intro-route, .home-destinations):nth-of-type(3n)::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  right: -8rem;
+  bottom: -6.5rem;
+  width: clamp(16rem, 22vw, 22rem);
+  aspect-ratio: 920 / 609;
+  background: url("/decor/foliage-heliconia.webp") center / contain no-repeat;
+  opacity: 0.085;
+  pointer-events: none;
+}
+
+:root[data-theme="dark"] :where(.section:not(.section--forest), .intro-route, .home-destinations)::before {
+  opacity: 0.065;
 }
 
 .jungle-interlude {
@@ -2910,10 +2944,8 @@ picture {
 }
 
 @media (max-width: 47.99rem) {
-  .section:not(.section--forest),
-  .intro-route,
-  .home-destinations {
-    background-size: 66rem auto, cover;
+  :where(.section:not(.section--forest), .intro-route, .home-destinations)::before {
+    opacity: 0.055;
   }
 
   .jungle-interlude {
@@ -2922,5 +2954,132 @@ picture {
 
   .jungle-interlude img {
     object-position: center 72%;
+  }
+}
+
+/* Tablet layouts stack before cards and labels become narrow. */
+@media (min-width: 48rem) and (max-width: 63.99rem) {
+  .tour-feature,
+  .route-values,
+  .cta-route__inner,
+  .content-grid,
+  .tour-details-grid,
+  .destination-story,
+  .contact-board,
+  .day-tour-route__layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tour-feature__photo {
+    min-height: 26rem;
+  }
+
+  .cta-route__actions {
+    justify-content: flex-start;
+  }
+
+  .day-tour-route__intro {
+    position: static;
+  }
+
+  .experience-fieldnotes__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+  }
+
+  .experience-card:nth-child(1),
+  .experience-card:nth-child(4) {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    min-height: 23rem;
+  }
+
+  .experience-card:nth-child(2),
+  .experience-card:nth-child(3) {
+    grid-column: auto;
+    grid-row: auto;
+    min-height: 25rem;
+  }
+
+  .journey-moments--mosaic .journey-moments__grid,
+  .journey-moments--ribbon .journey-moments__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+  }
+
+  .journey-moments--mosaic figure,
+  .journey-moments--ribbon figure {
+    grid-column: auto;
+    grid-row: auto;
+    min-height: 25rem;
+  }
+
+  .journey-moments--mosaic figure:first-child {
+    grid-column: 1 / -1;
+    min-height: 30rem;
+  }
+
+  .journey-moments--mosaic figure:nth-child(2) {
+    grid-column: auto;
+  }
+
+  .destination-editorial {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+
+  .destination-tile--panorama,
+  .destination-tile--editorial,
+  .destination-tile--earth,
+  .destination-tile--river {
+    grid-column: auto;
+    grid-row: auto;
+    min-height: 28rem;
+    margin-top: 0;
+  }
+
+  .expedition-timeline:not(.expedition-timeline--compact) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .expedition-timeline:not(.expedition-timeline--compact)::before {
+    top: 1.6rem;
+    right: auto;
+    bottom: 1.6rem;
+    left: 1.55rem;
+    width: 1px;
+    height: auto;
+  }
+
+  .expedition-timeline:not(.expedition-timeline--compact) li {
+    grid-template-columns: 3.2rem minmax(0, 1fr);
+    gap: 1rem;
+    padding-inline: 0;
+  }
+
+  .expedition-timeline:not(.expedition-timeline--compact) .expedition-timeline__marker {
+    transform: none;
+  }
+}
+
+@media (min-width: 48rem) and (max-width: 79.99rem) {
+  .includes-band {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 48rem) and (max-width: 59.99rem) {
+  .day-tour-collection:not(.day-tour-collection--compact) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .day-tour-collection:not(.day-tour-collection--compact) .day-tour-poster:first-child {
+    grid-template-columns: minmax(0, 1fr);
+    grid-column: auto;
+  }
+
+  .day-tour-collection--compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
