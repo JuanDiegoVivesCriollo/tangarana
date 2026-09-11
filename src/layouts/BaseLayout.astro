@@ -4,6 +4,7 @@ import "@fontsource-variable/source-sans-3";
 import "../styles/global.css";
 import ExpeditionNav from "../components/ExpeditionNav.astro";
 import FooterCamp from "../components/FooterCamp.astro";
+import WhatsAppCTA from "../components/WhatsAppCTA.astro";
 import { SITE_URL, siteConfig } from "../data/site";
 
 interface Props {
@@ -73,6 +74,7 @@ const socialImageUrl = new URL(socialImage, SITE_URL).toString();
       <ExpeditionNav />
       <main id="contenido"><slot /></main>
       <FooterCamp />
+      <WhatsAppCTA label="WhatsApp" variant="floating" />
     </div>
     <script>
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {

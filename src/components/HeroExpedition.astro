@@ -1,8 +1,7 @@
 ---
 import { Picture } from "astro:assets";
-import { ArrowDown, ArrowRight } from "@lucide/astro";
+import { ArrowDown, ArrowRight, BusFront } from "@lucide/astro";
 import BrandMark from "./BrandMark.astro";
-import WhatsAppCTA from "./WhatsAppCTA.astro";
 import { siteImages } from "../data/images";
 ---
 
@@ -36,16 +35,15 @@ import { siteImages } from "../data/images";
       <p class="hero__lead">Descubre tours por Pozuzo, Villa Rica, el Valle del Perené, Chontabamba y Catarata Río Tigre con Tangarana Travel Tours.</p>
       <div class="hero__actions">
         <a class="button button-primary" href="/tours/">Ver todos los tours <ArrowRight size={20} aria-hidden="true" /></a>
-        <WhatsAppCTA label="Consultar por WhatsApp" class="button button-secondary" />
       </div>
-      <nav class="hero__tour-links" aria-label="Tours principales">
-        <a href="/tours/pozuzo/">Pozuzo</a><span aria-hidden="true">·</span>
-        <a href="/tours/villa-rica/">Villa Rica</a><span aria-hidden="true">·</span>
-        <a href="/tours/perene/">Perené</a><span aria-hidden="true">·</span>
-        <a href="/tours/chontabamba/">Chontabamba</a><span aria-hidden="true">·</span>
-        <a href="/tours/catarata-rio-tigre/">Río Tigre</a>
+      <nav class="hero__tour-links" aria-label="Ir directamente a un tour">
+        <a href="/tours/pozuzo/">Ir a Pozuzo</a>
+        <a href="/tours/villa-rica/">Ir a Villa Rica</a>
+        <a href="/tours/perene/">Ir a Perené</a>
+        <a href="/tours/chontabamba/">Ir a Chontabamba</a>
+        <a href="/tours/catarata-rio-tigre/">Ir a Río Tigre</a>
       </nav>
-      <span class="route-stamp">Tours de un día · Circuito de 4 días</span>
+      <span class="route-stamp"><BusFront size={19} stroke-width={1.7} aria-hidden="true" /> Transporte turístico · Tours de un día · Circuito de 4 días</span>
     </div>
   </div>
   <a class="scroll-cue" href="#ruta">Ver tours destacados <ArrowDown size={18} aria-hidden="true" /></a>
