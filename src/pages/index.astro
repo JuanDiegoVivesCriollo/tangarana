@@ -11,6 +11,7 @@ import WhatsAppCTA from "../components/WhatsAppCTA.astro";
 import ExperienceFieldnotes from "../components/ExperienceFieldnotes.astro";
 import JourneyMoments from "../components/JourneyMoments.astro";
 import DayTourCollection from "../components/DayTourCollection.astro";
+import JungleInterlude from "../components/JungleInterlude.astro";
 import { destinations } from "../data/destinations";
 import { faqItems } from "../data/faq";
 import { SITE_URL, siteConfig } from "../data/site";
@@ -99,6 +100,8 @@ const schema = [
       <a class="text-link home-day-tours__link" href="/tours/">Ver todos los tours de un día</a>
     </div>
   </section>
+
+  <JungleInterlude variant="to-forest" />
 
   <section class="section section--forest" aria-labelledby="included-title">
     <div class="container route-values">

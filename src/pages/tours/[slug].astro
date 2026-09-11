@@ -11,6 +11,7 @@ import ExpeditionTimeline from "../../components/ExpeditionTimeline.astro";
 import FAQAccordion from "../../components/FAQAccordion.astro";
 import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
 import JourneyMoments from "../../components/JourneyMoments.astro";
+import JungleInterlude from "../../components/JungleInterlude.astro";
 import { siteImages, type SiteImageKey } from "../../data/images";
 import { SITE_URL, siteConfig } from "../../data/site";
 
@@ -119,6 +120,8 @@ const schema = [
         ))}
       </section>
 
+      <JungleInterlude variant="from-forest" />
+
       <section class="section section--soft" aria-labelledby="confirm-title">
         <div class="container content-grid">
           <div class="content-copy"><span class="eyebrow">Antes de reservar</span><h2 id="confirm-title">Qué debes confirmar</h2><p>Consulta la disponibilidad, el punto de salida, el transporte, las entradas, la alimentación y las condiciones de las actividades opcionales.</p></div>
@@ -141,6 +144,8 @@ const schema = [
           <ExpeditionTimeline stops={tour.itinerary} />
         </div>
       </section>
+
+      <JungleInterlude variant="from-forest" />
 
       <JourneyMoments id="tour-moments-title" variant="ribbon" />
 

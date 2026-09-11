@@ -6,6 +6,7 @@ import TourFeature from "../../components/TourFeature.astro";
 import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
 import DayTourCollection from "../../components/DayTourCollection.astro";
 import SectionHeading from "../../components/SectionHeading.astro";
+import JungleInterlude from "../../components/JungleInterlude.astro";
 const tours = await getCollection("tours", ({ data }) => data.status === "published");
 const featuredTour = tours.find(({ data }) => data.kind === "multi-day")!;
 const dayTourOrder = ["perene", "villa-rica", "pozuzo", "chontabamba", "catarata-rio-tigre"];
@@ -34,6 +35,7 @@ const dayTours = dayTourOrder.map((slug) => tours.find(({ data }) => data.slug =
       <DayTourCollection tours={dayTours} />
     </div>
   </section>
+  <JungleInterlude />
   <section class="section section--soft" aria-labelledby="expedition-title">
     <div class="container">
       <SectionHeading eyebrow="Paquete de 4 días" title="Tour por Oxapampa, Pozuzo, Villa Rica y Perené" id="expedition-title">

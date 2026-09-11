@@ -4,6 +4,7 @@ import PageIntro from "../../components/PageIntro.astro";
 import DestinationEditorial from "../../components/DestinationEditorial.astro";
 import SectionHeading from "../../components/SectionHeading.astro";
 import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
+import JungleInterlude from "../../components/JungleInterlude.astro";
 import { destinations } from "../../data/destinations";
 ---
 
@@ -31,6 +32,7 @@ import { destinations } from "../../data/destinations";
       <DestinationEditorial destinations={destinations} />
     </div>
   </section>
+  <JungleInterlude variant="to-sun" />
   <section class="cta-route" aria-labelledby="destinations-cta-title">
     <div class="container cta-route__inner">
       <div><span class="eyebrow">Elige un tour</span><h2 id="destinations-cta-title">Compara precios, horarios e itinerarios</h2></div>

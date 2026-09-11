@@ -1,0 +1,18 @@
+---
+interface Props {
+  variant?: "light" | "to-forest" | "from-forest" | "to-sun";
+}
+
+const { variant = "light" } = Astro.props;
+---
+
+<div class:list={["jungle-interlude", `jungle-interlude--${variant}`]} aria-hidden="true">
+  <img
+    src="/decor/jungle-ridge.webp"
+    width="2172"
+    height="724"
+    alt=""
+    loading="lazy"
+    decoding="async"
+  />
+</div>

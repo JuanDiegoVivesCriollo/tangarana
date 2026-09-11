@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageIntro from "../components/PageIntro.astro";
 import FAQAccordion from "../components/FAQAccordion.astro";
 import WhatsAppCTA from "../components/WhatsAppCTA.astro";
+import JungleInterlude from "../components/JungleInterlude.astro";
 import { faqItems } from "../data/faq";
 
 const schema = {
@@ -34,5 +35,6 @@ const schema = {
       <FAQAccordion items={faqItems} headingLevel="h2" />
     </div>
   </section>
+  <JungleInterlude variant="to-sun" />
   <section class="cta-route" aria-labelledby="faq-cta-title"><div class="container cta-route__inner"><div><span class="eyebrow">Contacto directo</span><h2 id="faq-cta-title">Consulta la información que necesitas</h2></div><div class="cta-route__actions"><WhatsAppCTA label="Consultar por WhatsApp" /></div></div></section>
 </BaseLayout>

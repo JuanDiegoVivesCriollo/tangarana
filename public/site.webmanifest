@@ -4,7 +4,7 @@
   "description": "Tours por la Selva Central del Perú.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f8f7f0",
+  "background_color": "#fbfefb",
   "theme_color": "#071c17",
   "lang": "es-PE",
   "icons": [

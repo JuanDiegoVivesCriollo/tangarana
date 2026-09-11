@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageIntro from "../components/PageIntro.astro";
 import WhatsAppCTA from "../components/WhatsAppCTA.astro";
+import JungleInterlude from "../components/JungleInterlude.astro";
 import { SITE_URL, phoneHref, siteConfig } from "../data/site";
 import { brandLogo } from "../data/images";
 
@@ -46,4 +47,5 @@ const schema = {
       </dl>
     </div>
   </section>
+  <JungleInterlude variant="to-forest" />
 </BaseLayout>

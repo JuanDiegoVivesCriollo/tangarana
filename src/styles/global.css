@@ -8,25 +8,25 @@
   --radius-sm: 0.65rem;
   --radius-md: 1.15rem;
   --radius-lg: 2.5rem;
-  --shadow-soft: 0 1.5rem 5rem rgba(10, 34, 27, 0.13);
-  --mist-50: #f8f7f0;
-  --cream-100: #efeddf;
+  --shadow-soft: 0 1.5rem 5rem rgba(8, 45, 33, 0.12);
+  --mist-50: #f7fcf8;
+  --cream-100: #eaf6ee;
   --forest-950: #071c17;
   --forest-900: #0d2b22;
   --forest-800: #174133;
   --forest-700: #235844;
-  --leaf-500: #5f8f53;
+  --leaf-500: #3f8451;
   --sun-400: #f3c95f;
   --amber-500: #db8b38;
   --earth-700: #6f442d;
-  --ink-950: #12201c;
+  --ink-950: #10271f;
   --accent-pink: #cf3c79;
-  --surface: #f8f7f0;
-  --surface-2: #efeddf;
-  --surface-raised: rgba(255, 255, 255, 0.82);
-  --ink: #12201c;
-  --muted: #53645d;
-  --line: rgba(18, 32, 28, 0.14);
+  --surface: #fbfefb;
+  --surface-2: #edf8f1;
+  --surface-raised: rgba(255, 255, 255, 0.94);
+  --ink: #10271f;
+  --muted: #405a50;
+  --line: rgba(13, 61, 45, 0.16);
   --glass-bg: rgba(7, 28, 23, 0.72);
   --glass-border: rgba(255, 255, 255, 0.18);
 }
@@ -61,7 +61,8 @@ body {
   min-width: 20rem;
   overflow-x: clip;
   background:
-    radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--sun-400) 8%, transparent), transparent 28rem),
+    radial-gradient(circle at 10% 12%, color-mix(in srgb, var(--sun-400) 10%, transparent), transparent 24rem),
+    radial-gradient(circle at 88% 34%, rgba(63, 132, 81, 0.08), transparent 28rem),
     var(--surface);
   color: var(--ink);
   font-family: "Source Sans 3 Variable", system-ui, sans-serif;
@@ -1319,7 +1320,7 @@ picture {
   width: clamp(12rem, 24vw, 23rem);
   height: clamp(10rem, 22vw, 17rem);
   overflow: hidden;
-  border: 0.45rem solid #f8f7f0;
+  border: 0.45rem solid #fbfefb;
   border-radius: 45% 0 45% 0;
   box-shadow: var(--shadow-soft);
 }
@@ -1361,7 +1362,7 @@ picture {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(239, 237, 223, 0.82), transparent 45%);
+  background: linear-gradient(90deg, rgba(234, 246, 238, 0.86), transparent 45%);
 }
 
 .page-intro--contact .page-intro__copy {
@@ -2815,5 +2816,111 @@ picture {
 
   .day-tour-gallery figure {
     min-height: 24rem;
+  }
+}
+
+/* Light-mode landscape system: crisp surfaces with quiet botanical edges. */
+.section:not(.section--forest),
+.intro-route,
+.home-destinations {
+  background-color: var(--surface);
+  background-image:
+    url("/decor/botanical-edges.webp"),
+    radial-gradient(circle at 76% 18%, rgba(63, 132, 81, 0.07), transparent 26rem);
+  background-repeat: no-repeat;
+  background-position: center top, center;
+  background-size: min(96rem, 140vw) auto, cover;
+}
+
+.section.section--soft,
+.section.home-day-tours {
+  background-color: var(--surface-2);
+  background-image:
+    url("/decor/botanical-edges.webp"),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.5), rgba(63, 132, 81, 0.035));
+  background-position: center bottom, center;
+}
+
+:root[data-theme="dark"] .section:not(.section--forest),
+:root[data-theme="dark"] .intro-route,
+:root[data-theme="dark"] .home-destinations {
+  background-image:
+    url("/decor/botanical-edges.webp"),
+    radial-gradient(circle at 76% 18%, rgba(95, 143, 83, 0.08), transparent 26rem);
+}
+
+.jungle-interlude {
+  --interlude-start: var(--surface);
+  --interlude-end: var(--surface-2);
+  position: relative;
+  height: clamp(9rem, 17vw, 15rem);
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(180deg, var(--interlude-start), color-mix(in srgb, var(--interlude-start) 45%, var(--interlude-end)), var(--interlude-end));
+}
+
+.jungle-interlude--to-forest {
+  --interlude-end: var(--forest-950);
+}
+
+.jungle-interlude--from-forest {
+  --interlude-start: var(--forest-950);
+}
+
+.jungle-interlude--to-sun {
+  --interlude-end: var(--sun-400);
+}
+
+.jungle-interlude img {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 68%;
+  opacity: 0.9;
+  filter: saturate(0.92) contrast(0.96);
+}
+
+.jungle-interlude::before,
+.jungle-interlude::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  left: 0;
+  height: 2rem;
+  pointer-events: none;
+}
+
+.jungle-interlude::before {
+  top: 0;
+  background: linear-gradient(180deg, var(--interlude-start), transparent);
+}
+
+.jungle-interlude::after {
+  bottom: 0;
+  background: linear-gradient(0deg, var(--interlude-end), transparent);
+}
+
+:root[data-theme="dark"] .jungle-interlude img {
+  opacity: 0.68;
+  filter: saturate(0.72) brightness(0.68);
+}
+
+@media (max-width: 47.99rem) {
+  .section:not(.section--forest),
+  .intro-route,
+  .home-destinations {
+    background-size: 66rem auto, cover;
+  }
+
+  .jungle-interlude {
+    height: 10rem;
+  }
+
+  .jungle-interlude img {
+    object-position: center 72%;
   }
 }
