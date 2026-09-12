@@ -2,6 +2,7 @@
 import { Picture } from "astro:assets";
 import { ArrowDown, ArrowRight, BusFront } from "@lucide/astro";
 import BrandMark from "./BrandMark.astro";
+import ReserveButton from "./ReserveButton.astro";
 import { siteImages } from "../data/images";
 ---
 
@@ -34,7 +35,8 @@ import { siteImages } from "../data/images";
       <p class="hero-display">Abre el mapa. Empieza la ruta.</p>
       <p class="hero__lead">Descubre tours por Pozuzo, Villa Rica, el Valle del Perené, Chontabamba y Catarata Río Tigre con Tangarana Travel Tours.</p>
       <div class="hero__actions">
-        <a class="button button-primary" href="/tours/">Ver todos los tours <ArrowRight size={20} aria-hidden="true" /></a>
+        <ReserveButton label="Reservar ahora" />
+        <a class="button button-secondary" href="/tours/">Ver todos los tours <ArrowRight size={20} aria-hidden="true" /></a>
       </div>
       <nav class="hero__tour-links" aria-label="Ir directamente a un tour">
         <a href="/tours/pozuzo/">Ir a Pozuzo</a>

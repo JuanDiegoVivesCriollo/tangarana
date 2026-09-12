@@ -5,6 +5,7 @@ import "../styles/global.css";
 import ExpeditionNav from "../components/ExpeditionNav.astro";
 import FooterCamp from "../components/FooterCamp.astro";
 import WhatsAppCTA from "../components/WhatsAppCTA.astro";
+import ReservationModal from "../components/ReservationModal.astro";
 import { SITE_URL, siteConfig } from "../data/site";
 
 interface Props {
@@ -75,6 +76,7 @@ const socialImageUrl = new URL(socialImage, SITE_URL).toString();
       <main id="contenido"><slot /></main>
       <FooterCamp />
       <WhatsAppCTA label="WhatsApp" variant="floating" />
+      <ReservationModal />
     </div>
     <script>
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {

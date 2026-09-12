@@ -1,0 +1,247 @@
+---
+import { getCollection } from "astro:content";
+import { ArrowUpRight, Check, Minus, Plus, Send, ShieldCheck, X } from "@lucide/astro";
+import { siteConfig } from "../data/site";
+
+const entries = await getCollection("tours", ({ data }) => data.status === "published" && data.indexable);
+const tours = entries
+  .map(({ data }) => data)
+  .sort((a, b) => Number(b.featured) - Number(a.featured) || a.price - b.price);
+const whatsappNumber = siteConfig.primaryWhatsApp.replace(/\D/g, "");
+---
+
+<dialog
+  class="reservation-dialog"
+  id="reservation-dialog"
+  data-reservation-dialog
+  data-whatsapp-number={whatsappNumber}
+  aria-labelledby="reservation-title"
+  aria-describedby="reservation-description"
+>
+  <div class="reservation-dialog__panel">
+    <header class="reservation-dialog__header">
+      <div>
+        <span class="eyebrow">Solicitud de reserva</span>
+        <h2 id="reservation-title">Prepara tu viaje</h2>
+        <p id="reservation-description">Completa estos datos y continuaremos la atención por WhatsApp.</p>
+      </div>
+      <button class="reservation-dialog__close" type="button" data-close-reservation aria-label="Cerrar formulario">
+        <X size={22} aria-hidden="true" />
+      </button>
+      <ol class="reservation-steps" aria-label="Pasos del formulario">
+        <li><span>1</span> Tour</li>
+        <li><span>2</span> Viajeros</li>
+        <li><span>3</span> Contacto</li>
+      </ol>
+    </header>
+
+    <form class="reservation-form" data-reservation-form>
+      <section class="reservation-form__section" aria-labelledby="reservation-tour-heading">
+        <div class="reservation-form__heading">
+          <span>01</span>
+          <div><h3 id="reservation-tour-heading">Elige tu tour</h3><p>Puedes revisar sus detalles antes de continuar.</p></div>
+        </div>
+        <div class="reservation-tour-field">
+          <label for="reservation-tour">Tour</label>
+          <select id="reservation-tour" name="tour" required data-tour-select>
+            <option value="">Selecciona un tour</option>
+            {tours.map((tour) => (
+              <option
+                value={tour.slug}
+                data-tour-name={tour.commercialName}
+                data-tour-url={`/tours/${tour.slug}/`}
+                data-tour-price={tour.price}
+              >
+                {tour.commercialName} · S/{tour.price}
+              </option>
+            ))}
+          </select>
+          <a class="reservation-tour-link" href="/tours/" data-tour-details-link aria-disabled="true">
+            Ver qué ofrece <ArrowUpRight size={17} aria-hidden="true" />
+          </a>
+        </div>
+      </section>
+
+      <section class="reservation-form__section" aria-labelledby="reservation-travelers-heading">
+        <div class="reservation-form__heading">
+          <span>02</span>
+          <div><h3 id="reservation-travelers-heading">¿Quiénes viajan?</h3><p>Indica cuántas personas forman el grupo.</p></div>
+        </div>
+        <div class="reservation-travelers">
+          <div class="reservation-counter">
+            <div><label for="reservation-adults">Adultos</label><small>Desde 18 años</small></div>
+            <div class="reservation-counter__controls">
+              <button type="button" data-count-action="decrement" data-count-target="reservation-adults" aria-label="Restar un adulto"><Minus size={17} aria-hidden="true" /></button>
+              <input id="reservation-adults" name="adults" type="number" min="1" max="30" value="2" inputmode="numeric" required />
+              <button type="button" data-count-action="increment" data-count-target="reservation-adults" aria-label="Añadir un adulto"><Plus size={17} aria-hidden="true" /></button>
+            </div>
+          </div>
+          <div class="reservation-counter">
+            <div><label for="reservation-children">Niños</label><small>Menores de 18 años</small></div>
+            <div class="reservation-counter__controls">
+              <button type="button" data-count-action="decrement" data-count-target="reservation-children" aria-label="Restar un niño"><Minus size={17} aria-hidden="true" /></button>
+              <input id="reservation-children" name="children" type="number" min="0" max="30" value="0" inputmode="numeric" required />
+              <button type="button" data-count-action="increment" data-count-target="reservation-children" aria-label="Añadir un niño"><Plus size={17} aria-hidden="true" /></button>
+            </div>
+          </div>
+        </div>
+        <label class="reservation-field reservation-field--children" data-children-ages hidden>
+          <span>Edades de los niños <small>(opcional)</small></span>
+          <input name="childrenAges" type="text" maxlength="80" placeholder="Ejemplo: 7 y 12 años" autocomplete="off" />
+        </label>
+      </section>
+
+      <section class="reservation-form__section" aria-labelledby="reservation-contact-heading">
+        <div class="reservation-form__heading">
+          <span>03</span>
+          <div><h3 id="reservation-contact-heading">Datos de contacto</h3><p>Los usaremos únicamente para atender esta solicitud.</p></div>
+        </div>
+        <div class="reservation-contact-grid">
+          <label class="reservation-field">
+            <span>Nombre completo</span>
+            <input name="fullName" type="text" minlength="3" maxlength="100" autocomplete="name" placeholder="Tu nombre y apellido" required />
+          </label>
+          <label class="reservation-field">
+            <span>Número de WhatsApp</span>
+            <input name="phone" type="tel" minlength="7" maxlength="20" autocomplete="tel" inputmode="tel" placeholder="Ejemplo: 931 530 169" required />
+          </label>
+          <label class="reservation-field reservation-field--wide">
+            <span>Hospedaje o lugar de recojo <small>(opcional)</small></span>
+            <input name="pickup" type="text" maxlength="140" autocomplete="street-address" placeholder="Puedes indicarlo después si aún no lo sabes" />
+          </label>
+          <label class="reservation-field reservation-field--wide">
+            <span>Pregunta o necesidad especial <small>(opcional)</small></span>
+            <textarea name="notes" rows="3" maxlength="300" placeholder="Por ejemplo: movilidad reducida, alimentación o equipaje"></textarea>
+          </label>
+        </div>
+        <p class="reservation-date-note"><Check size={18} aria-hidden="true" /> No necesitas elegir una fecha ahora. La coordinaremos contigo por WhatsApp.</p>
+        <label class="reservation-consent">
+          <input name="consent" type="checkbox" required />
+          <span>Acepto que Tangarana Travel Tours use estos datos para responder mi solicitud. <a href="/politica-de-privacidad/">Ver política de privacidad</a>.</span>
+        </label>
+      </section>
+
+      <footer class="reservation-form__footer">
+        <div>
+          <strong data-reservation-summary>Selecciona un tour</strong>
+          <span><ShieldCheck size={16} aria-hidden="true" /> Solicitud sin pago en línea</span>
+        </div>
+        <button class="button button-primary reservation-submit" type="submit">
+          Enviar por WhatsApp <Send size={18} aria-hidden="true" />
+        </button>
+      </footer>
+    </form>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>("[data-reservation-dialog]");
+  const form = dialog?.querySelector<HTMLFormElement>("[data-reservation-form]");
+  const tourSelect = form?.querySelector<HTMLSelectElement>("[data-tour-select]");
+  const detailsLink = form?.querySelector<HTMLAnchorElement>("[data-tour-details-link]");
+  const summary = form?.querySelector<HTMLElement>("[data-reservation-summary]");
+  const childrenInput = form?.querySelector<HTMLInputElement>("#reservation-children");
+  const childrenAges = form?.querySelector<HTMLElement>("[data-children-ages]");
+
+  const selectedTour = () => tourSelect?.selectedOptions[0];
+
+  const updateTour = () => {
+    const option = selectedTour();
+    const slug = option?.value ?? "";
+    const name = option?.dataset.tourName;
+    const price = option?.dataset.tourPrice;
+    const url = option?.dataset.tourUrl;
+
+    if (detailsLink) {
+      detailsLink.href = url || "/tours/";
+      detailsLink.setAttribute("aria-disabled", slug ? "false" : "true");
+    }
+    if (summary) summary.textContent = name && price ? `${name} · S/${price} por persona` : "Selecciona un tour";
+  };
+
+  const updateChildren = () => {
+    if (!childrenInput || !childrenAges) return;
+    childrenAges.hidden = Number(childrenInput.value) < 1;
+  };
+
+  const openDialog = (tourSlug = "") => {
+    if (!dialog || !tourSelect) return;
+    if (tourSlug && Array.from(tourSelect.options).some((option) => option.value === tourSlug)) {
+      tourSelect.value = tourSlug;
+    }
+    updateTour();
+    updateChildren();
+    if (!dialog.open) dialog.showModal();
+    document.body.classList.add("reservation-is-open");
+    requestAnimationFrame(() => (tourSlug ? form?.querySelector<HTMLInputElement>('input[name="fullName"]') : tourSelect)?.focus());
+  };
+
+  document.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+    const opener = target.closest<HTMLElement>("[data-open-reservation]");
+    if (opener) {
+      openDialog(opener.dataset.tourSlug || "");
+      return;
+    }
+
+    if (target.closest("[data-close-reservation]")) dialog?.close();
+
+    const counterButton = target.closest<HTMLButtonElement>("[data-count-action]");
+    if (counterButton && form) {
+      const input = form.querySelector<HTMLInputElement>(`#${counterButton.dataset.countTarget}`);
+      if (!input) return;
+      const minimum = Number(input.min || 0);
+      const maximum = Number(input.max || 99);
+      const adjustment = counterButton.dataset.countAction === "increment" ? 1 : -1;
+      input.value = String(Math.min(maximum, Math.max(minimum, Number(input.value || minimum) + adjustment)));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  });
+
+  dialog?.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+
+  dialog?.addEventListener("close", () => document.body.classList.remove("reservation-is-open"));
+  tourSelect?.addEventListener("change", updateTour);
+  childrenInput?.addEventListener("change", updateChildren);
+  childrenInput?.addEventListener("input", updateChildren);
+
+  detailsLink?.addEventListener("click", (event) => {
+    if (detailsLink.getAttribute("aria-disabled") === "true") {
+      event.preventDefault();
+      tourSelect?.focus();
+      tourSelect?.reportValidity();
+    }
+  });
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!form.reportValidity() || !dialog) return;
+
+    const data = new FormData(form);
+    const option = selectedTour();
+    const tourName = option?.dataset.tourName || String(data.get("tour") || "");
+    const lines = [
+      "Hola, quiero solicitar una reserva con Tangarana Travel Tours.",
+      "",
+      `Tour: ${tourName}`,
+      `Nombre: ${String(data.get("fullName") || "")}`,
+      `Adultos: ${String(data.get("adults") || "0")}`,
+      `Niños: ${String(data.get("children") || "0")}`,
+    ];
+    const ages = String(data.get("childrenAges") || "").trim();
+    const phone = String(data.get("phone") || "").trim();
+    const pickup = String(data.get("pickup") || "").trim();
+    const notes = String(data.get("notes") || "").trim();
+    if (ages) lines.push(`Edades de los niños: ${ages}`);
+    lines.push(`Mi WhatsApp: ${phone}`);
+    if (pickup) lines.push(`Hospedaje o recojo: ${pickup}`);
+    if (notes) lines.push(`Consulta adicional: ${notes}`);
+    lines.push("", "Quisiera confirmar una fecha y la disponibilidad del tour.");
+
+    const number = dialog.dataset.whatsappNumber || "";
+    window.open(`https://wa.me/${number}?text=${encodeURIComponent(lines.join("\n"))}`, "_blank", "noopener,noreferrer");
+    dialog.close();
+  });
+</script>

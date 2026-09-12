@@ -1,0 +1,26 @@
+---
+import { MessageCircleMore, ShieldCheck } from "@lucide/astro";
+import ReserveButton from "./ReserveButton.astro";
+
+interface Props {
+  tourSlug: string;
+  tourName: string;
+}
+
+const { tourSlug, tourName } = Astro.props;
+---
+
+<section class="booking-nudge-section" aria-label={`Reserva ${tourName}`}>
+  <div class="container">
+    <aside class="booking-nudge">
+      <div class="booking-nudge__icon" aria-hidden="true"><MessageCircleMore size={25} /></div>
+      <div class="booking-nudge__copy">
+        <span class="eyebrow">Solicitud rápida</span>
+        <h2>¿Este tour es para ti?</h2>
+        <p>Envíanos los datos de tu grupo. Confirmaremos la fecha y la disponibilidad contigo por WhatsApp.</p>
+        <span class="booking-nudge__assurance"><ShieldCheck size={17} aria-hidden="true" /> No realizas ningún pago al enviar la solicitud.</span>
+      </div>
+      <ReserveButton label="Reservar este tour" tourSlug={tourSlug} />
+    </aside>
+  </div>
+</section>

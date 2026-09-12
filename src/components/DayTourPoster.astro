@@ -3,6 +3,7 @@ import { Picture } from "astro:assets";
 import { ArrowUpRight, Clock3, MapPin } from "@lucide/astro";
 import type { CollectionEntry } from "astro:content";
 import { siteImages, type SiteImageKey } from "../data/images";
+import ReserveButton from "./ReserveButton.astro";
 
 interface Props {
   tour: CollectionEntry<"tours">["data"];
@@ -40,6 +41,9 @@ const price = new Intl.NumberFormat("es-PE", { maximumFractionDigits: 0 }).forma
     <ol class="day-tour-poster__activities">
       {activities.map((activity, activityIndex) => <li><span>{String(activityIndex + 1).padStart(2, "0")}</span>{activity}</li>)}
     </ol>
-    <a class="day-tour-poster__link" href={`/tours/${tour.slug}/`}>{tour.linkLabel} <ArrowUpRight size={19} aria-hidden="true" /></a>
+    <div class="day-tour-poster__actions">
+      <a class="day-tour-poster__link" href={`/tours/${tour.slug}/`}>{tour.linkLabel} <ArrowUpRight size={19} aria-hidden="true" /></a>
+      <ReserveButton label="Reservar" tourSlug={tour.slug} class="day-tour-poster__reserve" />
+    </div>
   </div>
 </article>

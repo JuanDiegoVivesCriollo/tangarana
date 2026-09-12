@@ -3,10 +3,10 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageIntro from "../../components/PageIntro.astro";
 import TourFeature from "../../components/TourFeature.astro";
-import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
 import DayTourCollection from "../../components/DayTourCollection.astro";
 import SectionHeading from "../../components/SectionHeading.astro";
 import JungleInterlude from "../../components/JungleInterlude.astro";
+import ReserveButton from "../../components/ReserveButton.astro";
 const tours = await getCollection("tours", ({ data }) => data.status === "published");
 const featuredTour = tours.find(({ data }) => data.kind === "multi-day")!;
 const dayTourOrder = ["perene", "villa-rica", "pozuzo", "chontabamba", "catarata-rio-tigre"];
@@ -46,8 +46,8 @@ const dayTours = dayTourOrder.map((slug) => tours.find(({ data }) => data.slug =
   </section>
   <section class="cta-route" aria-labelledby="tour-help-title">
     <div class="container cta-route__inner">
-      <div><span class="eyebrow">Contacto directo</span><h2 id="tour-help-title">Consulta fechas y disponibilidad</h2></div>
-      <div class="cta-route__actions"><WhatsAppCTA label="Consultar disponibilidad" /></div>
+      <div><span class="eyebrow">Solicitud rápida</span><h2 id="tour-help-title">Elige y reserva tu tour</h2></div>
+      <div class="cta-route__actions"><ReserveButton label="Reservar ahora" class="button-dark" /></div>
     </div>
   </section>
 </BaseLayout>

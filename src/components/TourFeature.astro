@@ -3,6 +3,7 @@ import { Picture } from "astro:assets";
 import { ArrowUpRight, BedDouble, CalendarDays } from "@lucide/astro";
 import PriceBadge from "./PriceBadge.astro";
 import ExpeditionTimeline from "./ExpeditionTimeline.astro";
+import ReserveButton from "./ReserveButton.astro";
 import { siteImages } from "../data/images";
 
 interface Props {
@@ -41,6 +42,9 @@ const { tour } = Astro.props;
       <span><BedDouble size={19} aria-hidden="true" /> {tour.durationNights ?? 3} noches</span>
     </div>
     <ExpeditionTimeline stops={tour.itinerary} compact />
-    <a class="text-link" href={`/tours/${tour.slug}/`}>Ver tour de 4 días <ArrowUpRight size={19} aria-hidden="true" /></a>
+    <div class="tour-feature__actions">
+      <ReserveButton label="Reservar este tour" tourSlug={tour.slug} />
+      <a class="text-link" href={`/tours/${tour.slug}/`}>Ver tour de 4 días <ArrowUpRight size={19} aria-hidden="true" /></a>
+    </div>
   </div>
 </article>

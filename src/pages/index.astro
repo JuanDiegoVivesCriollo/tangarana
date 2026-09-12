@@ -7,11 +7,11 @@ import DestinationEditorial from "../components/DestinationEditorial.astro";
 import IncludesBand from "../components/IncludesBand.astro";
 import SectionHeading from "../components/SectionHeading.astro";
 import FAQAccordion from "../components/FAQAccordion.astro";
-import WhatsAppCTA from "../components/WhatsAppCTA.astro";
 import ExperienceFieldnotes from "../components/ExperienceFieldnotes.astro";
 import JourneyMoments from "../components/JourneyMoments.astro";
 import DayTourCollection from "../components/DayTourCollection.astro";
 import JungleInterlude from "../components/JungleInterlude.astro";
+import ReserveButton from "../components/ReserveButton.astro";
 import { destinations } from "../data/destinations";
 import { faqItems } from "../data/faq";
 import { SITE_URL, siteConfig } from "../data/site";
@@ -122,12 +122,12 @@ const schema = [
   <section class="cta-route" aria-labelledby="cta-title">
     <div class="container cta-route__inner">
       <div>
-        <span class="eyebrow">Contacto directo</span>
-        <h2 id="cta-title">Consulta fechas y disponibilidad</h2>
+        <span class="eyebrow">Solicitud rápida</span>
+        <h2 id="cta-title">Reserva tu próxima ruta</h2>
       </div>
       <div class="cta-route__actions">
-        <a class="button button-dark" href="/tours/">Ver todos los tours</a>
-        <WhatsAppCTA label="Consultar por WhatsApp" />
+        <a class="button button-ink-outline" href="/tours/">Ver todos los tours</a>
+        <ReserveButton label="Reservar ahora" class="button-dark" />
       </div>
     </div>
   </section>
