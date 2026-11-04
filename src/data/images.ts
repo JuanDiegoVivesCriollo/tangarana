@@ -1,5 +1,6 @@
-import brandLogoAsset from "../assets/brand/tangarana-logo.webp";
-import hero from "../assets/images/selva-central-montanas-hero.webp";
+import brandLogoAsset from "../assets/brand/tangarana-logo.png";
+import hero from "../assets/images/home-hero-desktop.jpg";
+import heroMobile from "../assets/images/home-hero-mobile.jpg";
 import trail from "../assets/images/sendero-selva-central.webp";
 import river from "../assets/images/rio-bosque-selva-central.webp";
 import airBike from "../assets/images/tangarana/actividad-bicicleta-aerea.webp";
@@ -17,10 +18,15 @@ import waterPause from "../assets/images/tangarana/grupo-pies-agua.webp";
 
 export const brandLogo = brandLogoAsset;
 
+export const homeHeroMobile = {
+  src: heroMobile,
+  alt: "Catarata rodeada de vegetación en la Selva Central",
+};
+
 export const siteImages = {
   hero: {
     src: hero,
-    alt: "Montañas cubiertas de bosque y neblina en un paisaje que evoca la Selva Central",
+    alt: "Caminantes cruzando una quebrada en el bosque de Yanachaga Chemillén",
   },
   trail: {
     src: trail,

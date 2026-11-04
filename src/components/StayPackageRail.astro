@@ -1,0 +1,91 @@
+---
+import StayPackageCard from "./StayPackageCard.astro";
+import { ChevronLeft, ChevronRight } from "@lucide/astro";
+import type { StayPackage } from "../data/stayPackages";
+
+interface Props {
+  items: StayPackage[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="stay-package-rail" data-stay-package-rail-component>
+  <div class="stay-package-rail__controls">
+    <button type="button" data-stay-previous aria-label="Ver paquetes anteriores"><ChevronLeft size={20} aria-hidden="true" /></button>
+    <button type="button" data-stay-next aria-label="Ver más paquetes"><ChevronRight size={20} aria-hidden="true" /></button>
+  </div>
+  <div class="stay-package-rail__track" data-stay-package-track data-lenis-prevent>
+    {items.map((item, index) => <StayPackageCard item={item} index={index} compact />)}
+  </div>
+</div>
+
+<script>
+  const bindStayPackageRails = () => document.querySelectorAll<HTMLElement>("[data-stay-package-rail-component]").forEach((component) => {
+    if (component.dataset.railBound === "true") return;
+    component.dataset.railBound = "true";
+    const rail = component.querySelector<HTMLElement>("[data-stay-package-track]");
+    if (!rail) return;
+    let timer = 0;
+    let pointerId = -1;
+    let startX = 0;
+    let startScroll = 0;
+    let moved = false;
+
+    const cardStep = () => {
+      const card = rail.querySelector<HTMLElement>(".stay-package-card");
+      return card ? card.offsetWidth + Number.parseFloat(getComputedStyle(rail).columnGap || "0") : 320;
+    };
+    const move = (direction: number) => {
+      const max = rail.scrollWidth - rail.clientWidth;
+      const next = direction > 0 && rail.scrollLeft >= max - 8 ? 0 : Math.max(0, rail.scrollLeft + direction * cardStep());
+      rail.scrollTo({ left: next, behavior: "smooth" });
+    };
+    const stop = () => window.clearInterval(timer);
+    const start = () => {
+      stop();
+      if (!document.hidden && !matchMedia("(prefers-reduced-motion: reduce)").matches) timer = window.setInterval(() => move(1), 1500);
+    };
+
+    component.querySelector("[data-stay-previous]")?.addEventListener("click", () => { move(-1); start(); });
+    component.querySelector("[data-stay-next]")?.addEventListener("click", () => { move(1); start(); });
+    rail.addEventListener("pointerdown", (event) => {
+      pointerId = event.pointerId;
+      startX = event.clientX;
+      startScroll = rail.scrollLeft;
+      moved = false;
+      stop();
+    });
+    rail.addEventListener("pointermove", (event) => {
+      if (event.pointerId !== pointerId) return;
+      const distance = event.clientX - startX;
+      if (Math.abs(distance) > 8) moved = true;
+      if (!moved) return;
+      rail.classList.add("is-dragging");
+      if (!rail.hasPointerCapture(event.pointerId)) rail.setPointerCapture(event.pointerId);
+      rail.scrollLeft = startScroll - distance;
+    });
+    const release = (event: PointerEvent) => {
+      if (event.pointerId !== pointerId) return;
+      rail.classList.remove("is-dragging");
+      if (rail.hasPointerCapture(event.pointerId)) rail.releasePointerCapture(event.pointerId);
+      pointerId = -1;
+      start();
+    };
+    rail.addEventListener("pointerup", release);
+    rail.addEventListener("pointercancel", release);
+    rail.addEventListener("click", (event) => {
+      if (moved) event.preventDefault();
+      moved = false;
+    });
+    rail.addEventListener("mouseenter", stop);
+    rail.addEventListener("mouseleave", start);
+    rail.addEventListener("focusin", stop);
+    rail.addEventListener("focusout", start);
+    document.addEventListener("visibilitychange", start);
+    start();
+  });
+
+  bindStayPackageRails();
+  document.addEventListener("astro:page-load", bindStayPackageRails);
+</script>

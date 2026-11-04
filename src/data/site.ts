@@ -1,12 +1,13 @@
-export const SITE_URL = "https://tangaranatravel.pe";
+export const SITE_URL = "https://tangaranatours.com";
 
 export const siteConfig = {
   name: "Tangarana Travel Tours",
   shortName: "Tangarana",
   tagline: "Vive, explora, conecta",
-  description: "Tours turísticos por la Selva Central del Perú.",
+  description: "Tours y paquetes turísticos por Oxapampa y la Selva Central del Perú.",
   locale: "es_PE",
   language: "es",
+  ruc: "10459748941",
   location: {
     street: "Av. San Martín 0001, frente al hospedaje Tunki Lodge",
     city: "Oxapampa",
@@ -25,10 +26,10 @@ export const siteConfig = {
 } as const;
 
 export const defaultWhatsAppMessage =
-  "Hola, vi la web de Tangarana Travel Tours y quisiera consultar disponibilidad y detalles de sus tours.";
+  "Hola, vi la web de Tangarana Travel Tours y quisiera consultar disponibilidad de sus tours y paquetes.";
 
 export const tourWhatsAppMessage =
-  "Hola, vi en la web el tour de 4 días por Oxapampa, Pozuzo, Villa Rica y Valle del Perené. Quisiera consultar disponibilidad y detalles.";
+  "Hola, vi en la web los tours y paquetes de Tangarana Travel Tours. Quisiera consultar disponibilidad y detalles.";
 
 export function whatsappUrl(message = defaultWhatsAppMessage) {
   return `https://wa.me/${siteConfig.primaryWhatsApp.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`;

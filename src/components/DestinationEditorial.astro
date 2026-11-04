@@ -3,6 +3,7 @@ import { Picture } from "astro:assets";
 import { ArrowUpRight } from "@lucide/astro";
 import type { Destination } from "../data/destinations";
 import { siteImages } from "../data/images";
+import { packageCover } from "../data/packageMedia";
 
 interface Props {
   destinations: Destination[];
@@ -13,7 +14,7 @@ const { destinations } = Astro.props;
 
 <div class="destination-editorial">
   {destinations.map((destination) => {
-    const image = siteImages[destination.image];
+    const image = packageCover(destination.tourSlug) ?? siteImages[destination.image];
     return (
       <article class:list={["destination-tile", `destination-tile--${destination.layout}`]}>
         <Picture

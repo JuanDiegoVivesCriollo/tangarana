@@ -1,23 +1,24 @@
 ---
-import { Picture } from "astro:assets";
-import { ArrowDown, ArrowRight, BusFront } from "@lucide/astro";
+import { getImage } from "astro:assets";
+import { ArrowRight } from "@lucide/astro";
 import BrandMark from "./BrandMark.astro";
-import ReserveButton from "./ReserveButton.astro";
-import { siteImages } from "../data/images";
+import { homeHeroMobile, siteImages } from "../data/images";
+
+const [heroDesktopAvif, heroDesktopWebp, heroMobileAvif, heroMobileWebp] = await Promise.all([
+  getImage({ src: siteImages.hero.src, width: 1024, format: "avif", quality: 76 }),
+  getImage({ src: siteImages.hero.src, width: 1024, format: "webp", quality: 82 }),
+  getImage({ src: homeHeroMobile.src, width: 720, format: "avif", quality: 76 }),
+  getImage({ src: homeHeroMobile.src, width: 720, format: "webp", quality: 82 }),
+]);
 ---
 
 <header class="hero">
-  <Picture
-    src={siteImages.hero.src}
-    formats={["avif"]}
-    fallbackFormat="webp"
-    widths={[640, 960, 1280, 1600, 1920]}
-    sizes="100vw"
-    alt={siteImages.hero.alt}
-    loading="eager"
-    fetchpriority="high"
-    class="hero-media"
-  />
+  <picture class="hero-media">
+    <source media="(max-width: 47.99rem)" type="image/avif" srcset={heroMobileAvif.src} />
+    <source media="(max-width: 47.99rem)" type="image/webp" srcset={heroMobileWebp.src} />
+    <source type="image/avif" srcset={heroDesktopAvif.src} />
+    <img src={heroDesktopWebp.src} width="1024" height="683" alt={siteImages.hero.alt} loading="eager" decoding="async" fetchpriority="high" />
+  </picture>
   <svg class="topography" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
     <g fill="none" stroke="currentColor" stroke-width="1">
       <path d="M-90 170C120 30 205 300 422 150S775 30 960 170s265 12 350-55" />
@@ -30,23 +31,18 @@ import { siteImages } from "../data/images";
   <div class="hero__brand"><BrandMark /></div>
   <div class="hero__inner container">
     <div class="hero__content">
-      <span class="eyebrow">Agencia de tours en Oxapampa</span>
-      <h1>Tours en Oxapampa y la Selva Central</h1>
-      <p class="hero-display">Abre el mapa. Empieza la ruta.</p>
-      <p class="hero__lead">Descubre tours por Pozuzo, Villa Rica, el Valle del Perené, Chontabamba y Catarata Río Tigre con Tangarana Travel Tours.</p>
-      <div class="hero__actions">
-        <ReserveButton label="Reservar ahora" />
-        <a class="button button-secondary" href="/tours/">Ver todos los tours <ArrowRight size={20} aria-hidden="true" /></a>
+      <div class="hero__intro">
+        <span class="eyebrow">Agencia de tours y paquetes en Oxapampa</span>
+        <h1>Tours en Oxapampa y la Selva Central</h1>
+        <p class="hero-display">Tours por destino y paquetes completos.</p>
+        <p class="hero__lead">Elige recorridos de un día o programas con alojamiento, desayunos y traslados.</p>
       </div>
-      <nav class="hero__tour-links" aria-label="Ir directamente a un tour">
-        <a href="/tours/pozuzo/">Ir a Pozuzo</a>
-        <a href="/tours/villa-rica/">Ir a Villa Rica</a>
-        <a href="/tours/perene/">Ir a Perené</a>
-        <a href="/tours/chontabamba/">Ir a Chontabamba</a>
-        <a href="/tours/catarata-rio-tigre/">Ir a Río Tigre</a>
-      </nav>
-      <span class="route-stamp"><BusFront size={19} stroke-width={1.7} aria-hidden="true" /> Transporte turístico · Tours de un día · Circuito de 4 días</span>
+      <div class="hero__conversion">
+        <div class="hero__actions">
+          <a class="button button-primary" href="/paquetes/">Ver paquetes <ArrowRight size={20} aria-hidden="true" /></a>
+          <a class="button button-secondary" href="/tours/">Ver tours <ArrowRight size={20} aria-hidden="true" /></a>
+        </div>
+      </div>
     </div>
   </div>
-  <a class="scroll-cue" href="#ruta">Ver tours destacados <ArrowDown size={18} aria-hidden="true" /></a>
 </header>

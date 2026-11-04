@@ -6,16 +6,24 @@ import SectionHeading from "../components/SectionHeading.astro";
 import WhatsAppCTA from "../components/WhatsAppCTA.astro";
 import JungleInterlude from "../components/JungleInterlude.astro";
 import { siteImages } from "../data/images";
+import { siteConfig } from "../data/site";
+import { breadcrumbSchema } from "../data/seo";
+
+const schema = breadcrumbSchema([
+  { name: "Inicio", path: "/" },
+  { name: "Nosotros", path: "/nosotros/" },
+]);
 ---
 
 <BaseLayout
-  title="Tangarana Travel Tours | Tours en Oxapampa y Selva Central"
-  description="Conoce Tangarana Travel Tours, agencia de tours en Oxapampa con excursiones a Pozuzo, Villa Rica, Valle del Perené, Chontabamba y Catarata Río Tigre."
+  title="Tangarana Travel Tours | Agencia en Oxapampa y Selva Central"
+  description="Tangarana Travel Tours es una empresa creada en 2018 y dedicada al turismo convencional, vivencial, de naturaleza y aventura en la Selva Central."
+  schema={schema}
 >
   <PageIntro
     eyebrow="Quiénes somos"
     title="Conoce Tangarana Travel Tours"
-    description="Agencia de tours en Oxapampa con excursiones de un día y un paquete de 4 días por la Selva Central."
+    description="Empresa de turismo convencional, vivencial, de naturaleza y aventura en la Selva Central, creada en 2018."
     crumbs={[{ label: "Inicio", href: "/" }, { label: "Nosotros" }]}
     tone="earth"
     variant="about"
@@ -23,27 +31,49 @@ import { siteImages } from "../data/images";
     marker="TT"
     note="Atención directa desde Oxapampa"
   />
-  <section class="section" aria-labelledby="purpose-title">
-    <div class="container route-values">
-      <div>
-        <SectionHeading eyebrow="Nuestro propósito" title="Brindar información clara antes de reservar" id="purpose-title">
-          <p>Tangarana Travel Tours publica precios, horarios, itinerarios e inclusiones confirmadas, y atiende las consultas directamente por WhatsApp.</p>
+  <section class="section about-story-section" aria-labelledby="purpose-title">
+    <div class="container about-story">
+      <div class="about-story__copy">
+        <SectionHeading eyebrow="Nuestra historia" title="Experiencia local desde 2018" id="purpose-title">
+          <p>Tangarana Travel Tours es una empresa de la Selva Central dedicada al turismo convencional, vivencial, de naturaleza y aventura. Trabajamos con guías turísticos especializados que conocen las rutas y acompañan cada experiencia.</p>
         </SectionHeading>
-        <div class="info-note"><strong>Atención directa.</strong> Puedes consultar disponibilidad y detalles de cada tour por WhatsApp con el equipo de Tangarana Travel Tours.</div>
+        <div class="about-story__facts" aria-label="Cómo atendemos a nuestros viajeros">
+          <article><span>2018</span><strong>Inicio de Tangarana</strong><p>La empresa fue creada para mostrar la Selva Central con cercanía y conocimiento local.</p></article>
+          <article><span>01</span><strong>Guías especializados</strong><p>Personas con experiencia y conocimiento de las rutas.</p></article>
+          <article><span>02</span><strong>Experiencias reales</strong><p>Naturaleza, aventura, cultura y turismo vivencial.</p></article>
+        </div>
+        <div class="info-note"><strong>Atención directa.</strong> Consulta la disponibilidad de tours y paquetes por WhatsApp. RUC {siteConfig.ruc}.</div>
       </div>
-      <div class="editorial-gallery">
-        <Picture src={siteImages.trail.src} formats={["avif"]} fallbackFormat="webp" widths={[420, 680, 900]} sizes="(min-width: 768px) 30vw, 58vw" alt={siteImages.trail.alt} loading="lazy" />
-        <Picture src={siteImages.hero.src} formats={["avif"]} fallbackFormat="webp" widths={[320, 520, 700]} sizes="(min-width: 768px) 22vw, 38vw" alt={siteImages.hero.alt} loading="lazy" />
-        <Picture src={siteImages.river.src} formats={["avif"]} fallbackFormat="webp" widths={[320, 520, 700]} sizes="(min-width: 768px) 22vw, 38vw" alt={siteImages.river.alt} loading="lazy" />
+      <div class="about-story__gallery" aria-label="Viajeros de Tangarana en la Selva Central">
+        <figure class="about-story__photo about-story__photo--main">
+          <Picture src={siteImages.waterfallGroup.src} formats={["avif"]} fallbackFormat="webp" widths={[520, 760, 1000]} sizes="(min-width: 768px) 37vw, 100vw" alt={siteImages.waterfallGroup.alt} loading="lazy" />
+          <figcaption>Viajeros frente a una cascada</figcaption>
+        </figure>
+        <figure class="about-story__photo">
+          <Picture src={siteImages.lagoonGroup.src} formats={["avif"]} fallbackFormat="webp" widths={[360, 560, 760]} sizes="(min-width: 768px) 20vw, 50vw" alt={siteImages.lagoonGroup.alt} loading="lazy" />
+          <figcaption>Paseo en grupo</figcaption>
+        </figure>
+        <figure class="about-story__photo">
+          <Picture src={siteImages.yaneshaCulture.src} formats={["avif"]} fallbackFormat="webp" widths={[360, 560, 760]} sizes="(min-width: 768px) 20vw, 50vw" alt={siteImages.yaneshaCulture.alt} loading="lazy" />
+          <figcaption>Experiencia cultural yanesha</figcaption>
+        </figure>
       </div>
     </div>
   </section>
   <JungleInterlude variant="to-forest" />
-  <section class="section section--forest" aria-labelledby="way-title">
-    <div class="container content-grid">
-      <div><span class="eyebrow">Información al viajero</span><h2 id="way-title" style="font-size: clamp(2.4rem, 5vw, 4.8rem); margin-top: 1rem;">Qué información encontrarás en la web</h2></div>
-      <div class="content-copy" style="color: rgba(255,255,255,.72);"><p>La web muestra el precio, la duración, los destinos, los horarios y las inclusiones disponibles para cada tour.</p><p>La disponibilidad, el punto de salida y los detalles no publicados se confirman directamente con el equipo antes de reservar.</p></div>
+  <section class="section section--forest about-traveler-info" aria-labelledby="way-title">
+    <div class="container about-traveler-info__grid">
+      <div class="about-traveler-info__intro">
+        <span class="eyebrow">Información al viajero</span>
+        <h2 id="way-title">Qué información encontrarás en la web</h2>
+        <p>Todo lo necesario para comparar un tour o paquete y reservar con claridad.</p>
+      </div>
+      <div class="about-traveler-info__list">
+        <article><span>01</span><div><strong>Precio y duración</strong><p>Verás el precio por persona y cuánto dura cada experiencia.</p></div></article>
+        <article><span>02</span><div><strong>Recorrido e inclusiones</strong><p>Consulta los lugares del itinerario y los servicios incluidos.</p></div></article>
+        <article><span>03</span><div><strong>Confirmación personal</strong><p>El equipo confirma por WhatsApp la fecha, disponibilidad y punto de salida.</p></div></article>
+      </div>
     </div>
   </section>
-  <section class="cta-route" aria-labelledby="about-cta-title"><div class="container cta-route__inner"><div><span class="eyebrow">Contacto directo</span><h2 id="about-cta-title">Consulta nuestros tours por WhatsApp</h2></div><div class="cta-route__actions"><WhatsAppCTA label="Consultar por WhatsApp" /></div></div></section>
+  <section class="cta-route" aria-labelledby="about-cta-title"><div class="container cta-route__inner"><div><span class="eyebrow">Contacto directo</span><h2 id="about-cta-title">Consulta nuestros tours y paquetes</h2></div><div class="cta-route__actions"><WhatsAppCTA label="Consultar por WhatsApp" /></div></div></section>
 </BaseLayout>

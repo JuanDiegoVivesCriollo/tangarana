@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tangaranatravel.pe/sitemap-index.xml
+Sitemap: https://tangaranatours.com/sitemap-index.xml

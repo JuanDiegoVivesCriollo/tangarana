@@ -1,0 +1,108 @@
+---
+import { Picture } from "astro:assets";
+import { ChevronLeft, ChevronRight, Images } from "@lucide/astro";
+import type { PackagePhoto } from "../data/packageMedia";
+
+interface Props {
+  photos: PackagePhoto[];
+  packageName: string;
+}
+
+const { photos, packageName } = Astro.props;
+---
+
+<div class="package-gallery" data-package-gallery data-interval="1800">
+  <div class="package-gallery__slides" aria-live="polite">
+    {photos.map((photo, index) => (
+      <figure class:list={["package-gallery__slide", index === 0 && "is-active"]} data-gallery-slide aria-hidden={index === 0 ? "false" : "true"}>
+        <Picture
+          src={photo.src}
+          formats={["avif"]}
+          fallbackFormat="webp"
+          widths={[640, 960, 1280, 1600]}
+          sizes="100vw"
+          alt={photo.alt}
+          loading={index === 0 ? "eager" : "lazy"}
+          fetchpriority={index === 0 ? "high" : "auto"}
+        />
+      </figure>
+    ))}
+  </div>
+
+  {photos.length > 1 && (
+    <>
+      <div class="package-gallery__controls">
+        <button type="button" data-gallery-previous aria-label={`Ver fotografía anterior de ${packageName}`}>
+          <ChevronLeft size={21} aria-hidden="true" />
+        </button>
+        <span><Images size={16} aria-hidden="true" /> <b data-gallery-current>1</b> / {photos.length}</span>
+        <button type="button" data-gallery-next aria-label={`Ver siguiente fotografía de ${packageName}`}>
+          <ChevronRight size={21} aria-hidden="true" />
+        </button>
+      </div>
+      <div class="package-gallery__dots" aria-label="Elegir fotografía">
+        {photos.map((_, index) => (
+          <button type="button" class:list={[index === 0 && "is-active"]} data-gallery-dot={index} aria-label={`Ver fotografía ${index + 1}`} aria-current={index === 0 ? "true" : "false"}></button>
+        ))}
+      </div>
+    </>
+  )}
+</div>
+
+<script>
+  const bindPackageGalleries = () => document.querySelectorAll<HTMLElement>("[data-package-gallery]").forEach((gallery) => {
+    if (gallery.dataset.galleryBound === "true") return;
+    gallery.dataset.galleryBound = "true";
+
+    const slides = Array.from(gallery.querySelectorAll<HTMLElement>("[data-gallery-slide]"));
+    const dots = Array.from(gallery.querySelectorAll<HTMLButtonElement>("[data-gallery-dot]"));
+    const current = gallery.querySelector<HTMLElement>("[data-gallery-current]");
+    const interval = Number(gallery.dataset.interval || 1800);
+    let active = 0;
+    let timer = 0;
+    let pointerStart = 0;
+
+    const show = (next: number) => {
+      active = (next + slides.length) % slides.length;
+      slides.forEach((slide, index) => {
+        const selected = index === active;
+        slide.classList.toggle("is-active", selected);
+        slide.setAttribute("aria-hidden", String(!selected));
+      });
+      dots.forEach((dot, index) => {
+        const selected = index === active;
+        dot.classList.toggle("is-active", selected);
+        dot.setAttribute("aria-current", String(selected));
+      });
+      if (current) current.textContent = String(active + 1);
+    };
+
+    const stop = () => window.clearInterval(timer);
+    const start = () => {
+      stop();
+      if (slides.length > 1 && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        timer = window.setInterval(() => show(active + 1), interval);
+      }
+    };
+
+    gallery.querySelector("[data-gallery-previous]")?.addEventListener("click", () => { show(active - 1); start(); });
+    gallery.querySelector("[data-gallery-next]")?.addEventListener("click", () => { show(active + 1); start(); });
+    dots.forEach((dot) => dot.addEventListener("click", () => { show(Number(dot.dataset.galleryDot)); start(); }));
+    gallery.addEventListener("pointerdown", (event) => {
+      pointerStart = event.clientX;
+      stop();
+    });
+    gallery.addEventListener("pointerup", (event) => {
+      const distance = event.clientX - pointerStart;
+      if (Math.abs(distance) > 45) show(active + (distance < 0 ? 1 : -1));
+      start();
+    });
+    gallery.addEventListener("pointercancel", start);
+    document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
+    show(0);
+    start();
+  });
+
+  bindPackageGalleries();
+  document.addEventListener("astro:page-load", bindPackageGalleries);
+</script>

@@ -6,6 +6,7 @@ import ExpeditionNav from "../components/ExpeditionNav.astro";
 import FooterCamp from "../components/FooterCamp.astro";
 import WhatsAppCTA from "../components/WhatsAppCTA.astro";
 import ReservationModal from "../components/ReservationModal.astro";
+import TangaranaAssistant from "../components/TangaranaAssistant.astro";
 import { SITE_URL, siteConfig } from "../data/site";
 
 interface Props {
@@ -32,18 +33,18 @@ const {
 const canonical = new URL(canonicalPath, SITE_URL).toString();
 const pageTitle = title.includes("Tangarana") ? title : `${title} | ${siteConfig.name}`;
 const socialImageUrl = new URL(socialImage, SITE_URL).toString();
+const chatbotEnabled = import.meta.env.PUBLIC_ENABLE_CHATBOT === "true";
 ---
 
 <!doctype html>
 <html lang="es-PE">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script is:inline>
       (() => {
         const saved = localStorage.getItem("tangarana-theme");
-        const preferred = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        document.documentElement.dataset.theme = saved || preferred;
+        document.documentElement.dataset.theme = saved || "light";
       })();
     </script>
     <title>{pageTitle}</title>
@@ -64,9 +65,12 @@ const socialImageUrl = new URL(socialImage, SITE_URL).toString();
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImageUrl} />
+    <meta name="twitter:image:alt" content={socialImageAlt} />
     <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+    <link rel="describedby" href="/llms.txt" type="text/markdown" />
     {schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}
   </head>
   <body class={bodyClass}>
@@ -77,11 +81,26 @@ const socialImageUrl = new URL(socialImage, SITE_URL).toString();
       <FooterCamp />
       <WhatsAppCTA label="WhatsApp" variant="floating" />
       <ReservationModal />
+      {chatbotEnabled && <TangaranaAssistant />}
     </div>
     <script>
+      const floatingWhatsApp = document.querySelector<HTMLElement>(".whatsapp-cta--floating");
+      const firstHero = document.querySelector<HTMLElement>(".hero, .package-hero, .page-intro");
+      if (floatingWhatsApp && firstHero) {
+        const heroObserver = new IntersectionObserver(([entry]) => {
+          floatingWhatsApp.classList.toggle("is-over-hero", entry.isIntersecting);
+        }, { threshold: 0.02 });
+        heroObserver.observe(firstHero);
+      }
+
       if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
         import("lenis").then(({ default: Lenis }) => {
           const lenis = new Lenis({ duration: 0.8, smoothWheel: true });
+          const stopLenis = () => lenis.stop();
+          const startLenis = () => lenis.start();
+          window.addEventListener("tangarana:scroll-lock", stopLenis);
+          window.addEventListener("tangarana:scroll-unlock", startLenis);
+          if (document.documentElement.classList.contains("reservation-is-open")) stopLenis();
           const raf = (time: number) => {
             lenis.raf(time);
             requestAnimationFrame(raf);

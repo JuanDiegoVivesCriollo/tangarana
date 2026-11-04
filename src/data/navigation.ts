@@ -1,6 +1,7 @@
 export const mainNavigation = [
   { label: "Inicio", href: "/" },
   { label: "Tours", href: "/tours/" },
+  { label: "Paquetes", href: "/paquetes/" },
   { label: "Destinos", href: "/destinos/" },
   { label: "Nosotros", href: "/nosotros/" },
   { label: "Contacto", href: "/contacto/" },
@@ -11,4 +12,5 @@ export const destinationNavigation = [
   { label: "Pozuzo", href: "/destinos/pozuzo/" },
   { label: "Villa Rica", href: "/destinos/villa-rica/" },
   { label: "Valle del Perené", href: "/destinos/valle-del-perene/" },
+  { label: "Yanachaga Chemillén", href: "/destinos/yanachaga-chemillen/" },
 ] as const;

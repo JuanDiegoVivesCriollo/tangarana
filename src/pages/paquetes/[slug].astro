@@ -1,0 +1,216 @@
+---
+import { Picture } from "astro:assets";
+import { Backpack, BedDouble, BusFront, CalendarDays, Check, Clock3, MapPin, ShieldCheck, Sparkles } from "@lucide/astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import BrandMark from "../../components/BrandMark.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import FAQAccordion from "../../components/FAQAccordion.astro";
+import PackageGallery from "../../components/PackageGallery.astro";
+import StayPackageRail from "../../components/StayPackageRail.astro";
+import StayPackageReservationPanel from "../../components/StayPackageReservationPanel.astro";
+import { busCopy, carolinaEggPhotos, cruzDelSurPhotos, lodgingCopy, stayPackages, type StayPackage } from "../../data/stayPackages";
+import { SITE_URL, siteConfig } from "../../data/site";
+import { breadcrumbSchema } from "../../data/seo";
+
+export function getStaticPaths() {
+  return stayPackages.map((item) => ({ params: { slug: item.slug }, props: { item } }));
+}
+
+const { item } = Astro.props as { item: StayPackage };
+const canonicalPath = `/paquetes/${item.slug}/`;
+const related = stayPackages.filter((candidate) => candidate.slug !== item.slug);
+const lodgingGallery = [carolinaEggPhotos[5], carolinaEggPhotos[0], carolinaEggPhotos[2], carolinaEggPhotos[8], carolinaEggPhotos[4]];
+const faq = [
+  { question: `¿Cuánto cuesta el ${item.title.toLowerCase()}?`, answer: `La habitación estándar cuesta S/${item.standardPrice} por persona y la cabaña S/${item.cabinPrice} por persona. Los niños de 3 a 10 años pagan el 75% de la tarifa de adulto.` },
+  { question: "¿Qué incluye el paquete?", answer: `Incluye ${item.days} días de tours, ${item.nights} ${item.nights === 1 ? "noche" : "noches"} de alojamiento, ${item.days} desayunos, entradas programadas, guiado, movilidad durante los recorridos y traslados desde y hacia el terminal de Oxapampa.` },
+  { question: "¿El pasaje a Oxapampa está incluido?", answer: "No. El viaje desde la ciudad de origen se contrata por separado. La página muestra precios referenciales de Cruz del Sur sujetos a cambios por temporada." },
+  { question: "¿Puedo viajar con mascota?", answer: "Sí, Carolina Egg es pet friendly, pero la tarifa adicional y las políticas de convivencia deben confirmarse antes de reservar." },
+];
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristTrip",
+    name: item.title,
+    description: item.seoDescription,
+    url: new URL(canonicalPath, SITE_URL).toString(),
+    image: item.gallery.map((photo) => new URL(photo.src.src, SITE_URL).toString()),
+    touristType: "Viajeros, parejas, familias y grupos",
+    itinerary: item.itinerary.map((day) => ({ "@type": "Place", name: `Día ${day.day}: ${day.destination}` })),
+    provider: { "@type": "TravelAgency", name: siteConfig.name, url: SITE_URL, taxID: siteConfig.ruc },
+    offers: [
+      { "@type": "Offer", name: "Habitación estándar", price: item.standardPrice, priceCurrency: "PEN", url: new URL(canonicalPath, SITE_URL).toString() },
+      { "@type": "Offer", name: "Cabaña", price: item.cabinPrice, priceCurrency: "PEN", url: new URL(canonicalPath, SITE_URL).toString() },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((entry) => ({ "@type": "Question", name: entry.question, acceptedAnswer: { "@type": "Answer", text: entry.answer } })),
+  },
+  breadcrumbSchema([
+    { name: "Inicio", path: "/" },
+    { name: "Paquetes", path: "/paquetes/" },
+    { name: item.title, path: canonicalPath },
+  ]),
+];
+---
+
+<BaseLayout
+  title={item.seoTitle}
+  description={item.seoDescription}
+  canonicalPath={canonicalPath}
+  schema={schema}
+  socialImage={item.gallery[0]?.src.src}
+  socialImageAlt={item.gallery[0]?.alt}
+>
+  <header class="package-hero stay-package-hero">
+    <div class="package-hero__gallery">
+      <PackageGallery photos={item.gallery} packageName={item.title} />
+    </div>
+    <div class="package-hero__content">
+      <div class="package-hero__brand"><BrandMark /></div>
+      <Breadcrumbs items={[{ label: "Inicio", href: "/" }, { label: "Paquetes", href: "/paquetes/" }, { label: item.durationLabel }]} />
+      <span class="eyebrow">Tours + alojamiento</span>
+      <h1>{item.title}</h1>
+      <p>{item.summary}</p>
+      <div class="package-hero__meta">
+        <span><CalendarDays size={18} aria-hidden="true" /> {item.days} días / {item.nights} {item.nights === 1 ? "noche" : "noches"}</span>
+        <span><MapPin size={18} aria-hidden="true" /> {item.routeSummary}</span>
+      </div>
+      <div class="package-hero__actions">
+        <a class="button button-primary" href="#reservar-paquete">Cotizar este paquete</a>
+        <a class="text-link text-link--light" href="#programa-paquete">Ver programa completo ↓</a>
+      </div>
+      <div class="stay-package-hero__prices" aria-label="Tarifas por persona">
+        <span><small>Habitación estándar</small><strong>S/{item.standardPrice}</strong></span>
+        <span><small>Cabaña</small><strong>S/{item.cabinPrice}</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <section class="package-detail section stay-package-detail" id="programa-paquete" aria-labelledby="package-program-title">
+    <div class="container package-detail__layout stay-package-detail__layout">
+      <div class="package-detail__content">
+        <div class="package-detail__intro">
+          <span class="eyebrow">Programa completo</span>
+          <h2 id="package-program-title">Tu viaje, día por día</h2>
+          <p>{lodgingCopy.intro}</p>
+          <p>{lodgingCopy.departure}</p>
+          <div class="package-detail__schedule"><Clock3 size={21} aria-hidden="true" /><span><small>Duración</small><strong>{item.durationLabel}</strong></span></div>
+        </div>
+
+        <ol class="stay-itinerary">
+          {item.itinerary.map((day) => (
+            <li>
+              <article class="stay-itinerary__card">
+                <div class="stay-itinerary__media">
+                  <Picture src={day.photo.src} formats={["avif"]} fallbackFormat="webp" widths={[360, 560, 760]} sizes="(min-width: 720px) 19rem, 100vw" alt={day.photo.alt} loading="lazy" decoding="async" />
+                  <span>Día {String(day.day).padStart(2, "0")}</span>
+                </div>
+                <div class="stay-itinerary__content">
+                  <span class="eyebrow">{day.pickup} — {day.end}</span>
+                  <h3>{day.destination}</h3>
+                  <p>{day.summary}</p>
+                  <ul>{day.details.map((detail) => <li>{detail}</li>)}</ul>
+                  <div class="stay-itinerary__schedule">
+                    <span><small>Recojo</small><strong>{day.pickup}</strong></span>
+                    <span><small>Inicio</small><strong>{day.start}</strong></span>
+                    <span><small>Fin</small><strong>{day.end}</strong></span>
+                  </div>
+                  <a class="stay-itinerary__link" href={`/tours/${day.tourSlug}/`}>Ver el tour completo →</a>
+                </div>
+              </article>
+            </li>
+          ))}
+        </ol>
+
+        <div class="stay-package-facts">
+          <article>
+            <div><Check size={21} aria-hidden="true" /><h3>Incluye</h3></div>
+            <ul>{item.includes.map((entry) => <li>{entry}</li>)}</ul>
+          </article>
+          <article>
+            <div><ShieldCheck size={21} aria-hidden="true" /><h3>No incluye</h3></div>
+            <ul>{item.excludes.map((entry) => <li>{entry}</li>)}</ul>
+          </article>
+          <article>
+            <div><Sparkles size={21} aria-hidden="true" /><h3>Condiciones</h3></div>
+            <ul>{item.conditions.map((entry) => <li>{entry}</li>)}</ul>
+          </article>
+          <article>
+            <div><Backpack size={21} aria-hidden="true" /><h3>Qué llevar</h3></div>
+            <ul>{item.bring.map((entry) => <li>{entry}</li>)}</ul>
+          </article>
+        </div>
+      </div>
+
+      <div id="reservar-paquete"><StayPackageReservationPanel item={item} /></div>
+    </div>
+  </section>
+
+  <section class="section section--soft stay-lodging" aria-labelledby="lodging-title">
+    <div class="container">
+      <div class="stay-service-heading">
+        <div><span class="eyebrow">Hospedaje incluido</span><h2 id="lodging-title">Carolina Egg</h2></div>
+        <p>{lodgingCopy.summary}</p>
+      </div>
+      <div class="stay-lodging__gallery">
+        {lodgingGallery.map((photo, index) => (
+          <figure class:list={[index === 0 && "stay-lodging__gallery-featured"]}>
+            <Picture src={photo.src} formats={["avif"]} fallbackFormat="webp" widths={[360, 560, 820]} sizes={index === 0 ? "(min-width: 900px) 54vw, 100vw" : "(min-width: 900px) 24vw, 50vw"} alt={photo.alt} loading="lazy" decoding="async" />
+          </figure>
+        ))}
+      </div>
+      <div class="stay-lodging__types">
+        <article><BedDouble size={24} aria-hidden="true" /><span><small>Opción 01</small><h3>Cabaña</h3><p>{lodgingCopy.cabin}</p></span></article>
+        <article><BedDouble size={24} aria-hidden="true" /><span><small>Opción 02</small><h3>Habitación estándar</h3><p>{lodgingCopy.standard}</p></span></article>
+        <article><Clock3 size={24} aria-hidden="true" /><span><small>Horarios</small><h3>Ingreso y salida</h3><p>{lodgingCopy.schedule}</p></span></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section stay-bus" aria-labelledby="bus-title">
+    <div class="container stay-bus__layout">
+      <div class="stay-bus__media">
+        {cruzDelSurPhotos.map((photo, index) => (
+          <figure class:list={[index === 0 && "stay-bus__media-featured"]}>
+            <Picture src={photo.src} formats={["avif"]} fallbackFormat="webp" widths={[360, 620, 900]} sizes={index === 0 ? "(min-width: 900px) 42vw, 100vw" : "(min-width: 900px) 20vw, 50vw"} alt={photo.alt} loading="lazy" decoding="async" />
+          </figure>
+        ))}
+      </div>
+      <div class="stay-bus__content">
+        <span class="eyebrow">Transporte opcional</span>
+        <h2 id="bus-title">Cruz del Sur a Oxapampa</h2>
+        <p>{busCopy.intro}</p>
+        <div class="stay-bus__prices">
+          <article><small>Económico · asiento 140°</small><strong>S/{busCopy.economy}</strong><span>por persona</span></article>
+          <article><small>Suite · asiento 160°</small><strong>S/{busCopy.suite}</strong><span>por persona</span></article>
+        </div>
+        <div class="stay-bus__details">
+          <span><BusFront size={20} aria-hidden="true" /><strong>Salidas:</strong> {busCopy.times.join(" · ")}</span>
+          <span><Clock3 size={20} aria-hidden="true" /><strong>{busCopy.duration}</strong></span>
+        </div>
+        <h3>Lugares de embarque y desembarque</h3>
+        <ul>{busCopy.terminals.map((terminal) => <li>{terminal}</li>)}</ul>
+        <p class="stay-bus__note">{busCopy.note}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="related-package-section section" aria-labelledby="related-stay-packages-title">
+    <div class="container">
+      <div class="related-package-section__head">
+        <div><span class="eyebrow">Otros paquetes</span><h2 id="related-stay-packages-title">Compara otra duración</h2></div>
+        <p>El carrusel avanza automáticamente. También puedes deslizar o abrir cualquier tarjeta.</p>
+      </div>
+      <StayPackageRail items={related} />
+    </div>
+  </section>
+
+  <section class="section package-faq" aria-labelledby="stay-package-faq-title">
+    <div class="container content-grid">
+      <div><span class="eyebrow">Antes de reservar</span><h2 id="stay-package-faq-title" class="display-section-title">Información importante</h2></div>
+      <FAQAccordion items={faq} />
+    </div>
+  </section>
+</BaseLayout>

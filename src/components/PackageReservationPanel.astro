@@ -1,0 +1,116 @@
+---
+import { Check, Minus, Plus, Send } from "@lucide/astro";
+import type { CollectionEntry } from "astro:content";
+import { siteConfig } from "../data/site";
+
+interface Props {
+  item: CollectionEntry<"tours">["data"];
+  childPriceFactor?: number;
+}
+
+const { item, childPriceFactor = 1 } = Astro.props;
+const whatsappNumber = siteConfig.primaryWhatsApp.replace(/\D/g, "");
+---
+
+<aside class="package-booking" aria-labelledby="package-booking-title">
+  <div class="package-booking__head">
+    <span class="eyebrow">Reserva directa</span>
+    <h2 id="package-booking-title">Reserva este tour</h2>
+    <p>Completa lo esencial. La fecha se coordina por WhatsApp.</p>
+  </div>
+
+  <form class="package-booking__form" data-package-booking data-price={item.price} data-child-factor={childPriceFactor} data-whatsapp-number={whatsappNumber} data-package-name={item.commercialName}>
+    <div class="package-booking__selected">
+      <span>Tour seleccionado</span>
+      <strong>{item.commercialName}</strong>
+      <small>S/{item.price} por persona</small>
+    </div>
+
+    <div class="package-booking__travelers">
+      <div class="package-booking__counter">
+        <div><strong>Adultos</strong><small>18 años o más</small></div>
+        <div>
+          <button type="button" data-package-count="minus" data-target="package-adults" aria-label="Restar un adulto"><Minus size={16} aria-hidden="true" /></button>
+          <input id="package-adults" name="adults" type="number" min="1" max="30" value="1" inputmode="numeric" required />
+          <button type="button" data-package-count="plus" data-target="package-adults" aria-label="Añadir un adulto"><Plus size={16} aria-hidden="true" /></button>
+        </div>
+      </div>
+      <div class="package-booking__counter">
+        <div><strong>Niños</strong><small>{childPriceFactor < 1 ? `${Math.round(childPriceFactor * 100)}% de la tarifa` : "Tarifa por confirmar"}</small></div>
+        <div>
+          <button type="button" data-package-count="minus" data-target="package-children" aria-label="Restar un niño"><Minus size={16} aria-hidden="true" /></button>
+          <input id="package-children" name="children" type="number" min="0" max="30" value="0" inputmode="numeric" required />
+          <button type="button" data-package-count="plus" data-target="package-children" aria-label="Añadir un niño"><Plus size={16} aria-hidden="true" /></button>
+        </div>
+      </div>
+    </div>
+
+    <label><span>Nombre completo</span><input name="fullName" type="text" minlength="3" maxlength="100" autocomplete="name" placeholder="Nombre y apellido" required /></label>
+    <label><span>Número de WhatsApp</span><input name="phone" type="tel" minlength="7" maxlength="20" autocomplete="tel" inputmode="tel" placeholder="Ejemplo: 931 530 169" required /></label>
+    <label><span>Hospedaje o recojo <small>(opcional)</small></span><input name="pickup" type="text" maxlength="140" placeholder="Puedes indicarlo después" /></label>
+
+    <p class="package-booking__date"><Check size={17} aria-hidden="true" /> La fecha y disponibilidad se confirman por WhatsApp.</p>
+    <div class="package-booking__total">
+      <span>Total estimado</span>
+      <strong data-package-total>S/{item.price}</strong>
+    </div>
+    <p class="package-booking__estimate" data-package-estimate>1 adulto · sin pago en línea</p>
+    <button class="button button-primary" type="submit">Continuar en WhatsApp <Send size={18} aria-hidden="true" /></button>
+  </form>
+</aside>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>("[data-package-booking]").forEach((form) => {
+    const adults = form.querySelector<HTMLInputElement>('[name="adults"]');
+    const children = form.querySelector<HTMLInputElement>('[name="children"]');
+    const total = form.querySelector<HTMLElement>("[data-package-total]");
+    const estimate = form.querySelector<HTMLElement>("[data-package-estimate]");
+    const price = Number(form.dataset.price || 0);
+    const childFactor = Number(form.dataset.childFactor || 1);
+
+    const updateTotal = () => {
+      const adultCount = Math.max(1, Number(adults?.value || 1));
+      const childCount = Math.max(0, Number(children?.value || 0));
+      const amount = adultCount * price + childCount * price * childFactor;
+      if (total) total.textContent = `S/${new Intl.NumberFormat("es-PE", { maximumFractionDigits: 2 }).format(amount)}`;
+      if (estimate) estimate.textContent = `${adultCount} ${adultCount === 1 ? "adulto" : "adultos"} · ${childCount} ${childCount === 1 ? "niño" : "niños"} · sin pago en línea`;
+    };
+
+    form.addEventListener("click", (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-package-count]");
+      if (!button) return;
+      const input = form.querySelector<HTMLInputElement>(`#${button.dataset.target}`);
+      if (!input) return;
+      const change = button.dataset.packageCount === "plus" ? 1 : -1;
+      input.value = String(Math.min(Number(input.max), Math.max(Number(input.min), Number(input.value) + change)));
+      updateTotal();
+    });
+    adults?.addEventListener("input", updateTotal);
+    children?.addEventListener("input", updateTotal);
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const data = new FormData(form);
+      const adultCount = Number(data.get("adults") || 1);
+      const childCount = Number(data.get("children") || 0);
+      const amount = adultCount * price + childCount * price * childFactor;
+      const lines = [
+        "Hola, quiero solicitar una reserva con Tangarana Travel Tours.",
+        "",
+        `Tour: ${form.dataset.packageName || ""}`,
+        `Nombre: ${String(data.get("fullName") || "")}`,
+        `Adultos: ${adultCount}`,
+        `Niños: ${childCount}`,
+        `Total estimado: S/${new Intl.NumberFormat("es-PE", { maximumFractionDigits: 2 }).format(amount)}`,
+        `Mi WhatsApp: ${String(data.get("phone") || "")}`,
+      ];
+      const pickup = String(data.get("pickup") || "").trim();
+      if (pickup) lines.push(`Hospedaje o recojo: ${pickup}`);
+      lines.push("", "Quiero confirmar una fecha, la disponibilidad y el precio final.");
+      window.open(`https://wa.me/${form.dataset.whatsappNumber || ""}?text=${encodeURIComponent(lines.join("\n"))}`, "_blank", "noopener,noreferrer");
+    });
+
+    updateTotal();
+  });
+</script>

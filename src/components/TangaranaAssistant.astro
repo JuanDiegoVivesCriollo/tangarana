@@ -1,0 +1,613 @@
+---
+import { getImage } from "astro:assets";
+import idleSource from "../assets/assistant/tangarana-ant-idle.png";
+import greetingSource from "../assets/assistant/tangarana-ant-greeting.png";
+import thinkingSource from "../assets/assistant/tangarana-ant-thinking.png";
+import presentingSource from "../assets/assistant/tangarana-ant-presenting.png";
+
+const [idle, greeting, thinking, presenting] = await Promise.all([
+  getImage({ src: idleSource, width: 270, format: "webp", quality: 76 }),
+  getImage({ src: greetingSource, width: 270, format: "webp", quality: 76 }),
+  getImage({ src: thinkingSource, width: 270, format: "webp", quality: 76 }),
+  getImage({ src: presentingSource, width: 270, format: "webp", quality: 76 }),
+]);
+---
+
+<aside
+  class="tanga-assistant"
+  data-tangarana-assistant
+  data-state="idle"
+  data-idle={idle.src}
+  data-greeting={greeting.src}
+  data-thinking={thinking.src}
+  data-presenting={presenting.src}
+  aria-label="Tanga, asistente virtual de Tangarana"
+>
+  <button
+    class="tanga-assistant__invitation"
+    type="button"
+    data-assistant-invitation
+    aria-controls="tanga-chat-panel"
+    aria-expanded="false"
+  >
+    <strong>Hola, soy Tanga</strong>
+    <span>¿Te ayudo a elegir?</span>
+  </button>
+
+  <button
+    class="tanga-assistant__character"
+    type="button"
+    data-assistant-toggle
+    aria-controls="tanga-chat-panel"
+    aria-expanded="false"
+    aria-label="Conversar con Tanga"
+  >
+    <span class="tanga-assistant__halo" aria-hidden="true"></span>
+    <img
+      src={idle.src}
+      width="270"
+      height="270"
+      alt=""
+      decoding="async"
+      data-assistant-character
+    />
+    <span class="tanga-assistant__badge" aria-hidden="true">IA</span>
+  </button>
+
+  <section
+    class="tanga-chat"
+    id="tanga-chat-panel"
+    data-assistant-panel
+    data-lenis-prevent
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="tanga-chat-title"
+    hidden
+  >
+    <header class="tanga-chat__header">
+      <div>
+        <p>TANGARANA · OXAPAMPA</p>
+        <h2 id="tanga-chat-title">Conversa con Tanga</h2>
+      </div>
+      <button type="button" data-assistant-close aria-label="Cerrar conversación con Tanga">×</button>
+    </header>
+
+    <div class="tanga-chat__messages" data-assistant-log role="log" aria-live="polite" aria-relevant="additions" tabindex="0">
+      <div class="tanga-chat__quick" aria-label="Consultas rápidas">
+        <button type="button" data-assistant-quick="tours">Ver tours</button>
+        <button type="button" data-assistant-quick="packages">Comparar paquetes</button>
+        <button type="button" data-assistant-quick="rates">Consultar precios</button>
+        <button type="button" data-assistant-quick="recommendations">Qué llevar</button>
+        <button type="button" data-assistant-quick="booking">Reservar</button>
+      </div>
+    </div>
+
+    <p class="tanga-chat__status" data-assistant-status role="status" hidden>
+      <span>Tanga está revisando la información</span>
+      <span class="tanga-chat__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    </p>
+
+    <form class="tanga-chat__form" data-assistant-form>
+      <label for="tanga-chat-input">Escribe tu pregunta</label>
+      <div>
+        <textarea
+          id="tanga-chat-input"
+          name="message"
+          rows="1"
+          maxlength="800"
+          placeholder="Pregunta por un tour o paquete…"
+          data-assistant-input
+          required
+        ></textarea>
+        <button type="submit" data-assistant-submit>Enviar</button>
+      </div>
+      <input class="tanga-chat__honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" data-assistant-website />
+      <p>La disponibilidad y las reservas siempre las confirma el equipo de Tangarana.</p>
+    </form>
+  </section>
+</aside>
+
+<script>
+  const prepareAssistant = (host: HTMLElement) => {
+    if (host.dataset.loaderBound === "true") return;
+    host.dataset.loaderBound = "true";
+    const controls = [
+      host.querySelector<HTMLButtonElement>("[data-assistant-toggle]"),
+      host.querySelector<HTMLButtonElement>("[data-assistant-invitation]"),
+    ].filter(Boolean) as HTMLButtonElement[];
+    let loading: Promise<typeof import("../scripts/tangaranaAssistant")> | undefined;
+    const boot = async (event: Event) => {
+      event.preventDefault();
+      controls.forEach((control) => control.removeEventListener("click", boot));
+      loading ||= import("../scripts/tangaranaAssistant");
+      const { initTangaranaAssistant } = await loading;
+      initTangaranaAssistant(host, true);
+    };
+    controls.forEach((control) => control.addEventListener("click", boot));
+
+    const preload = () => ["greeting", "thinking", "presenting"].forEach((state) => {
+      const src = host.dataset[state];
+      if (src) new Image().src = src;
+    });
+    const idleCallback = (window as Window & { requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number }).requestIdleCallback;
+    if (idleCallback) idleCallback(preload, { timeout: 2800 });
+    else globalThis.setTimeout(preload, 1800);
+  };
+
+  document.querySelectorAll<HTMLElement>("[data-tangarana-assistant]").forEach(prepareAssistant);
+  document.addEventListener("astro:page-load", () => document.querySelectorAll<HTMLElement>("[data-tangarana-assistant]").forEach(prepareAssistant));
+</script>
+
+<style is:global>
+  .tanga-assistant {
+    --tanga-green: #0a352a;
+    --tanga-green-soft: #dff2e8;
+    --tanga-gold: #facb55;
+    position: fixed;
+    right: 7.2rem;
+    bottom: 0.65rem;
+    z-index: 78;
+    width: 8rem;
+    height: 9.2rem;
+    pointer-events: none;
+  }
+
+  .tanga-assistant button,
+  .tanga-assistant a,
+  .tanga-assistant textarea {
+    font-family: "Source Sans 3 Variable", sans-serif;
+  }
+
+  .tanga-assistant__character {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 7.6rem;
+    height: 8.6rem;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    pointer-events: auto;
+    cursor: pointer;
+    filter: drop-shadow(0 0.7rem 1.1rem rgb(0 25 17 / 0.24));
+    transition: transform 220ms ease, filter 220ms ease;
+  }
+
+  .tanga-assistant__character:hover {
+    transform: translateY(-0.25rem) scale(1.025);
+    filter: drop-shadow(0 0.9rem 1.3rem rgb(0 25 17 / 0.3));
+  }
+
+  .tanga-assistant__character:focus-visible,
+  .tanga-assistant__invitation:focus-visible,
+  .tanga-chat :is(button, a, textarea):focus-visible {
+    outline: 3px solid var(--tanga-gold);
+    outline-offset: 3px;
+  }
+
+  .tanga-assistant__character img {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .tanga-assistant__halo {
+    position: absolute;
+    inset: 1.1rem 0.3rem 0.1rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(250 203 85 / 0.3), transparent 67%);
+    transform: scale(0.82);
+  }
+
+  .tanga-assistant__badge {
+    position: absolute;
+    right: 0.1rem;
+    bottom: 0.5rem;
+    z-index: 2;
+    display: grid;
+    min-width: 2rem;
+    height: 2rem;
+    place-items: center;
+    border: 2px solid #f8f3de;
+    border-radius: 50%;
+    background: var(--tanga-green);
+    color: white;
+    font: 800 0.65rem/1 "Manrope Variable", sans-serif;
+    letter-spacing: 0.04em;
+  }
+
+  .tanga-assistant__invitation {
+    position: absolute;
+    right: 6.7rem;
+    bottom: 1.55rem;
+    width: max-content;
+    max-width: 12rem;
+    display: grid;
+    gap: 0.1rem;
+    border: 1px solid color-mix(in srgb, var(--forest-950) 24%, transparent);
+    border-radius: 1rem 1rem 0.2rem 1rem;
+    background: color-mix(in srgb, var(--surface-raised) 94%, transparent);
+    box-shadow: 0 0.55rem 1.6rem rgb(0 32 22 / 0.17);
+    padding: 0.68rem 0.85rem;
+    color: var(--ink);
+    text-align: left;
+    pointer-events: auto;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+  }
+
+  .tanga-assistant__invitation strong {
+    font: 800 0.78rem/1.2 "Manrope Variable", sans-serif;
+  }
+
+  .tanga-assistant__invitation span {
+    color: var(--muted);
+    font-size: 0.73rem;
+  }
+
+  .tanga-assistant.is-open .tanga-assistant__invitation {
+    display: none;
+  }
+
+  .tanga-assistant[data-state="greeting"] .tanga-assistant__character,
+  .tanga-assistant[data-state="presenting"] .tanga-assistant__character {
+    animation: tanga-arrive 620ms cubic-bezier(.2,.75,.25,1);
+  }
+
+  .tanga-assistant[data-state="thinking"] .tanga-assistant__character {
+    animation: tanga-think 1.4s ease-in-out infinite;
+  }
+
+  .tanga-assistant[data-state="thinking"] .tanga-assistant__halo {
+    animation: tanga-pulse 1.15s ease-in-out infinite;
+  }
+
+  .tanga-chat {
+    --chat-paper: #f1f8f4;
+    --chat-bubble: #ffffff;
+    --chat-ink: #092f25;
+    --chat-muted: #536a62;
+    --chat-line: #cadbd3;
+    position: fixed;
+    right: 15.6rem;
+    bottom: var(--assistant-bottom, 0.8rem);
+    z-index: 79;
+    display: flex;
+    width: min(27rem, calc(100vw - 17rem));
+    height: var(--assistant-height, min(42.5rem, 82dvh));
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--leaf-500) 42%, var(--chat-line));
+    border-top: 3px solid var(--tanga-gold);
+    border-radius: 1.15rem;
+    background: var(--chat-paper);
+    color: var(--chat-ink);
+    box-shadow: 0 1.25rem 4rem rgb(0 25 17 / 0.3);
+    text-align: left;
+    pointer-events: auto;
+  }
+
+  .tanga-chat[hidden] { display: none; }
+  .tanga-chat * { box-sizing: border-box; }
+  .tanga-chat p { margin: 0; }
+
+  .tanga-chat__header {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1rem 0.9rem 1.2rem;
+    border-bottom: 1px solid rgb(250 203 85 / 0.32);
+    background: linear-gradient(135deg, #062c22, #104c3b);
+    color: #fbfff9;
+  }
+
+  .tanga-chat__header p {
+    margin-bottom: 0.25rem;
+    color: #f8cf68;
+    font: 750 0.65rem/1 "Manrope Variable", sans-serif;
+    letter-spacing: 0.12em;
+  }
+
+  .tanga-chat__header h2 {
+    margin: 0;
+    font: 590 1.55rem/1.05 "Manrope Variable", sans-serif;
+    letter-spacing: -0.035em;
+  }
+
+  .tanga-chat__header button {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid rgb(255 255 255 / 0.36);
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.08);
+    color: white;
+    font-size: 1.55rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .tanga-chat__messages {
+    min-height: 4rem;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-color: #779b8c transparent;
+    scrollbar-width: thin;
+    padding: 1rem;
+  }
+
+  .tanga-chat__message {
+    width: fit-content;
+    max-width: 92%;
+    margin: 0 0 0.75rem;
+    border: 1px solid var(--chat-line);
+    border-radius: 0.35rem 1rem 1rem;
+    background: var(--chat-bubble);
+    padding: 0.72rem 0.85rem;
+  }
+
+  .tanga-chat__message--user {
+    margin-left: auto;
+    border-color: color-mix(in srgb, var(--leaf-500) 24%, var(--chat-line));
+    border-radius: 1rem 0.35rem 1rem 1rem;
+    background: var(--tanga-green-soft);
+  }
+
+  .tanga-chat__speaker,
+  .tanga-chat__form > label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .tanga-chat__text {
+    color: inherit;
+    font-size: 0.98rem;
+    line-height: 1.48;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+
+  .tanga-chat__quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.15rem 0 1rem;
+  }
+
+  .tanga-chat__quick button,
+  .tanga-chat__actions :is(button, a) {
+    display: inline-flex;
+    min-height: 2.55rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--chat-line);
+    border-radius: 999px;
+    background: transparent;
+    padding: 0.48rem 0.72rem;
+    color: var(--chat-ink);
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .tanga-chat__quick button:hover,
+  .tanga-chat__actions :is(button, a):hover {
+    border-color: var(--tanga-gold);
+    background: color-mix(in srgb, var(--tanga-gold) 18%, var(--chat-bubble));
+  }
+
+  .tanga-chat__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.65rem;
+  }
+
+  .tanga-chat__actions :is(button, a):first-child {
+    border-color: var(--tanga-green);
+    background: var(--tanga-green);
+    color: white;
+  }
+
+  .tanga-chat__status {
+    display: flex;
+    min-height: 2.1rem;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 1rem;
+    color: var(--chat-muted);
+    font-size: 0.78rem;
+  }
+
+  .tanga-chat__status[hidden] { display: none; }
+
+  .tanga-chat__dots {
+    display: inline-flex;
+    gap: 0.2rem;
+  }
+
+  .tanga-chat__dots i {
+    width: 0.27rem;
+    height: 0.27rem;
+    border-radius: 50%;
+    background: currentColor;
+    animation: tanga-dot 1s ease-in-out infinite;
+  }
+
+  .tanga-chat__dots i:nth-child(2) { animation-delay: 150ms; }
+  .tanga-chat__dots i:nth-child(3) { animation-delay: 300ms; }
+
+  .tanga-chat__form {
+    position: relative;
+    flex: 0 0 auto;
+    border-top: 1px solid var(--chat-line);
+    background: var(--chat-paper);
+    padding: 0.7rem;
+  }
+
+  .tanga-chat__form > div {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.45rem;
+  }
+
+  .tanga-chat__form textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.75rem;
+    max-height: 6.75rem;
+    resize: none;
+    border: 1px solid var(--chat-line);
+    border-radius: 1.4rem;
+    background: var(--chat-bubble);
+    padding: 0.65rem 0.85rem;
+    color: var(--chat-ink);
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .tanga-chat__form textarea::placeholder { color: var(--chat-muted); }
+
+  .tanga-chat__form button {
+    min-width: 4.3rem;
+    min-height: 2.75rem;
+    border: 0;
+    border-radius: 1.4rem;
+    background: var(--tanga-gold);
+    color: #102c22;
+    font-size: 0.82rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .tanga-chat__form button:disabled,
+  .tanga-chat__quick button:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  .tanga-chat__form > p {
+    margin-top: 0.42rem;
+    padding-inline: 0.25rem;
+    color: var(--chat-muted);
+    font-size: 0.68rem;
+    line-height: 1.3;
+  }
+
+  .tanga-chat__honeypot {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden;
+    opacity: 0;
+    clip-path: inset(50%);
+    pointer-events: none;
+  }
+
+  :root[data-theme="dark"] .tanga-chat {
+    --chat-paper: #071d17;
+    --chat-bubble: #102b22;
+    --chat-ink: #f2f8f4;
+    --chat-muted: #b8cbc2;
+    --chat-line: #36594b;
+    --tanga-green-soft: #173e31;
+    box-shadow: 0 1.25rem 4rem rgb(0 0 0 / 0.58);
+  }
+
+  :root[data-theme="dark"] .tanga-assistant__invitation {
+    border-color: rgb(255 255 255 / 0.16);
+    background: rgb(7 29 23 / 0.92);
+  }
+
+  @media (max-width: 67.99rem) {
+    .tanga-assistant { right: 0.75rem; }
+    .tanga-chat { right: 8.6rem; width: min(27rem, calc(100vw - 10rem)); }
+  }
+
+  @media (max-width: 47.99rem) {
+    .tanga-assistant {
+      right: 0.45rem;
+      bottom: calc(0.25rem + env(safe-area-inset-bottom));
+      width: 6.3rem;
+      height: 7.2rem;
+    }
+
+    .tanga-assistant__character {
+      width: 6.15rem;
+      height: 7rem;
+    }
+
+    .tanga-assistant__invitation {
+      right: 5.6rem;
+      bottom: 1rem;
+      max-width: 10rem;
+      padding: 0.55rem 0.7rem;
+    }
+
+    .tanga-assistant__invitation span { font-size: 0.68rem; }
+    .tanga-assistant.is-open .tanga-assistant__character { opacity: 0; pointer-events: none; }
+
+    .tanga-chat {
+      left: 0.55rem;
+      right: 0.55rem;
+      bottom: var(--assistant-bottom, calc(0.55rem + env(safe-area-inset-bottom)));
+      width: auto;
+      max-width: none;
+      border-radius: 0.95rem;
+    }
+
+    .tanga-chat__header { padding: 0.72rem 0.75rem 0.68rem 0.95rem; }
+    .tanga-chat__header h2 { font-size: 1.3rem; }
+    .tanga-chat__header p { font-size: 0.58rem; }
+    .tanga-chat__messages { padding: 0.8rem; }
+    .tanga-chat__text { font-size: 0.91rem; }
+    .tanga-chat__form { padding: 0.55rem; }
+    .tanga-chat.is-compact .tanga-chat__header p,
+    .tanga-chat.is-compact .tanga-chat__form > p { display: none; }
+  }
+
+  @media (max-width: 23rem) {
+    .tanga-assistant__invitation span { display: none; }
+    .tanga-chat__quick button { font-size: 0.75rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tanga-assistant *,
+    .tanga-chat * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+
+  @keyframes tanga-arrive {
+    0% { opacity: 0.72; transform: translateY(0.55rem) scale(0.94); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes tanga-think {
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50% { transform: translateY(-0.22rem) rotate(1deg); }
+  }
+
+  @keyframes tanga-pulse {
+    0%, 100% { opacity: 0.45; transform: scale(0.78); }
+    50% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes tanga-dot {
+    0%, 70%, 100% { opacity: 0.32; transform: translateY(0); }
+    35% { opacity: 1; transform: translateY(-0.18rem); }
+  }
+</style>

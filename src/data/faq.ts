@@ -1,34 +1,34 @@
 export const faqItems = [
   {
     question: "¿Cuánto cuesta el tour a Pozuzo?",
-    answer: "El tour a Pozuzo cuesta S/70 por persona y tiene un horario publicado de 5:30 a. m. a 6:30 p. m.",
+    answer: "Cuesta S/70 por persona. El horario publicado es de 5:30 a. m. a 6:30 p. m.",
   },
   {
     question: "¿Cuánto dura el tour a Villa Rica?",
-    answer: "El tour a Villa Rica se realiza de 8:00 a. m. a 6:30 p. m. y cuesta S/60 por persona.",
+    answer: "Se realiza de 8:00 a. m. a 6:30 p. m. y cuesta S/60 por persona.",
   },
   {
-    question: "¿Qué lugares incluye el tour al Valle del Perené?",
-    answer: "El itinerario anunciado incluye deportes extremos, Mariposario, visita a Pepe Lucho, paseo en bote, Catarata Bayoz, Catarata Velo de la Novia y CC.NN. Asháninka.",
+    question: "¿Qué incluye el tour al Valle del Perené?",
+    answer: "Incluye las paradas publicadas: mariposario, paseo en bote, Catarata Bayoz, Velo de la Novia y encuentro cultural asháninka, entre otras actividades.",
   },
   {
-    question: "¿Cuánto cuestan los tours a Chontabamba y Catarata Río Tigre?",
-    answer: "Cada tour cuesta S/30 por persona. Chontabamba tiene un horario publicado de 10:30 a. m. a 2:30 p. m.; Catarata Río Tigre, de 3:30 p. m. a 6:30 p. m.",
+    question: "¿Cuánto cuestan Chontabamba y Catarata Río Tigre?",
+    answer: "Chontabamba cuesta S/30 por persona. Catarata Río Tigre cuesta S/45 y ofrece dos horarios de aproximadamente cuatro horas.",
   },
   {
-    question: "¿Qué incluye el paquete de 4 días?",
-    answer: "Incluye transporte turístico, alojamiento por 4 días y 3 noches, desayunos, 4 días de tours, guía profesional y asistencia permanente. Cuesta S/370 por persona.",
+    question: "¿Qué incluye el paquete de 4 días y 3 noches?",
+    answer: "Incluye alojamiento en Carolina Egg, cuatro desayunos, tours a Chontabamba, Pozuzo, Villa Rica y Catarata Río Tigre, entradas programadas, guiado, movilidad y traslados al terminal. Cuesta S/644 en habitación estándar o S/710 en cabaña por persona.",
+  },
+  {
+    question: "¿Qué ofrece Yanachaga Chemillén?",
+    answer: "Una caminata de aproximadamente 14 km por el sector San Alberto para observar flora, fauna, plantas del bosque y árboles antiguos. Cuesta S/90 por persona.",
   },
   {
     question: "¿Cómo consulto disponibilidad?",
-    answer: "Escribe al WhatsApp +51 931 530 169 e indica el tour y la fecha que te interesan. El equipo de Tangarana Travel Tours confirmará la disponibilidad.",
+    answer: "Elige un tour o paquete, completa los datos de los viajeros y envía la solicitud por WhatsApp. El equipo confirmará la fecha y las condiciones.",
   },
   {
-    question: "¿Qué debo confirmar en las excursiones de un día?",
-    answer: "Antes de reservar, confirma disponibilidad, punto de salida, transporte, entradas, alimentación, orden de las paradas y condiciones de las actividades opcionales.",
-  },
-  {
-    question: "¿Qué destinos visita Tangarana Travel Tours?",
-    answer: "La oferta publicada incluye tours a Pozuzo, Villa Rica, Valle del Perené, Chontabamba y Catarata Río Tigre, además de un paquete de 4 días por Oxapampa, Pozuzo, Villa Rica y Perené.",
+    question: "¿La solicitud por WhatsApp confirma la reserva?",
+    answer: "No. La solicitud inicia la conversación. Tangarana confirma disponibilidad, precio final, condiciones y forma de pago.",
   },
 ];

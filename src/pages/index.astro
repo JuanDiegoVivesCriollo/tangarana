@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroExpedition from "../components/HeroExpedition.astro";
-import TourFeature from "../components/TourFeature.astro";
 import DestinationEditorial from "../components/DestinationEditorial.astro";
 import IncludesBand from "../components/IncludesBand.astro";
 import SectionHeading from "../components/SectionHeading.astro";
@@ -11,23 +10,25 @@ import ExperienceFieldnotes from "../components/ExperienceFieldnotes.astro";
 import JourneyMoments from "../components/JourneyMoments.astro";
 import DayTourCollection from "../components/DayTourCollection.astro";
 import JungleInterlude from "../components/JungleInterlude.astro";
-import ReserveButton from "../components/ReserveButton.astro";
+import StayPackageCard from "../components/StayPackageCard.astro";
 import { destinations } from "../data/destinations";
 import { faqItems } from "../data/faq";
+import { stayPackages } from "../data/stayPackages";
 import { SITE_URL, siteConfig } from "../data/site";
 import { brandLogo } from "../data/images";
 
-const publishedTours = await getCollection("tours", ({ data }) => data.status === "published");
-const tourEntry = publishedTours.find(({ data }) => data.featured)!;
-const tour = tourEntry.data;
-const dayTourOrder = ["perene", "villa-rica", "chontabamba"];
+const publishedTours = await getCollection("tours", ({ data }) => data.status === "published" && data.kind === "day-tour" && data.indexable);
+const dayTourOrder = ["perene", "villa-rica", "yanachaga-chemillen"];
 const dayTours = dayTourOrder.map((slug) => publishedTours.find(({ data }) => data.slug === slug)!.data);
+const featuredPackage = stayPackages[2];
 const homeFaq = faqItems.slice(0, 4);
 const schema = [
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
     name: siteConfig.name,
+    alternateName: [siteConfig.shortName, "Tangarana Tours", "tangaranatours.com"],
     url: SITE_URL,
     inLanguage: "es-PE",
   },
@@ -36,9 +37,24 @@ const schema = [
     "@type": ["TravelAgency", "Organization"],
     "@id": `${SITE_URL}/#organization`,
     name: siteConfig.name,
+    alternateName: siteConfig.shortName,
+    legalName: siteConfig.name,
+    description: siteConfig.description,
     url: SITE_URL,
     logo: new URL(brandLogo.src, SITE_URL).toString(),
     telephone: siteConfig.primaryWhatsApp,
+    taxID: siteConfig.ruc,
+    foundingDate: "2018",
+    priceRange: "S/30–S/930",
+    areaServed: ["Oxapampa", "Pasco", "Selva Central", "Perú"],
+    knowsLanguage: ["es-PE"],
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: siteConfig.primaryWhatsApp,
+      contactType: "reservas y atención al viajero",
+      availableLanguage: ["es"],
+      areaServed: "PE",
+    },
     address: {
       "@type": "PostalAddress",
       streetAddress: siteConfig.location.street,
@@ -61,25 +77,31 @@ const schema = [
 ---
 
 <BaseLayout
-  title="Tours en Oxapampa y Selva Central | Tangarana Travel Tours"
-  description="Descubre tours por Oxapampa, Pozuzo, Villa Rica, Valle del Perené, Chontabamba y Catarata Río Tigre. Consulta itinerarios, precios y disponibilidad con Tangarana Travel Tours."
+  title="Tours y paquetes en Oxapampa | Tangarana Travel Tours"
+  description="Descubre tours individuales y paquetes con alojamiento por Oxapampa, Pozuzo, Villa Rica, Valle del Perené, Chontabamba, Río Tigre y Yanachaga Chemillén."
   schema={schema}
 >
   <HeroExpedition />
 
-  <section class="home-featured" id="ruta" aria-label="Tour destacado">
-    <div class="container"><TourFeature tour={tour} /></div>
+  <section class="section home-featured" id="ruta" aria-labelledby="home-package-title">
+    <div class="container home-stay-package">
+      <SectionHeading eyebrow="Paquete recomendado" title="Tours, alojamiento y desayunos en un solo programa" id="home-package-title">
+        <p>Viaja cuatro días con una tarifa clara según el tipo de habitación y revisa el itinerario completo antes de solicitar disponibilidad.</p>
+      </SectionHeading>
+      {featuredPackage && <StayPackageCard item={featuredPackage} index={2} />}
+      <a class="text-link home-day-tours__link" href="/paquetes/">Comparar los cuatro paquetes</a>
+    </div>
   </section>
 
   <ExperienceFieldnotes id="home-experiences-title" tone="soft" />
 
   <section class="section home-day-tours" aria-labelledby="home-day-tours-title">
     <div class="container">
-      <SectionHeading eyebrow="Tours de un día" title="Excursiones con precio y horario publicados" id="home-day-tours-title">
-        <p>Compara tours al Valle del Perené, Villa Rica y Chontabamba. Cada página muestra el horario, el precio y las paradas anunciadas.</p>
+      <SectionHeading eyebrow="Tours individuales" title="Elige un destino para el día" id="home-day-tours-title">
+        <p>Compara Valle del Perené, Villa Rica y Yanachaga Chemillén. Cada página muestra la tarifa y lo que harás.</p>
       </SectionHeading>
       <DayTourCollection tours={dayTours} compact />
-      <a class="text-link home-day-tours__link" href="/tours/">Ver todos los tours de un día</a>
+      <a class="text-link home-day-tours__link" href="/tours/">Ver todos los tours</a>
     </div>
   </section>
 
@@ -89,17 +111,17 @@ const schema = [
     <div class="container route-values">
       <div class="route-values__copy">
         <span class="eyebrow">Viaja con claridad</span>
-        <h2 id="included-title">Qué incluye el tour de 4 días</h2>
-        <p>El paquete incluye transporte turístico, alojamiento, desayunos, guía profesional y asistencia permanente. Los detalles adicionales se confirman antes del viaje.</p>
+        <h2 id="included-title">Qué incluye un paquete Tangarana</h2>
+        <p>Los paquetes reúnen tours, alojamiento, desayunos, recepción en el terminal, movilidad turística y guiado. Cada ficha indica sus exclusiones y condiciones.</p>
       </div>
-      <IncludesBand labels={tour.includes} />
+      {featuredPackage && <IncludesBand labels={featuredPackage.includes.slice(0, 6)} />}
     </div>
   </section>
 
   <section class="home-destinations" aria-labelledby="destinations-title">
     <div class="container">
-      <SectionHeading eyebrow="Información de destinos" title="Conoce los destinos de la Selva Central" id="destinations-title">
-        <p>Consulta información sobre Oxapampa, Pozuzo, Villa Rica y el Valle del Perené, y encuentra el tour relacionado con cada destino.</p>
+      <SectionHeading eyebrow="Información de destinos" title="Conoce la Selva Central" id="destinations-title">
+        <p>Consulta información de Oxapampa, Pozuzo, Villa Rica, Valle del Perené y Yanachaga Chemillén, y encuentra los tours relacionados.</p>
       </SectionHeading>
       <DestinationEditorial destinations={destinations} />
     </div>
@@ -121,14 +143,8 @@ const schema = [
 
   <section class="cta-route" aria-labelledby="cta-title">
     <div class="container cta-route__inner">
-      <div>
-        <span class="eyebrow">Solicitud rápida</span>
-        <h2 id="cta-title">Reserva tu próxima ruta</h2>
-      </div>
-      <div class="cta-route__actions">
-        <a class="button button-ink-outline" href="/tours/">Ver todos los tours</a>
-        <ReserveButton label="Reservar ahora" class="button-dark" />
-      </div>
+      <div><span class="eyebrow">Elige cómo viajar</span><h2 id="cta-title">Un tour por destino o un paquete completo</h2></div>
+      <div class="cta-route__actions"><a class="button button-primary" href="/paquetes/">Ver paquetes</a><a class="button button-ink-outline" href="/tours/">Ver tours</a></div>
     </div>
   </section>
 </BaseLayout>

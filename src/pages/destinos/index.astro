@@ -6,28 +6,50 @@ import SectionHeading from "../../components/SectionHeading.astro";
 import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
 import JungleInterlude from "../../components/JungleInterlude.astro";
 import { destinations } from "../../data/destinations";
+import { SITE_URL } from "../../data/site";
+import { breadcrumbSchema } from "../../data/seo";
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Destinos de la Selva Central",
+    numberOfItems: destinations.length,
+    itemListElement: destinations.map((destination, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: destination.name,
+      url: new URL(`/destinos/${destination.slug}/`, SITE_URL).toString(),
+    })),
+  },
+  breadcrumbSchema([
+    { name: "Inicio", path: "/" },
+    { name: "Destinos", path: "/destinos/" },
+  ]),
+];
 ---
 
 <BaseLayout
   title="Destinos de la Selva Central | Tangarana Travel Tours"
-  description="Conoce Oxapampa, Pozuzo, Villa Rica y el Valle del Perené. Consulta información de cada destino y encuentra los tours relacionados de Tangarana Travel Tours."
+  description="Conoce Oxapampa, Pozuzo, Villa Rica, el Valle del Perené y Yanachaga Chemillén. Encuentra tours y paquetes relacionados de Tangarana Travel Tours."
+  schema={schema}
 >
   <PageIntro
     eyebrow="Información de destinos"
     title="Destinos de la Selva Central"
-    description="Conoce Oxapampa, Pozuzo, Villa Rica y el Valle del Perené, y encuentra los tours disponibles para cada destino."
+    description="Conoce Oxapampa, Pozuzo, Villa Rica, el Valle del Perené y Yanachaga Chemillén y descubre qué tours y paquetes visitan cada destino."
     crumbs={[{ label: "Inicio", href: "/" }, { label: "Destinos" }]}
     tone="river"
     variant="destinations"
     image="oxapampaGroup"
     secondaryImage="pozuzoGate"
-    marker="04"
-    note="Oxapampa · Pozuzo · Villa Rica · Perené"
+    marker="05"
+    note="Oxapampa · Pozuzo · Villa Rica · Perené · Yanachaga"
   />
   <section class="section" aria-labelledby="destinations-map-title">
     <div class="container">
-      <SectionHeading eyebrow="Cuatro destinos" title="Información turística y tours relacionados" id="destinations-map-title">
-        <p>Cada página explica qué experiencias ofrece Tangarana en el destino y enlaza al tour correspondiente.</p>
+      <SectionHeading eyebrow="Cinco destinos" title="Información, tours y paquetes relacionados" id="destinations-map-title">
+        <p>Cada página explica qué ofrece el destino y enlaza al tour individual y a los paquetes correspondientes.</p>
       </SectionHeading>
       <DestinationEditorial destinations={destinations} />
     </div>
@@ -35,8 +57,8 @@ import { destinations } from "../../data/destinations";
   <JungleInterlude variant="to-sun" />
   <section class="cta-route" aria-labelledby="destinations-cta-title">
     <div class="container cta-route__inner">
-      <div><span class="eyebrow">Elige un tour</span><h2 id="destinations-cta-title">Compara precios, horarios e itinerarios</h2></div>
-      <div class="cta-route__actions"><a class="button button-dark" href="/tours/">Ver todos los tours</a><WhatsAppCTA label="Consultar por WhatsApp" /></div>
+      <div><span class="eyebrow">Elige cómo viajar</span><h2 id="destinations-cta-title">Compara tours o programas completos</h2></div>
+      <div class="cta-route__actions"><a class="button button-dark" href="/tours/">Ver tours</a><a class="button button-ink-outline" href="/paquetes/">Ver paquetes</a><WhatsAppCTA label="Consultar por WhatsApp" /></div>
     </div>
   </section>
 </BaseLayout>

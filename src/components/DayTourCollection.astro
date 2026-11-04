@@ -10,6 +10,54 @@ interface Props {
 const { tours, compact = false } = Astro.props;
 ---
 
-<div class:list={["day-tour-collection", compact && "day-tour-collection--compact"]}>
+<div
+  class:list={["day-tour-collection", compact && "day-tour-collection--compact"]}
+  data-day-tour-collection
+  data-auto-carousel={compact ? "true" : "false"}
+>
   {tours.map((tour, index) => <DayTourPoster tour={tour} index={index} compact={compact} />)}
 </div>
+
+<script>
+  const compactCollections = document.querySelectorAll<HTMLElement>(
+    '[data-day-tour-collection][data-auto-carousel="true"]',
+  );
+
+  compactCollections.forEach((collection) => {
+    if (collection.dataset.carouselReady === "true") return;
+    collection.dataset.carouselReady = "true";
+
+    const mobile = matchMedia("(max-width: 47.99rem)");
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    let timer = 0;
+
+    const stop = () => {
+      window.clearInterval(timer);
+      timer = 0;
+    };
+
+    const advance = () => {
+      const card = collection.querySelector<HTMLElement>(".day-tour-poster");
+      if (!card) return;
+      const gap = Number.parseFloat(getComputedStyle(collection).columnGap || "0");
+      const maximum = collection.scrollWidth - collection.clientWidth;
+      const next = collection.scrollLeft >= maximum - 8 ? 0 : collection.scrollLeft + card.offsetWidth + gap;
+      collection.scrollTo({ left: next, behavior: "smooth" });
+    };
+
+    const start = () => {
+      stop();
+      if (!mobile.matches || reducedMotion.matches || document.hidden) return;
+      timer = window.setInterval(advance, 2000);
+    };
+
+    collection.addEventListener("pointerdown", stop, { passive: true });
+    collection.addEventListener("pointerup", start, { passive: true });
+    collection.addEventListener("focusin", stop);
+    collection.addEventListener("focusout", start);
+    mobile.addEventListener("change", start);
+    reducedMotion.addEventListener("change", start);
+    document.addEventListener("visibilitychange", start);
+    start();
+  });
+</script>

@@ -1,20 +1,19 @@
 ---
+import { getImage } from "astro:assets";
 import { getCollection } from "astro:content";
-import { Picture } from "astro:assets";
-import { Check, Clock3, MapPin } from "@lucide/astro";
+import { Backpack, Check, ChevronDown, Clock3, MapPin, Play, ShieldCheck, X } from "@lucide/astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BrandMark from "../../components/BrandMark.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
-import PriceBadge from "../../components/PriceBadge.astro";
-import IncludesBand from "../../components/IncludesBand.astro";
-import ExpeditionTimeline from "../../components/ExpeditionTimeline.astro";
 import FAQAccordion from "../../components/FAQAccordion.astro";
-import JourneyMoments from "../../components/JourneyMoments.astro";
-import JungleInterlude from "../../components/JungleInterlude.astro";
+import PackageGallery from "../../components/PackageGallery.astro";
+import PackageReservationPanel from "../../components/PackageReservationPanel.astro";
+import RelatedPackageRail from "../../components/RelatedPackageRail.astro";
 import ReserveButton from "../../components/ReserveButton.astro";
-import BookingPrompt from "../../components/BookingPrompt.astro";
-import { siteImages, type SiteImageKey } from "../../data/images";
+import { packageDetails, type PackageDetail } from "../../data/packageDetails";
+import { packageCover, packagePhotos, packageVideos } from "../../data/packageMedia";
 import { SITE_URL, siteConfig } from "../../data/site";
+import { breadcrumbSchema } from "../../data/seo";
 
 export async function getStaticPaths() {
   const entries = await getCollection("tours", ({ data }) => data.status === "published");
@@ -22,167 +21,275 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const tour = entry.data;
-const isDayTour = tour.kind === "day-tour";
-const canonicalPath = `/tours/${tour.slug}/`;
-const heroImage = siteImages[tour.imageKey as SiteImageKey];
-const faqTourName = tour.commercialName.replace(/^Tour/, "el tour");
-const faqTourNameWithDe = faqTourName.replace(/^el /, "del ");
-const allTours = await getCollection("tours", ({ data }) => data.status === "published" && data.indexable);
-const relatedTours = allTours
-  .filter(({ data }) => data.slug !== tour.slug)
-  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured))
-  .slice(0, 3)
-  .map(({ data }) => data);
-const dayTourFaq = [
-  { question: `¿Cuánto cuesta ${faqTourName}?`, answer: `El precio publicado es S/${tour.price} por persona.` },
-  { question: `¿Cuál es el horario ${faqTourNameWithDe}?`, answer: `El horario publicado es de ${tour.scheduleStart} a ${tour.scheduleEnd}.` },
-  { question: "¿Qué incluye exactamente el precio?", answer: "La página muestra las paradas anunciadas. Confirma por WhatsApp el transporte, las entradas, la alimentación y cualquier condición adicional antes de reservar." },
-  { question: "¿Cómo confirmo disponibilidad?", answer: "La disponibilidad se confirma directamente por WhatsApp con el equipo de Tangarana Travel Tours." },
-];
-const expeditionFaq = [
-  { question: "¿Cuánto cuesta el tour de 4 días?", answer: `El precio publicado es S/${tour.price} por persona.` },
-  { question: "¿Cómo confirmo disponibilidad?", answer: "La disponibilidad se confirma directamente por WhatsApp con el equipo de Tangarana Travel Tours." },
-  { question: "¿Qué alojamiento incluye?", answer: "El paquete incluye alojamiento durante 4 días y 3 noches. El detalle se confirma al coordinar el viaje." },
-  { question: "¿Qué actividades se realizan cada día?", answer: "Las experiencias concretas de cada jornada se informan en el itinerario coordinado con Tangarana Travel Tours." },
-];
-const tourFaq = isDayTour ? dayTourFaq : expeditionFaq;
-const galleryByTour: Record<string, SiteImageKey[]> = {
-  "perene": ["butterfly", "yaneshaExperience"],
-  "villa-rica": ["lagoonGroup", "lagoonSwing"],
-  "pozuzo": ["pozuzoGate", "waterPause"],
-  "chontabamba": ["highBridge", "yaneshaCulture"],
-  "catarata-rio-tigre": ["hiking", "waterfallGroup"],
+const item = entry.data;
+const isDayPackage = item.kind === "day-tour";
+const canonicalPath = `/tours/${item.slug}/`;
+const photos = packagePhotos[item.slug] ?? [];
+const cover = packageCover(item.slug);
+const video = packageVideos[item.slug];
+const videoPoster = video && cover
+  ? await getImage({ src: cover.src, width: 720, format: "webp", quality: 78 })
+  : undefined;
+const details: PackageDetail = packageDetails[item.slug] ?? {
+  summary: item.shortDescription,
+  highlights: item.activities.map((title: string) => ({ title, description: "Parada incluida en el recorrido publicado." })),
+  includes: item.includes,
+  beforeBooking: ["La fecha, disponibilidad y condiciones se confirman por WhatsApp."],
+  bring: ["Ropa cómoda", "Protector solar y repelente"],
 };
-const gallery = (galleryByTour[tour.slug] ?? ["trail", "river"]).map((key) => siteImages[key]);
+const highlightPhotos = await Promise.all(details.highlights.map(async (highlight, index) => {
+  const fallbackIndex = photos.length ? index % photos.length : -1;
+  const requestedIndices = highlight.imageIndices?.length
+    ? highlight.imageIndices
+    : [highlight.imageIndex ?? fallbackIndex];
+  const uniqueIndices = [...new Set(requestedIndices)].slice(0, 2);
+
+  const optimizedPhotos = await Promise.all(uniqueIndices.map(async (photoIndex) => {
+    const photo = photos[photoIndex];
+    if (!photo) return undefined;
+
+    const width = Math.min(520, photo.src.width);
+    const height = Math.round(width * photo.src.height / photo.src.width);
+    const optimized = await getImage({ src: photo.src, width, format: "webp", quality: 74 });
+    return { src: optimized.src, alt: photo.alt, width, height };
+  }));
+
+  return optimizedPhotos.filter((photo): photo is NonNullable<typeof photo> => Boolean(photo));
+}));
+const hasEmbeddedHighlightVideo = Boolean(video && details.highlights.some((highlight) => highlight.videoSrc === video.src));
+const allPackages = await getCollection("tours", ({ data }) => data.status === "published" && data.indexable);
+const relatedPackages = allPackages
+  .filter(({ data }) => data.slug !== item.slug)
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || a.data.price - b.data.price)
+  .map(({ data }) => data);
+const schedule = details.scheduleNote ?? (item.scheduleStart && item.scheduleEnd ? `${item.scheduleStart} a ${item.scheduleEnd}` : item.durationLabel);
+const itemNameLower = item.commercialName.replace(/^Tour/, "el tour");
+const tourFaq = [
+  { question: `¿Cuánto cuesta ${itemNameLower}?`, answer: `La tarifa publicada es S/${item.price} por persona. El total estimado cambia según la cantidad de viajeros.` },
+  { question: "¿Tengo que elegir una fecha ahora?", answer: "No. La fecha y la disponibilidad se confirman directamente con Tangarana por WhatsApp." },
+  { question: "¿La solicitud confirma automáticamente la reserva?", answer: "No. El formulario prepara la solicitud; el equipo confirma disponibilidad, condiciones y pago por WhatsApp." },
+];
 const schema = [
   {
     "@context": "https://schema.org",
     "@type": "TouristTrip",
-    name: tour.title,
-    description: tour.seoDescription,
+    name: item.title,
+    description: item.seoDescription,
     url: new URL(canonicalPath, SITE_URL).toString(),
-    image: new URL(heroImage.src.src, SITE_URL).toString(),
-    itinerary: tour.destinations.map((name) => ({ "@type": "Place", name })),
-    provider: { "@type": "TravelAgency", name: siteConfig.name, url: SITE_URL },
-    offers: { "@type": "Offer", price: tour.price, priceCurrency: tour.currency, url: new URL(canonicalPath, SITE_URL).toString() },
+    image: cover ? new URL(cover.src.src, SITE_URL).toString() : undefined,
+    itinerary: item.destinations.map((name) => ({ "@type": "Place", name })),
+    provider: { "@type": "TravelAgency", name: siteConfig.name, url: SITE_URL, taxID: siteConfig.ruc },
+    offers: { "@type": "Offer", price: item.price, priceCurrency: item.currency, url: new URL(canonicalPath, SITE_URL).toString() },
   },
   {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: tourFaq.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })),
+    mainEntity: tourFaq.map((faq) => ({ "@type": "Question", name: faq.question, acceptedAnswer: { "@type": "Answer", text: faq.answer } })),
   },
+  breadcrumbSchema([
+    { name: "Inicio", path: "/" },
+    { name: "Tours", path: "/tours/" },
+    { name: item.commercialName, path: canonicalPath },
+  ]),
 ];
 ---
 
-<BaseLayout title={tour.seoTitle} description={tour.seoDescription} canonicalPath={canonicalPath} schema={schema} noindex={!tour.indexable} socialImage={heroImage.src.src} socialImageAlt={heroImage.alt}>
-  <header class:list={["tour-hero", isDayTour && "tour-hero--day", isDayTour && `tour-hero--${tour.posterTone}`]}>
-    <Picture src={heroImage.src} formats={["avif"]} fallbackFormat="webp" widths={[640, 960, 1280, 1600, 1920]} sizes="100vw" alt={heroImage.alt} loading="eager" fetchpriority="high" />
-    <div class="tour-hero__top container"><BrandMark /></div>
-    <div class="tour-hero__inner container">
-      <Breadcrumbs items={[{ label: "Inicio", href: "/" }, { label: "Tours", href: "/tours/" }, { label: tour.commercialName }]} />
-      <span class="eyebrow">{isDayTour ? `${tour.durationLabel} · ${tour.scheduleStart}` : "Expedición · Selva Central"}</span>
-      <h1>{tour.commercialName}</h1>
-      <p class="tour-hero__lead">{tour.shortDescription}</p>
-      <div class="tour-hero__meta">
-        {isDayTour ? (
-          <><span><Clock3 size={17} aria-hidden="true" /> {tour.scheduleStart} — {tour.scheduleEnd}</span><span><MapPin size={17} aria-hidden="true" /> {tour.destinations[0]}</span><span>{tour.activities.length} paradas</span></>
-        ) : (
-          <><span>{tour.durationDays} días</span><span>{tour.durationNights} noches</span><span>{tour.destinations.length} destinos</span></>
-        )}
-      </div>
-      <div class="tour-hero__actions"><ReserveButton label="Reservar este tour" tourSlug={tour.slug} /></div>
+<BaseLayout
+  title={item.seoTitle}
+  description={item.seoDescription}
+  canonicalPath={canonicalPath}
+  schema={schema}
+  noindex={!item.indexable}
+  socialImage={cover?.src.src}
+  socialImageAlt={cover?.alt}
+>
+  <header class="package-hero">
+    <div class="package-hero__gallery">
+      <PackageGallery photos={photos} packageName={item.commercialName} />
     </div>
-    <PriceBadge price={tour.price} currency={tour.currency} />
+    <div class="package-hero__content">
+      <div class="package-hero__brand"><BrandMark /></div>
+      <Breadcrumbs items={[{ label: "Inicio", href: "/" }, { label: "Tours", href: "/tours/" }, { label: item.commercialName }]} />
+      <span class="eyebrow">{isDayPackage ? item.durationLabel : "Tour por la Selva Central"}</span>
+      <h1>{item.commercialName}</h1>
+      <p>{details.summary}</p>
+      <div class="package-hero__meta">
+        <span><Clock3 size={18} aria-hidden="true" /> {schedule}</span>
+        <span><MapPin size={18} aria-hidden="true" /> {item.destinations.join(" · ")}</span>
+      </div>
+      <div class="package-hero__actions">
+        <ReserveButton label="Reservar este tour" tourSlug={item.slug} />
+        <a class="text-link text-link--light" href="#detalle-tour">Ver lo que ofrece ↓</a>
+      </div>
+      <div class="package-hero__price"><small>Tarifa por persona</small><strong>S/{item.price}</strong><span>Fecha por confirmar</span></div>
+    </div>
   </header>
 
-  {isDayTour ? (
-    <>
-      <section class="section day-tour-route" aria-labelledby="day-route-title">
-        <div class="container day-tour-route__layout">
-          <div class="day-tour-route__intro">
-            <span class="eyebrow">Paradas anunciadas</span>
-            <h2 id="day-route-title">Itinerario del tour</h2>
-            <p>Estas son las {tour.activities.length} actividades publicadas para la excursión. Consulta el orden final por WhatsApp.</p>
-            <div class="day-tour-route__schedule"><Clock3 size={24} aria-hidden="true" /><span><small>Horario</small><strong>{tour.scheduleStart} — {tour.scheduleEnd}</strong></span></div>
-          </div>
-          <ol class="day-tour-route__stops">
-            {tour.activities.map((activity, index) => <li><span>{String(index + 1).padStart(2, "0")}</span><strong>{activity}</strong><Check size={18} aria-hidden="true" /></li>)}
-          </ol>
+  <section class="package-detail section" id="detalle-tour" aria-labelledby="package-detail-title">
+    <div class="container package-detail__layout">
+      <div class="package-detail__content">
+        <div class="package-detail__intro">
+          <span class="eyebrow">Detalle del tour</span>
+          <h2 id="package-detail-title">Lo que harás</h2>
+          <p>{details.summary}</p>
+          <div class="package-detail__schedule"><Clock3 size={21} aria-hidden="true" /><span><small>Horario o duración</small><strong>{schedule}</strong></span></div>
         </div>
-      </section>
 
-      <section class="day-tour-gallery" aria-label={`Fotografías relacionadas con ${tour.destinations[0]}`}>
-        {gallery.map((image, index) => (
-          <figure>
-            <Picture src={image.src} formats={["avif"]} fallbackFormat="webp" widths={[520, 760, 1080]} sizes="(min-width: 768px) 50vw, 100vw" alt={image.alt} loading="lazy" />
-            <figcaption>{index === 0 ? `Foto de ${tour.destinations[0]}` : "Viajeros con Tangarana Travel Tours"}</figcaption>
-          </figure>
-        ))}
-      </section>
+        <ol class="package-highlights">
+          {details.highlights.map((highlight, index) => (
+            <li>
+              <details class="package-highlight">
+                <summary>
+                  <span class="package-highlight__number">{String(index + 1).padStart(2, "0")}</span>
+                  <span class="package-highlight__heading">
+                    <span class="package-highlight__title" role="heading" aria-level="3">{highlight.title}</span>
+                    <span class="package-highlight__summary">{highlight.description}</span>
+                  </span>
+                  <span class="package-highlight__toggle" aria-hidden="true">
+                    <span class="package-highlight__more">Ver más</span>
+                    <span class="package-highlight__less">Ver menos</span>
+                    <ChevronDown size={20} stroke-width={1.8} />
+                  </span>
+                </summary>
+                <div class:list={["package-highlight__detail", !highlightPhotos[index]?.length && "package-highlight__detail--text-only"]}>
+                  {highlightPhotos[index]?.length > 0 && (
+                    <figure class:list={[
+                      "package-highlight__media",
+                      highlightPhotos[index].length > 1 && "package-highlight__media--pair",
+                      highlight.imageFit === "contain" && "package-highlight__media--contain",
+                    ]}>
+                      {highlightPhotos[index].map((photo) => (
+                        <img
+                          src={photo.src}
+                          alt={photo.alt}
+                          width={photo.width}
+                          height={photo.height}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      ))}
+                    </figure>
+                  )}
+                  <div class="package-highlight__copy">
+                    {(highlight.details?.length ? highlight.details : [highlight.description]).map((paragraph) => <p>{paragraph}</p>)}
+                    {highlight.videoSrc && (
+                      <button class="package-highlight__video-button" type="button" data-highlight-video-open={`highlight-video-${index}`}>
+                        <Play size={17} fill="currentColor" aria-hidden="true" />
+                        {highlight.videoLabel ?? "Ver video"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </details>
+              {highlight.videoSrc && (
+                <dialog class="highlight-video-dialog" id={`highlight-video-${index}`} data-highlight-video-dialog>
+                  <div class="highlight-video-dialog__panel">
+                    <div class="highlight-video-dialog__header">
+                      <div><small>Experiencia real</small><strong>{highlight.title}</strong></div>
+                      <button type="button" data-highlight-video-close aria-label="Cerrar video"><X size={22} aria-hidden="true" /></button>
+                    </div>
+                    <video controls playsinline preload="none">
+                      <source src={highlight.videoSrc} type="video/mp4" />
+                      Tu navegador no puede reproducir este video.
+                    </video>
+                  </div>
+                </dialog>
+              )}
+            </li>
+          ))}
+        </ol>
 
-      <BookingPrompt tourSlug={tour.slug} tourName={tour.commercialName} />
-
-      <JungleInterlude variant="from-forest" />
-
-      <section class="section section--soft" aria-labelledby="confirm-title">
-        <div class="container content-grid">
-          <div class="content-copy"><span class="eyebrow">Antes de reservar</span><h2 id="confirm-title">Qué debes confirmar</h2><p>Consulta la disponibilidad, el punto de salida, el transporte, las entradas, la alimentación y las condiciones de las actividades opcionales.</p></div>
-          <div class="info-note"><strong>Precio publicado: S/{tour.price} por persona.</strong> La disponibilidad y el orden final del recorrido se confirman directamente con Tangarana Travel Tours.</div>
+        <div class="package-facts">
+          <article>
+            <div class="package-facts__title"><Check size={20} aria-hidden="true" /><h3>Incluye</h3></div>
+            <ul>{details.includes.map((label) => <li>{label}</li>)}</ul>
+          </article>
+          <article>
+            <div class="package-facts__title"><ShieldCheck size={20} aria-hidden="true" /><h3>Antes de reservar</h3></div>
+            <ul>{details.beforeBooking.map((label) => <li>{label}</li>)}</ul>
+          </article>
+          <article>
+            <div class="package-facts__title"><Backpack size={20} aria-hidden="true" /><h3>Qué llevar</h3></div>
+            <ul>{details.bring.map((label) => <li>{label}</li>)}</ul>
+          </article>
         </div>
-      </section>
-    </>
-  ) : (
-    <>
-      <section class="section" aria-labelledby="includes-title">
-        <div class="container tour-details-grid">
-          <div class="tour-details-grid__intro"><span class="eyebrow">Servicios incluidos</span><h2 id="includes-title">Qué incluye el tour de 4 días</h2><p>Estos son los servicios confirmados para el paquete. Las fechas y la disponibilidad se consultan directamente por WhatsApp.</p></div>
-          <IncludesBand labels={tour.includes} />
+
+        <div class="package-inline-booking">
+          <div><strong>¿Este tour es para ti?</strong><span>Solicita disponibilidad sin volver al inicio.</span></div>
+          <ReserveButton label="Reservar este tour" tourSlug={item.slug} />
         </div>
-      </section>
+      </div>
 
-      <section class="section section--forest" aria-labelledby="itinerary-title">
-        <div class="container tour-route-panel">
-          <div class="tour-route-panel__head"><div><span class="eyebrow">Cuatro destinos</span><h2 id="itinerary-title">Itinerario del tour de 4 días</h2></div><PriceBadge price={tour.price} currency={tour.currency} /></div>
-          <ExpeditionTimeline stops={tour.itinerary} />
-        </div>
-      </section>
-
-      <BookingPrompt tourSlug={tour.slug} tourName={tour.commercialName} />
-
-      <JungleInterlude variant="from-forest" />
-
-      <JourneyMoments id="tour-moments-title" variant="ribbon" />
-
-      <section class="section section--soft" aria-labelledby="stay-title">
-        <div class="container content-grid">
-          <div class="content-copy"><span class="eyebrow">Estancia y alimentación</span><h2 id="stay-title">Alojamiento y desayunos incluidos</h2><p>El paquete incluye alojamiento por 4 días y 3 noches, además de desayunos. El hospedaje específico y cualquier condición adicional deben confirmarse por WhatsApp.</p></div>
-          <div class="info-note"><strong>Información transparente.</strong> No se muestran horarios, puntos de salida, actividades ni políticas que todavía no han sido confirmados por la empresa.</div>
-        </div>
-      </section>
-    </>
-  )}
-
-  <section class="section section--soft" aria-labelledby="related-tours-title">
-    <div class="container content-grid">
-      <div><span class="eyebrow">Otros tours</span><h2 id="related-tours-title" class="display-section-title">También puedes consultar</h2></div>
-      <ul class="related-destinations">
-        {relatedTours.map((relatedTour) => <li><a href={`/tours/${relatedTour.slug}/`}><span>{relatedTour.commercialName}</span><span aria-hidden="true">↗</span></a></li>)}
-      </ul>
+      <PackageReservationPanel item={item} childPriceFactor={details.childPriceFactor} />
     </div>
   </section>
 
-  <section class="section" aria-labelledby="tour-faq-title">
+  {video && !hasEmbeddedHighlightVideo && (
+    <section class="package-video-section section" aria-labelledby="package-video-title">
+      <div class="container package-video-section__layout">
+        <div>
+          <span class="eyebrow">Experiencia real</span>
+          <h2 id="package-video-title">Mira cómo se vive {item.destinations[0]}</h2>
+          <p>Video breve del recorrido. La reproducción empieza solo cuando tú lo decides.</p>
+        </div>
+        <video controls playsinline preload="none" poster={videoPoster?.src} aria-label={video.label}>
+          <source src={video.src} type="video/mp4" />
+          Tu navegador no puede reproducir este video.
+        </video>
+      </div>
+    </section>
+  )}
+
+  <script>
+    const bindHighlightVideos = () => {
+      document.querySelectorAll<HTMLButtonElement>("[data-highlight-video-open]").forEach((button) => {
+        if (button.dataset.bound === "true") return;
+        button.dataset.bound = "true";
+        button.addEventListener("click", () => {
+          const dialog = document.getElementById(button.dataset.highlightVideoOpen ?? "") as HTMLDialogElement | null;
+          dialog?.showModal();
+        });
+      });
+
+      document.querySelectorAll<HTMLDialogElement>("[data-highlight-video-dialog]").forEach((dialog) => {
+        if (dialog.dataset.bound === "true") return;
+        dialog.dataset.bound = "true";
+        dialog.querySelector<HTMLButtonElement>("[data-highlight-video-close]")?.addEventListener("click", () => dialog.close());
+        dialog.addEventListener("click", (event) => {
+          if (event.target === dialog) dialog.close();
+        });
+        dialog.addEventListener("close", () => {
+          const player = dialog.querySelector<HTMLVideoElement>("video");
+          player?.pause();
+        });
+      });
+    };
+
+    bindHighlightVideos();
+    document.addEventListener("astro:page-load", bindHighlightVideos);
+  </script>
+
+  <section class="related-package-section section" aria-labelledby="related-packages-title">
+    <div class="container">
+      <div class="related-package-section__head">
+        <div><span class="eyebrow">Otros tours</span><h2 id="related-packages-title">Sigue explorando</h2></div>
+        <p>Desliza las tarjetas o usa las flechas para comparar otros recorridos.</p>
+      </div>
+      <RelatedPackageRail items={relatedPackages} />
+    </div>
+  </section>
+
+  <section class="section package-faq" aria-labelledby="package-faq-title">
     <div class="container content-grid">
-      <div><span class="eyebrow">Información confirmada</span><h2 id="tour-faq-title" class="display-section-title">Preguntas sobre este tour</h2></div>
+      <div><span class="eyebrow">Respuesta directa</span><h2 id="package-faq-title" class="display-section-title">Antes de enviar tu solicitud</h2></div>
       <FAQAccordion items={tourFaq} />
     </div>
   </section>
 
   <section class="cta-route" aria-labelledby="book-title">
     <div class="container cta-route__inner">
-      <div><span class="eyebrow">Tu próximo viaje</span><h2 id="book-title">Solicita tu reserva</h2></div>
-      <div class="cta-route__actions"><ReserveButton label="Reservar este tour" tourSlug={tour.slug} class="button-dark" /></div>
+      <div><span class="eyebrow">Menos pasos</span><h2 id="book-title">Consulta una fecha disponible</h2></div>
+      <div class="cta-route__actions"><ReserveButton label="Reservar este tour" tourSlug={item.slug} class="button-dark" /></div>
     </div>
   </section>
 </BaseLayout>

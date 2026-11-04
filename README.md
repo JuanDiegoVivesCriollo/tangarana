@@ -39,7 +39,11 @@ npm run preview  # vista previa del build
 
 ## Dominio recomendado
 
-Recomendación principal: `tangaranatravel.pe`.
+Dominio principal: `tangaranatours.com`.
+
+## Activar o desactivar el chatbot
+
+El chatbot se conserva en el proyecto, pero permanece oculto por defecto para permitir una publicación completamente estática. Para incorporarlo más adelante, configura `PUBLIC_ENABLE_CHATBOT=true`, añade las variables privadas de Gemini en Netlify y vuelve a desplegar el proyecto junto con `netlify/functions`.
 
 La consulta WHOIS realizada el 9 de septiembre de 2026 indicó `No Object Found`, es decir, no aparecía registrado en ese momento. La disponibilidad puede cambiar y debe volver a comprobarse justo antes de comprarlo.
 
@@ -52,7 +56,7 @@ Como protección de marca, también conviene adquirir `tangaranatravel.com` y re
 3. Netlify mostrará los registros DNS exactos que debes configurar.
 4. En Hostinger, abre la zona DNS del dominio y copia esos registros exactamente. No inventes valores.
 5. Espera la propagación y confirma que el certificado HTTPS esté activo en Netlify.
-6. Mantén una sola versión canónica, preferiblemente `https://tangaranatravel.pe`.
+6. Mantén una sola versión canónica: `https://tangaranatours.com`.
 
 > **TODO obligatorio: configurar y comprar el dominio oficial antes de publicar la web definitiva.**
 
@@ -164,3 +168,15 @@ Prompts finales: fotografía editorial natural de bosque nublado, sendero y río
 - [ ] Texto legal revisado para privacidad y términos.
 
 El frontend no inventa estos datos ni muestra disponibilidad falsa. La futura capa de reservas puede reemplazar los CTA de WhatsApp sin rehacer la estructura de contenido.
+
+
+## Continuar en otra PC
+
+```sh
+git clone https://github.com/JuanDiegoVivesCriollo/tangarana.git
+cd tangarana
+```
+
+Instala las herramientas y dependencias indicadas arriba. Los archivos `.env`, claves, bases de datos reales, respaldos y datos operativos no se publican: trasládalos por un medio privado. Las carpetas de dependencias y compilación se regeneran en el equipo nuevo. No uses una base de producción para pruebas.
+
+Guarda cambios con `git add .`, `git commit` y `git push`; en el otro equipo usa `git pull --ff-only`. El repositorio guarda código, no sincroniza automáticamente MySQL, SQLite ni archivos locales sin subir.

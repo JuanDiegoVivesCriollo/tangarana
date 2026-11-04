@@ -1,0 +1,85 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageIntro from "../../components/PageIntro.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import StayPackageCard from "../../components/StayPackageCard.astro";
+import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
+import { stayPackages } from "../../data/stayPackages";
+import { SITE_URL, siteConfig } from "../../data/site";
+import { breadcrumbSchema } from "../../data/seo";
+
+const canonicalPath = "/paquetes/";
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Paquetes turísticos con alojamiento en Oxapampa",
+  url: new URL(canonicalPath, SITE_URL).toString(),
+  numberOfItems: stayPackages.length,
+  itemListElement: stayPackages.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    url: new URL(`/paquetes/${item.slug}/`, SITE_URL).toString(),
+    name: item.title,
+    item: {
+      "@type": "TouristTrip",
+      name: item.title,
+      provider: { "@type": "TravelAgency", name: siteConfig.name },
+      offers: { "@type": "AggregateOffer", lowPrice: item.standardPrice, highPrice: item.cabinPrice, priceCurrency: "PEN" },
+    },
+  })),
+};
+const breadcrumbs = breadcrumbSchema([
+  { name: "Inicio", path: "/" },
+  { name: "Paquetes", path: canonicalPath },
+]);
+---
+
+<BaseLayout
+  title="Paquetes con alojamiento en Oxapampa | Tangarana Travel Tours"
+  description="Compara paquetes de 2 a 5 días en Oxapampa con alojamiento en Carolina Egg, desayunos, tours, traslados y guiado. Desde S/297 por persona."
+  canonicalPath={canonicalPath}
+  schema={[schema, breadcrumbs]}
+>
+  <PageIntro
+    eyebrow="Tours + alojamiento"
+    title="Paquetes de 2 a 5 días en Oxapampa"
+    description="Programas completos con hospedaje, desayunos, recepción en el terminal y tours por la Selva Central. Elige la duración y revisa todo lo incluido."
+    crumbs={[{ label: "Inicio", href: "/" }, { label: "Paquetes" }]}
+    variant="tours"
+    image="oxapampaGroup"
+    marker="04"
+    note="Tarifas desde S/297 por persona"
+  />
+
+  <section class="section stay-packages-catalog" aria-labelledby="stay-packages-title">
+    <div class="container">
+      <SectionHeading eyebrow="Cuatro programas" title="Elige cuántos días quieres viajar" id="stay-packages-title">
+        <p>Todos los paquetes incluyen alojamiento, desayunos y recorridos organizados. La tarifa cambia según el tipo de habitación.</p>
+      </SectionHeading>
+      <div class="stay-package-grid">
+        {stayPackages.map((item, index) => <StayPackageCard item={item} index={index} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--forest stay-package-explainer" aria-labelledby="package-difference-title">
+    <div class="container stay-package-explainer__layout">
+      <div>
+        <span class="eyebrow">La diferencia</span>
+        <h2 id="package-difference-title">Un paquete resuelve todo el viaje</h2>
+      </div>
+      <div class="stay-package-explainer__items">
+        <article><strong>Hospedaje</strong><p>Cabaña o habitación estándar en Carolina Egg, a cinco cuadras de la Plaza de Armas.</p></article>
+        <article><strong>Desayunos</strong><p>Un desayuno por cada día de estadía, incluido desde tu llegada.</p></article>
+        <article><strong>Tours y traslados</strong><p>Recorridos en van, guiado, entradas programadas y recepción en el terminal de Oxapampa.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-route" aria-labelledby="package-contact-title">
+    <div class="container cta-route__inner">
+      <div><span class="eyebrow">Asesoría directa</span><h2 id="package-contact-title">¿No sabes qué duración elegir?</h2></div>
+      <div class="cta-route__actions"><a class="button button-ink-outline" href="/tours/">Ver tours individuales</a><WhatsAppCTA label="Consultar por WhatsApp" /></div>
+    </div>
+  </section>
+</BaseLayout>

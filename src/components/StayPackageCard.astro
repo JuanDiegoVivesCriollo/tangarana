@@ -1,0 +1,50 @@
+---
+import { Picture } from "astro:assets";
+import { ArrowUpRight, BedDouble, CircleCheck, MapPin } from "@lucide/astro";
+import type { StayPackage } from "../data/stayPackages";
+
+interface Props {
+  item: StayPackage;
+  index?: number;
+  compact?: boolean;
+}
+
+const { item, index = 0, compact = false } = Astro.props;
+const coverIndexes: Record<string, number> = {
+  "2-dias-1-noche": 0,
+  "3-dias-2-noches": 1,
+  "4-dias-3-noches": 2,
+  "5-dias-4-noches": 3,
+};
+const cover = item.gallery[coverIndexes[item.slug] ?? 0] ?? item.gallery[0];
+---
+
+<article class:list={["stay-package-card", compact && "stay-package-card--compact"]}>
+  <a class="stay-package-card__media" href={`/paquetes/${item.slug}/`} aria-label={`Ver ${item.title}`}>
+    {cover && (
+      <Picture
+        src={cover.src}
+        formats={["avif"]}
+        fallbackFormat="webp"
+        widths={[420, 640, 860]}
+        sizes={compact ? "(min-width: 960px) 29vw, 82vw" : "(min-width: 960px) 31vw, (min-width: 640px) 46vw, 100vw"}
+        alt={cover.alt}
+        loading={index === 0 ? "eager" : "lazy"}
+        decoding="async"
+      />
+    )}
+    <span class="stay-package-card__marker">{String(index + 1).padStart(2, "0")}</span>
+    <span class="stay-package-card__price"><small>desde</small><strong>S/{item.standardPrice}</strong><small>por persona</small></span>
+  </a>
+  <div class="stay-package-card__body">
+    <span class="eyebrow">Tours + alojamiento</span>
+    <h2>{item.title}</h2>
+    <div class="stay-package-card__facts">
+      <span><CircleCheck size={17} aria-hidden="true" /> Tours y entradas</span>
+      <span><BedDouble size={17} aria-hidden="true" /> Carolina Egg</span>
+    </div>
+    <p>Hospedaje, desayunos, recorridos guiados y traslados organizados en Oxapampa.</p>
+    <span class="stay-package-card__route"><MapPin size={17} aria-hidden="true" /> {item.routeSummary}</span>
+    <a class="stay-package-card__link" href={`/paquetes/${item.slug}/`}>Ver paquete completo <ArrowUpRight size={18} aria-hidden="true" /></a>
+  </div>
+</article>

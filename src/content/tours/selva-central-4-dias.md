@@ -1,14 +1,14 @@
 ---
 kind: "multi-day"
-title: "Tour Selva Central 4 días: Oxapampa, Pozuzo, Villa Rica y Valle del Perené"
+title: "Paquete Selva Central 4 días: Oxapampa, Pozuzo, Villa Rica y Valle del Perené"
 slug: "selva-central-4-dias"
-commercialName: "Tour Oxapampa, Pozuzo, Villa Rica y Perené — 4 días"
+commercialName: "Paquete Oxapampa, Pozuzo, Villa Rica y Perené — 4 días"
 tagline: "Naturaleza, cultura y aventura"
-shortDescription: "Tour de 4 días por Oxapampa, Pozuzo, Villa Rica y el Valle del Perené con alojamiento, desayunos, transporte turístico, guía y asistencia."
-linkLabel: "Ver tour de 4 días"
-whatsappMessage: "Hola, vi en la web el tour de 4 días por Oxapampa, Pozuzo, Villa Rica y Valle del Perené. Quisiera consultar disponibilidad y detalles."
-seoTitle: "Tour Oxapampa, Pozuzo, Villa Rica y Perené 4 días | Tangarana"
-seoDescription: "Tour de 4 días por Oxapampa, Pozuzo, Villa Rica y Valle del Perené. Incluye alojamiento, desayunos, transporte turístico, guía y asistencia. S/ 370 por persona."
+shortDescription: "Paquete de 4 días por Oxapampa, Pozuzo, Villa Rica y el Valle del Perené con alojamiento, desayunos, transporte turístico, guía y asistencia."
+linkLabel: "Ver paquete de 4 días"
+whatsappMessage: "Hola, vi en la web el paquete de 4 días por Oxapampa, Pozuzo, Villa Rica y Valle del Perené. Quisiera consultar disponibilidad y detalles."
+seoTitle: "Paquete Oxapampa, Pozuzo, Villa Rica y Perené 4 días | Tangarana"
+seoDescription: "Paquete de 4 días por Oxapampa, Pozuzo, Villa Rica y Valle del Perené. Incluye alojamiento, desayunos, transporte, guía y asistencia. S/370 por persona."
 price: 370
 currency: "PEN"
 durationDays: 4
@@ -24,7 +24,7 @@ includes:
   - "Transporte turístico"
   - "Alojamiento por 4 días / 3 noches"
   - "Desayunos incluidos"
-  - "4 días de tours"
+  - "4 días de recorridos"
   - "Guía profesional"
   - "Asistencia permanente"
 itinerary:
@@ -40,8 +40,8 @@ activities: []
 imageKey: "hero"
 posterTone: "canopy"
 cover: "selva-central-montanas-hero"
-status: "published"
-indexable: true
+status: "draft"
+indexable: false
 ---
 
-Tour de 4 días por Oxapampa, Pozuzo, Villa Rica y el Valle del Perené. El paquete incluye alojamiento, desayunos, transporte turístico, guía y asistencia permanente.
+Paquete de 4 días por Oxapampa, Pozuzo, Villa Rica y el Valle del Perené. Incluye alojamiento, desayunos, transporte turístico, guía y asistencia permanente.

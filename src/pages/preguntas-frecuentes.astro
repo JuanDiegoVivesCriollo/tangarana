@@ -5,19 +5,26 @@ import FAQAccordion from "../components/FAQAccordion.astro";
 import WhatsAppCTA from "../components/WhatsAppCTA.astro";
 import JungleInterlude from "../components/JungleInterlude.astro";
 import { faqItems } from "../data/faq";
+import { breadcrumbSchema } from "../data/seo";
 
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqItems.map((item) => ({
-    "@type": "Question",
-    name: item.question,
-    acceptedAnswer: { "@type": "Answer", text: item.answer },
-  })),
-};
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  },
+  breadcrumbSchema([
+    { name: "Inicio", path: "/" },
+    { name: "Preguntas frecuentes", path: "/preguntas-frecuentes/" },
+  ]),
+];
 ---
 
-<BaseLayout title="Preguntas frecuentes sobre los tours" description="Respuestas sobre destinos, inclusiones, alojamiento, desayunos y contacto con Tangarana Travel Tours." schema={schema}>
+<BaseLayout title="Preguntas frecuentes de viaje" description="Resuelve dudas sobre precios, horarios, destinos, inclusiones, reservas, niños y coordinación de tours y paquetes con Tangarana Travel Tours." schema={schema}>
   <PageIntro
     eyebrow="Antes de partir"
     title="Preguntas frecuentes"

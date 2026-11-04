@@ -13,6 +13,7 @@ export default defineConfig({
     "/tours/villa-rica-dia-completo": "/tours/villa-rica/",
     "/tours/pozuzo-dia-completo": "/tours/pozuzo/",
     "/tours/chontabamba-medio-dia": "/tours/chontabamba/",
+    "/tours/selva-central-4-dias": "/paquetes/4-dias-3-noches/",
   },
   integrations: [
     sitemap({
@@ -22,7 +23,8 @@ export default defineConfig({
         !page.endsWith("/tours/perene-dia-completo/") &&
         !page.endsWith("/tours/villa-rica-dia-completo/") &&
         !page.endsWith("/tours/pozuzo-dia-completo/") &&
-        !page.endsWith("/tours/chontabamba-medio-dia/"),
+        !page.endsWith("/tours/chontabamba-medio-dia/") &&
+        !page.endsWith("/tours/selva-central-4-dias/"),
     }),
   ],
   vite: {

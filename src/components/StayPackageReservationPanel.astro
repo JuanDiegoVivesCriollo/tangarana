@@ -1,0 +1,168 @@
+---
+import { CalendarDays, Check, Minus, Plus, Send } from "@lucide/astro";
+import type { StayPackage } from "../data/stayPackages";
+import { siteConfig } from "../data/site";
+
+interface Props {
+  item: StayPackage;
+}
+
+const { item } = Astro.props;
+const whatsappNumber = siteConfig.primaryWhatsApp.replace(/\D/g, "");
+---
+
+<aside class="package-booking stay-package-booking" aria-labelledby="stay-package-booking-title">
+  <div class="package-booking__head">
+    <span class="eyebrow">Solicitud del paquete</span>
+    <h2 id="stay-package-booking-title">Cotiza tu viaje</h2>
+    <p>Elige fecha, alojamiento y viajeros. Confirmaremos la disponibilidad por WhatsApp.</p>
+  </div>
+
+  <form
+    class="package-booking__form"
+    data-stay-package-booking
+    data-cabin-price={item.cabinPrice}
+    data-standard-price={item.standardPrice}
+    data-whatsapp-number={whatsappNumber}
+    data-package-name={item.title}
+  >
+    <div class="package-booking__selected">
+      <span>Paquete seleccionado</span>
+      <strong>{item.title}</strong>
+      <small>{item.routeSummary}</small>
+    </div>
+
+    <label>
+      <span>Fecha de llegada</span>
+      <span class="stay-package-booking__input-wrap"><CalendarDays size={18} aria-hidden="true" /><input name="travelDate" type="date" required /></span>
+    </label>
+
+    <label>
+      <span>Tipo de alojamiento</span>
+      <select name="roomType" required>
+        <option value="standard">Habitación estándar · S/{item.standardPrice} por persona</option>
+        <option value="cabin">Cabaña · S/{item.cabinPrice} por persona</option>
+      </select>
+    </label>
+
+    <div class="package-booking__travelers package-booking__travelers--three">
+      <div class="package-booking__counter">
+        <div><strong>Adultos</strong><small>Tarifa completa</small></div>
+        <div>
+          <button type="button" data-stay-count="minus" data-target="stay-adults" aria-label="Restar un adulto"><Minus size={16} aria-hidden="true" /></button>
+          <input id="stay-adults" name="adults" type="number" min="1" max="30" value="1" inputmode="numeric" required />
+          <button type="button" data-stay-count="plus" data-target="stay-adults" aria-label="Añadir un adulto"><Plus size={16} aria-hidden="true" /></button>
+        </div>
+      </div>
+      <div class="package-booking__counter">
+        <div><strong>Niños</strong><small>3 a 10 años · 75%</small></div>
+        <div>
+          <button type="button" data-stay-count="minus" data-target="stay-children" aria-label="Restar un niño"><Minus size={16} aria-hidden="true" /></button>
+          <input id="stay-children" name="children" type="number" min="0" max="30" value="0" inputmode="numeric" required />
+          <button type="button" data-stay-count="plus" data-target="stay-children" aria-label="Añadir un niño"><Plus size={16} aria-hidden="true" /></button>
+        </div>
+      </div>
+      <div class="package-booking__counter">
+        <div><strong>Mascotas</strong><small>Costo por confirmar</small></div>
+        <div>
+          <button type="button" data-stay-count="minus" data-target="stay-pets" aria-label="Restar una mascota"><Minus size={16} aria-hidden="true" /></button>
+          <input id="stay-pets" name="pets" type="number" min="0" max="10" value="0" inputmode="numeric" required />
+          <button type="button" data-stay-count="plus" data-target="stay-pets" aria-label="Añadir una mascota"><Plus size={16} aria-hidden="true" /></button>
+        </div>
+      </div>
+    </div>
+
+    <label><span>Nombre completo</span><input name="fullName" type="text" minlength="3" maxlength="100" autocomplete="name" placeholder="Nombre y apellido" required /></label>
+    <label><span>Número de WhatsApp</span><input name="phone" type="tel" minlength="7" maxlength="20" autocomplete="tel" inputmode="tel" placeholder="Ejemplo: 931 530 169" required /></label>
+    <label><span>Consulta adicional <small>(opcional)</small></span><textarea name="notes" rows="3" maxlength="300" placeholder="Equipaje, alimentación, edades u otra necesidad"></textarea></label>
+
+    <p class="package-booking__date"><Check size={17} aria-hidden="true" /> La reserva se confirma con el 50%. No se realiza ningún pago en esta web.</p>
+    <div class="package-booking__total">
+      <span>Total estimado</span>
+      <strong data-stay-total>S/{item.standardPrice}</strong>
+    </div>
+    <p class="package-booking__estimate" data-stay-estimate>1 adulto · habitación estándar</p>
+    <button class="button button-primary" type="submit">Solicitar por WhatsApp <Send size={18} aria-hidden="true" /></button>
+  </form>
+</aside>
+
+<script>
+  const bindStayPackageForms = () => document.querySelectorAll<HTMLFormElement>("[data-stay-package-booking]").forEach((form) => {
+    if (form.dataset.formBound === "true") return;
+    form.dataset.formBound = "true";
+
+    const adults = form.querySelector<HTMLInputElement>('[name="adults"]');
+    const children = form.querySelector<HTMLInputElement>('[name="children"]');
+    const pets = form.querySelector<HTMLInputElement>('[name="pets"]');
+    const roomType = form.querySelector<HTMLSelectElement>('[name="roomType"]');
+    const date = form.querySelector<HTMLInputElement>('[name="travelDate"]');
+    const total = form.querySelector<HTMLElement>("[data-stay-total]");
+    const estimate = form.querySelector<HTMLElement>("[data-stay-estimate]");
+    const cabinPrice = Number(form.dataset.cabinPrice || 0);
+    const standardPrice = Number(form.dataset.standardPrice || 0);
+
+    if (date) {
+      const now = new Date();
+      const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
+      date.min = localDate;
+    }
+
+    const currentPrice = () => roomType?.value === "cabin" ? cabinPrice : standardPrice;
+    const formatMoney = (amount: number) => new Intl.NumberFormat("es-PE", { maximumFractionDigits: 2 }).format(amount);
+    const update = () => {
+      const adultCount = Math.max(1, Number(adults?.value || 1));
+      const childCount = Math.max(0, Number(children?.value || 0));
+      const petCount = Math.max(0, Number(pets?.value || 0));
+      const price = currentPrice();
+      const amount = adultCount * price + childCount * price * 0.75;
+      if (total) total.textContent = `S/${formatMoney(amount)}`;
+      if (estimate) estimate.textContent = `${adultCount} ${adultCount === 1 ? "adulto" : "adultos"} · ${childCount} ${childCount === 1 ? "niño" : "niños"} · ${petCount} ${petCount === 1 ? "mascota" : "mascotas"} · ${roomType?.value === "cabin" ? "cabaña" : "habitación estándar"}`;
+    };
+
+    form.addEventListener("click", (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-stay-count]");
+      if (!button) return;
+      const input = form.querySelector<HTMLInputElement>(`#${button.dataset.target}`);
+      if (!input) return;
+      const adjustment = button.dataset.stayCount === "plus" ? 1 : -1;
+      input.value = String(Math.min(Number(input.max), Math.max(Number(input.min), Number(input.value) + adjustment)));
+      update();
+    });
+    [adults, children, pets].forEach((input) => input?.addEventListener("input", update));
+    roomType?.addEventListener("change", update);
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const data = new FormData(form);
+      const adultCount = Number(data.get("adults") || 1);
+      const childCount = Number(data.get("children") || 0);
+      const petCount = Number(data.get("pets") || 0);
+      const price = currentPrice();
+      const amount = adultCount * price + childCount * price * 0.75;
+      const lodging = data.get("roomType") === "cabin" ? "Cabaña" : "Habitación estándar";
+      const lines = [
+        "Hola, quiero solicitar disponibilidad de un paquete con Tangarana Travel Tours.",
+        "",
+        `Paquete: ${form.dataset.packageName || ""}`,
+        `Fecha de llegada: ${String(data.get("travelDate") || "")}`,
+        `Alojamiento: ${lodging}`,
+        `Adultos: ${adultCount}`,
+        `Niños (3 a 10 años): ${childCount}`,
+        `Mascotas: ${petCount} (tarifa adicional por confirmar)`,
+        `Total estimado sin mascotas: S/${formatMoney(amount)}`,
+        `Nombre: ${String(data.get("fullName") || "")}`,
+        `Mi WhatsApp: ${String(data.get("phone") || "")}`,
+      ];
+      const notes = String(data.get("notes") || "").trim();
+      if (notes) lines.push(`Consulta adicional: ${notes}`);
+      lines.push("", "Quisiera confirmar disponibilidad, condiciones y el pago del 50% para reservar.");
+      window.open(`https://wa.me/${form.dataset.whatsappNumber || ""}?text=${encodeURIComponent(lines.join("\n"))}`, "_blank", "noopener,noreferrer");
+    });
+
+    update();
+  });
+
+  bindStayPackageForms();
+  document.addEventListener("astro:page-load", bindStayPackageForms);
+</script>

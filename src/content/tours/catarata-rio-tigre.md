@@ -4,15 +4,15 @@ title: "Tour a Catarata Río Tigre"
 slug: "catarata-rio-tigre"
 commercialName: "Tour a Catarata Río Tigre"
 tagline: "Bosque, agua y turismo vivencial"
-shortDescription: "Excursión de tarde a Catarata Río Tigre con Mirador El Abra, Manantial de la Virgen y turismo vivencial."
+shortDescription: "Tour de cuatro horas a Catarata Río Tigre, Manantial de Aguas Cristalinas, Gruta de la Virgen y Mirador El Abra."
 linkLabel: "Ver tour a Catarata Río Tigre"
 whatsappMessage: "Hola, vi en la web el tour a Catarata Río Tigre de Tangarana Travel Tours. Quisiera consultar disponibilidad y detalles."
-seoTitle: "Tour a Catarata Río Tigre: itinerario y precio | Tangarana"
-seoDescription: "Conoce el tour a Catarata Río Tigre de Tangarana Travel Tours. Consulta precio, horario e itinerario con Mirador El Abra, Manantial de la Virgen y turismo vivencial."
-price: 30
+seoTitle: "Tour a Catarata Río Tigre: horario y precio | Tangarana"
+seoDescription: "Tour familiar a Catarata Río Tigre desde Oxapampa: dos horarios, movilidad, guiado, manantial, Gruta de la Virgen y Mirador El Abra. Tarifa S/45."
+price: 45
 currency: "PEN"
-durationLabel: "Tour de tarde"
-scheduleStart: "3:30 p. m."
+durationLabel: "Medio día · 4 horas"
+scheduleStart: "10:00 a. m."
 scheduleEnd: "6:30 p. m."
 destinations:
   - "Catarata Río Tigre"
@@ -21,10 +21,10 @@ includes: []
 itinerary: []
 activities:
   - "Mirador El Abra"
-  - "Juegos"
-  - "Manantial de la Virgen"
+  - "Manantial de aguas cristalinas"
+  - "Gruta de la Virgen"
   - "Catarata Río Tigre"
-  - "Turismo vivencial"
+  - "Experiencia con animales de granja"
 imageKey: "waterfallGroup"
 posterTone: "canopy"
 cover: "grupo-cascada"
@@ -32,4 +32,4 @@ status: "published"
 indexable: true
 ---
 
-Excursión de tarde a Catarata Río Tigre con cinco actividades anunciadas. Consulta por WhatsApp la disponibilidad y los detalles antes de reservar.
+Tour familiar de aproximadamente cuatro horas con dos horarios disponibles. Consulta la fecha y disponibilidad por WhatsApp.

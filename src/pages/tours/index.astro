@@ -2,52 +2,64 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageIntro from "../../components/PageIntro.astro";
-import TourFeature from "../../components/TourFeature.astro";
 import DayTourCollection from "../../components/DayTourCollection.astro";
 import SectionHeading from "../../components/SectionHeading.astro";
 import JungleInterlude from "../../components/JungleInterlude.astro";
 import ReserveButton from "../../components/ReserveButton.astro";
-const tours = await getCollection("tours", ({ data }) => data.status === "published");
-const featuredTour = tours.find(({ data }) => data.kind === "multi-day")!;
-const dayTourOrder = ["perene", "villa-rica", "pozuzo", "chontabamba", "catarata-rio-tigre"];
-const dayTours = dayTourOrder.map((slug) => tours.find(({ data }) => data.slug === slug)!.data);
+import { SITE_URL } from "../../data/site";
+import { breadcrumbSchema } from "../../data/seo";
+
+const entries = await getCollection("tours", ({ data }) => data.status === "published" && data.kind === "day-tour" && data.indexable);
+const tourOrder = ["perene", "villa-rica", "pozuzo", "chontabamba", "catarata-rio-tigre", "yanachaga-chemillen"];
+const tours = tourOrder.map((slug) => entries.find(({ data }) => data.slug === slug)!.data);
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Tours individuales de Tangarana Travel Tours",
+  url: new URL("/tours/", SITE_URL).toString(),
+  numberOfItems: tours.length,
+  itemListElement: tours.map((tour, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: tour.commercialName,
+    url: new URL(`/tours/${tour.slug}/`, SITE_URL).toString(),
+  })),
+};
+const breadcrumbs = breadcrumbSchema([
+  { name: "Inicio", path: "/" },
+  { name: "Tours", path: "/tours/" },
+]);
 ---
 
 <BaseLayout
-  title="Tours a Pozuzo, Villa Rica y Perené | Tangarana Travel Tours"
-  description="Compara tours a Pozuzo, Villa Rica, Valle del Perené, Chontabamba, Catarata Río Tigre y el circuito de 4 días de Tangarana Travel Tours. Consulta horarios, itinerarios y precios."
+  title="Tours a Pozuzo, Villa Rica y la Selva Central | Tangarana"
+  description="Compara tours individuales a Pozuzo, Villa Rica, Valle del Perené, Chontabamba, Catarata Río Tigre y Yanachaga Chemillén."
+  canonicalPath="/tours/"
+  schema={[schema, breadcrumbs]}
 >
   <PageIntro
-    eyebrow="Tours y excursiones"
-    title="Tours a Pozuzo, Villa Rica, Perené y más"
-    description="Compara cinco tours de un día y un paquete de cuatro días. Revisa precios, horarios e itinerarios antes de consultar disponibilidad."
+    eyebrow="Tours individuales"
+    title="Tours por Oxapampa y la Selva Central"
+    description="Elige un recorrido por destino. Cada página muestra precio, horario, actividades, recomendaciones y las condiciones antes de reservar."
     crumbs={[{ label: "Inicio", href: "/" }, { label: "Tours" }]}
     variant="tours"
     image="airBike"
     marker="06"
-    note="Precios publicados de S/30 a S/370 por persona"
+    note="Tours desde S/30 por persona"
   />
   <section class="section tours-catalog" aria-labelledby="day-tours-title">
     <div class="container">
-      <SectionHeading eyebrow="Tours de un día" title="Precios, horarios e itinerarios" id="day-tours-title">
-        <p>Compara horarios, precios y paradas antes de elegir. Consulta por WhatsApp la disponibilidad y el orden final del recorrido.</p>
+      <SectionHeading eyebrow="Seis experiencias" title="Un destino, un tour" id="day-tours-title">
+        <p>Compara horarios, precios y paradas. La disponibilidad y el orden final del recorrido se confirman directamente por WhatsApp.</p>
       </SectionHeading>
-      <DayTourCollection tours={dayTours} />
+      <DayTourCollection tours={tours} />
     </div>
   </section>
   <JungleInterlude />
-  <section class="section section--soft" aria-labelledby="expedition-title">
-    <div class="container">
-      <SectionHeading eyebrow="Paquete de 4 días" title="Tour por Oxapampa, Pozuzo, Villa Rica y Perené" id="expedition-title">
-        <p>Oxapampa, Pozuzo, Villa Rica y el Valle del Perené en un solo programa con alojamiento, desayunos y acompañamiento.</p>
-      </SectionHeading>
-      <TourFeature tour={featuredTour.data} />
-    </div>
-  </section>
   <section class="cta-route" aria-labelledby="tour-help-title">
     <div class="container cta-route__inner">
-      <div><span class="eyebrow">Solicitud rápida</span><h2 id="tour-help-title">Elige y reserva tu tour</h2></div>
-      <div class="cta-route__actions"><ReserveButton label="Reservar ahora" class="button-dark" /></div>
+      <div><span class="eyebrow">Dos formas de viajar</span><h2 id="tour-help-title">Reserva un tour o elige un paquete completo</h2></div>
+      <div class="cta-route__actions"><a class="button button-ink-outline" href="/paquetes/">Ver paquetes</a><ReserveButton label="Reservar un tour" class="button-dark" /></div>
     </div>
   </section>
 </BaseLayout>

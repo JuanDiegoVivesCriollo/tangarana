@@ -9,11 +9,11 @@ import { phoneHref, siteConfig, whatsappUrl } from "../data/site";
     <div class="footer-camp__top">
       <div>
         <BrandMark />
-        <p class="footer-camp__motto">Tours en Oxapampa y la Selva Central.</p>
+        <p class="footer-camp__motto">Tours y paquetes en Oxapampa y la Selva Central.</p>
       </div>
       <div class="footer-camp__links">
         <div>
-          <h2>Tours y páginas</h2>
+          <h2>Tours, paquetes y páginas</h2>
           <ul>
             {mainNavigation.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
             <li><a href="/preguntas-frecuentes/">Preguntas frecuentes</a></li>
@@ -37,6 +37,7 @@ import { phoneHref, siteConfig, whatsappUrl } from "../data/site";
     </div>
     <div class="footer-camp__base">
       <span>{siteConfig.location.display}</span>
+      <span>RUC {siteConfig.ruc}</span>
       <span>© {new Date().getFullYear()} Tangarana Travel Tours</span>
       <span><a href="/politica-de-privacidad/">Privacidad</a> · <a href="/terminos-y-condiciones/">Términos</a></span>
     </div>

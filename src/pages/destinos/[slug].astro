@@ -8,25 +8,34 @@ import WhatsAppCTA from "../../components/WhatsAppCTA.astro";
 import JungleInterlude from "../../components/JungleInterlude.astro";
 import { destinations, type Destination } from "../../data/destinations";
 import { siteImages } from "../../data/images";
+import { packageCover } from "../../data/packageMedia";
 import { SITE_URL } from "../../data/site";
+import { breadcrumbSchema } from "../../data/seo";
 
 export function getStaticPaths() {
   return destinations.map((destination) => ({ params: { slug: destination.slug }, props: { destination } }));
 }
 
 const { destination } = Astro.props as { destination: Destination };
-const image = siteImages[destination.image];
+const image = packageCover(destination.tourSlug) ?? siteImages[destination.image];
 const related = destinations.filter((item) => item.slug !== destination.slug);
 const tone = destination.layout === "earth" ? "earth" : destination.layout === "river" ? "river" : "forest";
 const canonicalPath = `/destinos/${destination.slug}/`;
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "TouristDestination",
-  name: destination.name,
-  description: destination.seoDescription,
-  url: new URL(canonicalPath, SITE_URL).toString(),
-  image: new URL(image.src.src, SITE_URL).toString(),
-};
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    name: destination.name,
+    description: destination.seoDescription,
+    url: new URL(canonicalPath, SITE_URL).toString(),
+    image: new URL(image.src.src, SITE_URL).toString(),
+  },
+  breadcrumbSchema([
+    { name: "Inicio", path: "/" },
+    { name: "Destinos", path: "/destinos/" },
+    { name: destination.name, path: canonicalPath },
+  ]),
+];
 ---
 
 <BaseLayout title={destination.seoTitle} description={destination.seoDescription} canonicalPath={canonicalPath} bodyClass={`destination-page--${destination.layout}`} schema={schema} socialImage={image.src.src} socialImageAlt={image.alt}>
@@ -53,7 +62,7 @@ const schema = {
         <ul class="destination-highlights">{destination.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
         <div class="destination-story__links">
           <a class="text-link" href={`/tours/${destination.tourSlug}/`}>{destination.tourLinkLabel} <ArrowUpRight size={19} aria-hidden="true" /></a>
-          <a class="text-link" href="/tours/selva-central-4-dias/">Ver tour de 4 días <ArrowUpRight size={19} aria-hidden="true" /></a>
+          <a class="text-link" href="/paquetes/">Ver paquetes con alojamiento <ArrowUpRight size={19} aria-hidden="true" /></a>
         </div>
       </div>
     </div>
@@ -72,7 +81,7 @@ const schema = {
 
   <section class="cta-route" aria-labelledby="destination-cta-title">
     <div class="container cta-route__inner">
-      <div><span class="eyebrow">Consulta directa</span><h2 id="destination-cta-title">Consulta tours que visitan {destination.name}</h2></div>
+      <div><span class="eyebrow">Consulta directa</span><h2 id="destination-cta-title">Consulta tours y paquetes que visitan {destination.name}</h2></div>
       <div class="cta-route__actions"><WhatsAppCTA label="Consultar por WhatsApp" /></div>
     </div>
   </section>
